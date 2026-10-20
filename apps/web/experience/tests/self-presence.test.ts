@@ -36,3 +36,12 @@ test("a profile linked for people but not declared is named, not reported as mis
   assert.match(one.title, /un solo perfil/);
   assert.match(one.why, /LinkedIn/);
 });
+
+
+test("the isolated landing reuses the governed graph with its own page URL and unchanged service identity", () => {
+  const graph = siteStructuredData("es", "/es/landing-lab")["@graph"] as Array<Record<string, unknown>>;
+  assert.equal(graph.find(node => node["@type"] === "WebPage")?.url, "https://axignal.com/es/landing-lab");
+  assert.equal(graph.find(node => node["@type"] === "Service")?.["@id"], "https://axignal.com/#service");
+  assert.deepEqual(graph.find(node => node["@type"] === "Service"),
+    (siteStructuredData("es")["@graph"] as Array<Record<string, unknown>>).find(node => node["@type"] === "Service"));
+});

@@ -1,0 +1,195 @@
+{
+  "note": "Observed local trace timing only: demonstrates actual deferred downloads and automatic restoration, not field or throttled LCP. The reported LCP budget remains in metrics.json.",
+  "samples": [
+    {
+      "sample": "ready-mobile-1",
+      "observedFirstPaintMs": 117,
+      "assets": [
+        {
+          "path": "/fonts/lab-manrope.76d1ca24ef0d.woff2",
+          "start": 11.964999988675117,
+          "end": 22.16099999845028,
+          "transferBytes": 21000
+        },
+        {
+          "path": "/fonts/lab-fraunces.3bbb3a5b8520.woff2",
+          "start": 12.108999997377396,
+          "end": 23.09299999475479,
+          "transferBytes": 45316
+        },
+        {
+          "path": "/fonts/lab-ibm-plex-mono.75215d728296.woff2",
+          "start": 86.46899999678135,
+          "end": 88.68400000035763,
+          "transferBytes": 11072
+        },
+        {
+          "path": "/fonts/lab-bic-notes-lab.3137d8930670.woff2",
+          "start": 237.87499998509884,
+          "end": 240.83399999141693,
+          "transferBytes": 26092
+        },
+        {
+          "path": "/_next/static/chunks/0g_5wysy4cw97.js",
+          "start": 280.7639999985695,
+          "end": 285.90999998152256,
+          "transferBytes": 46001
+        }
+      ],
+      "notesAfterFirstPaint": true,
+      "motionAfterNotes": true
+    },
+    {
+      "sample": "ready-mobile-2",
+      "observedFirstPaintMs": 100,
+      "assets": [
+        {
+          "path": "/fonts/lab-manrope.76d1ca24ef0d.woff2",
+          "start": 14.030000016093254,
+          "end": 16.628000006079674,
+          "transferBytes": 21000
+        },
+        {
+          "path": "/fonts/lab-fraunces.3bbb3a5b8520.woff2",
+          "start": 14.211000010371208,
+          "end": 17.685000002384186,
+          "transferBytes": 45316
+        },
+        {
+          "path": "/fonts/lab-ibm-plex-mono.75215d728296.woff2",
+          "start": 91.23800000548363,
+          "end": 94.17700001597404,
+          "transferBytes": 11072
+        },
+        {
+          "path": "/fonts/lab-bic-notes-lab.3137d8930670.woff2",
+          "start": 221.2740000039339,
+          "end": 223.55300000309944,
+          "transferBytes": 26092
+        },
+        {
+          "path": "/_next/static/chunks/0g_5wysy4cw97.js",
+          "start": 296.50400000810623,
+          "end": 302.2650000154972,
+          "transferBytes": 46001
+        }
+      ],
+      "notesAfterFirstPaint": true,
+      "motionAfterNotes": true
+    },
+    {
+      "sample": "ready-mobile-3",
+      "observedFirstPaintMs": 94,
+      "assets": [
+        {
+          "path": "/fonts/lab-manrope.76d1ca24ef0d.woff2",
+          "start": 11.12100000679493,
+          "end": 13.263999983668327,
+          "transferBytes": 21000
+        },
+        {
+          "path": "/fonts/lab-fraunces.3bbb3a5b8520.woff2",
+          "start": 11.261999994516373,
+          "end": 14.457999989390373,
+          "transferBytes": 45316
+        },
+        {
+          "path": "/fonts/lab-ibm-plex-mono.75215d728296.woff2",
+          "start": 85.02899999916553,
+          "end": 89.46399998664856,
+          "transferBytes": 11072
+        },
+        {
+          "path": "/fonts/lab-bic-notes-lab.3137d8930670.woff2",
+          "start": 229.72299998998642,
+          "end": 231.93099999427795,
+          "transferBytes": 26092
+        },
+        {
+          "path": "/_next/static/chunks/0g_5wysy4cw97.js",
+          "start": 269.3869999945164,
+          "end": 274.29199999570847,
+          "transferBytes": 46001
+        }
+      ],
+      "notesAfterFirstPaint": true,
+      "motionAfterNotes": true
+    },
+    {
+      "sample": "ready-mobile-4",
+      "observedFirstPaintMs": 106,
+      "assets": [
+        {
+          "path": "/fonts/lab-manrope.76d1ca24ef0d.woff2",
+          "start": 12.813999995589256,
+          "end": 15.596000000834465,
+          "transferBytes": 21000
+        },
+        {
+          "path": "/fonts/lab-fraunces.3bbb3a5b8520.woff2",
+          "start": 13.023999989032745,
+          "end": 17.211999997496605,
+          "transferBytes": 45316
+        },
+        {
+          "path": "/fonts/lab-ibm-plex-mono.75215d728296.woff2",
+          "start": 96.08599999547005,
+          "end": 99.7419999986887,
+          "transferBytes": 11072
+        },
+        {
+          "path": "/fonts/lab-bic-notes-lab.3137d8930670.woff2",
+          "start": 244.53900000452995,
+          "end": 246.71699999272823,
+          "transferBytes": 26092
+        },
+        {
+          "path": "/_next/static/chunks/0g_5wysy4cw97.js",
+          "start": 282.60199999809265,
+          "end": 289.90300001204014,
+          "transferBytes": 46001
+        }
+      ],
+      "notesAfterFirstPaint": true,
+      "motionAfterNotes": true
+    },
+    {
+      "sample": "ready-mobile-5",
+      "observedFirstPaintMs": 98,
+      "assets": [
+        {
+          "path": "/fonts/lab-manrope.76d1ca24ef0d.woff2",
+          "start": 10.729000002145767,
+          "end": 12.988999992609024,
+          "transferBytes": 21000
+        },
+        {
+          "path": "/fonts/lab-fraunces.3bbb3a5b8520.woff2",
+          "start": 10.899000003933907,
+          "end": 14.509999990463257,
+          "transferBytes": 45316
+        },
+        {
+          "path": "/fonts/lab-ibm-plex-mono.75215d728296.woff2",
+          "start": 87.49099999666214,
+          "end": 90.35199999809265,
+          "transferBytes": 11072
+        },
+        {
+          "path": "/fonts/lab-bic-notes-lab.3137d8930670.woff2",
+          "start": 233.5789999961853,
+          "end": 235.65999999642372,
+          "transferBytes": 26092
+        },
+        {
+          "path": "/_next/static/chunks/0g_5wysy4cw97.js",
+          "start": 271.9649999886751,
+          "end": 276.85799999535084,
+          "transferBytes": 46001
+        }
+      ],
+      "notesAfterFirstPaint": true,
+      "motionAfterNotes": true
+    }
+  ]
+}

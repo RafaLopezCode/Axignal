@@ -1,0 +1,134 @@
+[
+  {
+    "focus": "Navegación",
+    "open": 0,
+    "test": "final-mobile-menu"
+  },
+  {
+    "deferred": false,
+    "hash": "#pricing",
+    "image": [
+      {
+        "height": "427",
+        "width": "640"
+      },
+      {
+        "height": "427",
+        "width": "640"
+      },
+      {
+        "height": "427",
+        "width": "640"
+      },
+      {
+        "height": "427",
+        "width": "640"
+      },
+      {
+        "height": "427",
+        "width": "640"
+      }
+    ],
+    "test": "fresh-mobile-deep-link"
+  },
+  {
+    "active": "#pricing",
+    "id": "pricing",
+    "margin": "90px",
+    "padding": "25px",
+    "test": "native-anchor",
+    "top": 115.3125,
+    "expected": 115,
+    "passed": true
+  },
+  {
+    "test": "final-newsletter-state",
+    "text": "Newsletter · AXIGNAL\n\nLa semana, con perspectiva.\n\nUna newsletter gratuita para seguir una organización a través de sus señales públicas. Hasta tres por semana cuando existan novedades materiales, con sus fuentes, fechas y límites.\n\nQuiero recibir el boletín\n\nBajo solicitud y aceptación según cobertura. Es una muestra editorial: no incluye acceso a AXENT ni al contexto privado de AXIGNAL. El consentimiento para recibirla es independiente y revocable.\n\nNo podemos comprobar la disponibilidad.\n\nPuedes volver a comprobarlo o consultar con nosotros. No se ha registrado ninguna solicitud.\n\nVolver a comprobar\nConsultar disponibilidad\nAbrir el canal de solicitudes"
+  },
+  {
+    "focus": "lab-heading",
+    "imagesLoaded": true,
+    "narrative": "complete",
+    "scrollY": 0,
+    "test": "final-mobile-backtop"
+  },
+  {
+    "state": "playing",
+    "test": "final-gsap-playing",
+    "transform": "matrix(0.999391, -0.0349, 0.0349, 0.999391, -5.1374, 2.5687)"
+  },
+  {
+    "fictional": true,
+    "open": [
+      true,
+      true
+    ],
+    "test": "final-evidence"
+  },
+  {
+    "test": "final-connections",
+    "text": "Observado\n1 jul 2026\nSu web menciona a Cooperativa Ribera como cliente.\n\nHay una declaración pública de la empresa sobre un caso con esa cooperativa. Es lo que dice la empresa, no un contrato verificado."
+  },
+  {
+    "test": "final-temporal",
+    "date": "1 jul 2026",
+    "text": "Lectura histórica\nEsta señal aún no se había observado.\n\nEn esta fecha el ejemplo no ofrece una base para mostrarla. Cambia de momento o explora otra pregunta."
+  },
+  {
+    "test": "final-temporal",
+    "date": "1 sept 2026",
+    "text": "Lectura histórica\nEsta señal aún no se había observado.\n\nEn esta fecha el ejemplo no ofrece una base para mostrarla. Cambia de momento o explora otra pregunta."
+  },
+  {
+    "test": "final-temporal",
+    "date": "3 oct 2026",
+    "text": "Observado\n3 oct 2026\nHa publicado tres obras recientes en su web.\n\nSon anuncios propios con fecha. Muestran actividad visible, no volumen de negocio."
+  },
+  {
+    "images": [
+      {
+        "complete": true,
+        "natural": [
+          640,
+          427
+        ],
+        "src": "/marketing/focus.webp"
+      },
+      {
+        "complete": true,
+        "natural": [
+          640,
+          427
+        ],
+        "src": "/marketing/explain.webp"
+      },
+      {
+        "complete": true,
+        "natural": [
+          640,
+          427
+        ],
+        "src": "/marketing/memory.webp"
+      }
+    ],
+    "test": "final-how-art"
+  },
+  {
+    "test": "final-price-25",
+    "total": "128,75 €\n/ al mes"
+  },
+  {
+    "complete": true,
+    "natural": [
+      640,
+      427
+    ],
+    "test": "final-closing-art"
+  },
+  {
+    "before": "playing",
+    "motion": "reduced",
+    "remaining": 0,
+    "test": "final-reduced-motion"
+  }
+]

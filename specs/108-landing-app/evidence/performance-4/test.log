@@ -1,0 +1,2534 @@
+
+> axignal-experience@0.1.0 test
+> tsx --test tests/*.test.ts
+
+TAP version 13
+# Subtest: failed callback is visible on first render and still requires explicit registration
+ok 1 - failed callback is visible on first render and still requires explicit registration
+  ---
+  duration_ms: 2.4899
+  type: 'test'
+  ...
+# Subtest: ordinary, unrelated and duplicate query values do not report an authentication failure
+ok 2 - ordinary, unrelated and duplicate query values do not report an authentication failure
+  ---
+  duration_ms: 0.7002
+  type: 'test'
+  ...
+# Subtest: profile commands cannot select another owner or inject arbitrary fields
+ok 3 - profile commands cannot select another owner or inject arbitrary fields
+  ---
+  duration_ms: 11.2674
+  type: 'test'
+  ...
+# Subtest: profile proxy is same-origin and only forwards bounded typed preferences with the session
+ok 4 - profile proxy is same-origin and only forwards bounded typed preferences with the session
+  ---
+  duration_ms: 53.7798
+  type: 'test'
+  ...
+# Subtest: profile conflict stays a conflict and portal host is exact
+ok 5 - profile conflict stays a conflict and portal host is exact
+  ---
+  duration_ms: 2.8423
+  type: 'test'
+  ...
+# Subtest: new subscriber controls and dismissal labels are translated in every locale
+ok 6 - new subscriber controls and dismissal labels are translated in every locale
+  ---
+  duration_ms: 1.0152
+  type: 'test'
+  ...
+# Subtest: temporary operation notices expose a keyboard-accessible dismissal without undoing state
+ok 7 - temporary operation notices expose a keyboard-accessible dismissal without undoing state
+  ---
+  duration_ms: 8.0522
+  type: 'test'
+  ...
+# Subtest: acquisition corpus is substantial and every published page passes editorial gates
+ok 8 - acquisition corpus is substantial and every published page passes editorial gates
+  ---
+  duration_ms: 1021.0385
+  type: 'test'
+  ...
+# Subtest: each page has six localized slugs and route lookup is one-to-one
+ok 9 - each page has six localized slugs and route lookup is one-to-one
+  ---
+  duration_ms: 3.2339
+  type: 'test'
+  ...
+# Subtest: all canonical, hreflang and x-default URLs are reciprocal and in the sitemap
+ok 10 - all canonical, hreflang and x-default URLs are reciprocal and in the sitemap
+  ---
+  duration_ms: 44.971
+  type: 'test'
+  ...
+# Subtest: article and breadcrumb structured data matches the visible localized document
+ok 11 - article and breadcrumb structured data matches the visible localized document
+  ---
+  duration_ms: 0.9061
+  type: 'test'
+  ...
+# Subtest: hub structured data identifies the localized Knowledge collection
+ok 12 - hub structured data identifies the localized Knowledge collection
+  ---
+  duration_ms: 0.3959
+  type: 'test'
+  ...
+# Subtest: route metadata localizes canonical, hreflang, OpenGraph and Twitter for every page
+ok 13 - route metadata localizes canonical, hreflang, OpenGraph and Twitter for every page
+  ---
+  duration_ms: 62.2989
+  type: 'test'
+  ...
+# Subtest: hreflang uses the Spanish x-default and robots expose the XML sitemap
+ok 14 - hreflang uses the Spanish x-default and robots expose the XML sitemap
+  ---
+  duration_ms: 0.2975
+  type: 'test'
+  ...
+# Subtest: GSC sitemap contains only canonical public indexable pages, not redirects, demo or private sessions
+ok 15 - GSC sitemap contains only canonical public indexable pages, not redirects, demo or private sessions
+  ---
+  duration_ms: 23.1075
+  type: 'test'
+  ...
+# Subtest: a waiting organization is kept apart from the active ones, and unconfirmed capacity is never read as zero
+ok 16 - a waiting organization is kept apart from the active ones, and unconfirmed capacity is never read as zero
+  ---
+  duration_ms: 13.5639
+  type: 'test'
+  ...
+# Subtest: a first subscription covers the active and the waiting organizations, at least one
+ok 17 - a first subscription covers the active and the waiting organizations, at least one
+  ---
+  duration_ms: 0.633
+  type: 'test'
+  ...
+# Subtest: an invitation can be pasted as its link or as its token; nothing else is accepted
+ok 18 - an invitation can be pasted as its link or as its token; nothing else is accepted
+  ---
+  duration_ms: 0.5164
+  type: 'test'
+  ...
+# Subtest: the payment provider's return is read, without treating a portal return as payment confirmation
+ok 19 - the payment provider's return is read, without treating a portal return as payment confirmation
+  ---
+  duration_ms: 0.5332
+  type: 'test'
+  ...
+# Subtest: the published prices come from the pricing function: 9,95 € the first organization, 4,95 € each additional
+ok 20 - the published prices come from the pricing function: 9,95 € the first organization, 4,95 € each additional
+  ---
+  duration_ms: 0.2563
+  type: 'test'
+  ...
+# Subtest: valid UTF-8 split across chunks is lossless, including at the exact byte limit
+ok 21 - valid UTF-8 split across chunks is lossless, including at the exact byte limit
+  ---
+  duration_ms: 102.0249
+  type: 'test'
+  ...
+# Subtest: byte limit stops consumption before later chunks and releases its lock
+ok 22 - byte limit stops consumption before later chunks and releases its lock
+  ---
+  duration_ms: 3.0449
+  type: 'test'
+  ...
+# Subtest: Unicode cannot pass a byte limit using its shorter JavaScript string length
+ok 23 - Unicode cannot pass a byte limit using its shorter JavaScript string length
+  ---
+  duration_ms: 2.6688
+  type: 'test'
+  ...
+# Subtest: failed cancellation cannot mask an oversize rejection or expose its error text
+ok 24 - failed cancellation cannot mask an oversize rejection or expose its error text
+  ---
+  duration_ms: 0.5916
+  type: 'test'
+  ...
+# Subtest: a cancellation that never settles cannot stall an already known limit rejection
+ok 25 - a cancellation that never settles cannot stall an already known limit rejection
+  ---
+  duration_ms: 0.9584
+  type: 'test'
+  ...
+# Subtest: stream failure releases the reader and preserves the transport error
+ok 26 - stream failure releases the reader and preserves the transport error
+  ---
+  duration_ms: 1.1903
+  type: 'test'
+  ...
+# Subtest: invalid or truncated UTF-8 is rejected, never silently repaired
+ok 27 - invalid or truncated UTF-8 is rejected, never silently repaired
+  ---
+  duration_ms: 0.7624
+  type: 'test'
+  ...
+# Subtest: empty or malformed input stays a request syntax error
+ok 28 - empty or malformed input stays a request syntax error
+  ---
+  duration_ms: 1.4356
+  type: 'test'
+  ...
+# Subtest: upstream syntax, bytes and stream failures never masquerade as request errors
+ok 29 - upstream syntax, bytes and stream failures never masquerade as request errors
+  ---
+  duration_ms: 4.3361
+  type: 'test'
+  ...
+# Subtest: a misleading Content-Length never bypasses the actual upstream byte cap
+ok 30 - a misleading Content-Length never bypasses the actual upstream byte cap
+  ---
+  duration_ms: 1.914
+  type: 'test'
+  ...
+# Subtest: invalid limit configuration fails before consuming the body
+ok 31 - invalid limit configuration fails before consuming the body
+  ---
+  duration_ms: 0.7589
+  type: 'test'
+  ...
+# Subtest: every operational menu connects to a governed runtime domain
+ok 32 - every operational menu connects to a governed runtime domain
+  ---
+  duration_ms: 2.6912
+  type: 'test'
+  ...
+# Subtest: command reads only its projection and retains unknown
+ok 33 - command reads only its projection and retains unknown
+  ---
+  duration_ms: 41.5697
+  type: 'test'
+  ...
+# Subtest: acquisition reads only its projection and retains unknown
+ok 34 - acquisition reads only its projection and retains unknown
+  ---
+  duration_ms: 0.9102
+  type: 'test'
+  ...
+# Subtest: revenue reads only its projection and retains unknown
+ok 35 - revenue reads only its projection and retains unknown
+  ---
+  duration_ms: 0.8301
+  type: 'test'
+  ...
+# Subtest: focus reads only its projection and retains unknown
+ok 36 - focus reads only its projection and retains unknown
+  ---
+  duration_ms: 0.8827
+  type: 'test'
+  ...
+# Subtest: quality reads only its projection and retains unknown
+ok 37 - quality reads only its projection and retains unknown
+  ---
+  duration_ms: 0.9462
+  type: 'test'
+  ...
+# Subtest: brain reads only its projection and retains unknown
+ok 38 - brain reads only its projection and retains unknown
+  ---
+  duration_ms: 0.6012
+  type: 'test'
+  ...
+# Subtest: governance reads only its projection and retains unknown
+ok 39 - governance reads only its projection and retains unknown
+  ---
+  duration_ms: 0.6618
+  type: 'test'
+  ...
+# Subtest: integrations reads only its projection and retains unknown
+ok 40 - integrations reads only its projection and retains unknown
+  ---
+  duration_ms: 1.1496
+  type: 'test'
+  ...
+# Subtest: finance reads only its projection and retains unknown
+ok 41 - finance reads only its projection and retains unknown
+  ---
+  duration_ms: 2.5826
+  type: 'test'
+  ...
+# Subtest: advisor reads only its projection and retains unknown
+ok 42 - advisor reads only its projection and retains unknown
+  ---
+  duration_ms: 1.0131
+  type: 'test'
+  ...
+# Subtest: system reads only its projection and retains unknown
+ok 43 - system reads only its projection and retains unknown
+  ---
+  duration_ms: 0.5615
+  type: 'test'
+  ...
+# Subtest: denied, unavailable, wrong-domain and missing projection are rejected
+ok 44 - denied, unavailable, wrong-domain and missing projection are rejected
+  ---
+  duration_ms: 3.7475
+  type: 'test'
+  ...
+# Subtest: operational vocabulary has six complete translations
+ok 45 - operational vocabulary has six complete translations
+  ---
+  duration_ms: 43.1895
+  type: 'test'
+  ...
+# Subtest: rendered readings distinguish unknown and zero and retain provenance without executing source text
+ok 46 - rendered readings distinguish unknown and zero and retain provenance without executing source text
+  ---
+  duration_ms: 76.8155
+  type: 'test'
+  ...
+# Subtest: migration reads only the exact authorized shell bootstrap and never forwards HTML
+ok 47 - migration reads only the exact authorized shell bootstrap and never forwards HTML
+  ---
+  duration_ms: 16.7942
+  type: 'test'
+  ...
+# Subtest: unknown never becomes zero, false, currency or a successful health state
+ok 48 - unknown never becomes zero, false, currency or a successful health state
+  ---
+  duration_ms: 81.8653
+  type: 'test'
+  ...
+# Subtest: amounts respect source units and currency exponents
+ok 49 - amounts respect source units and currency exponents
+  ---
+  duration_ms: 1.1139
+  type: 'test'
+  ...
+# Subtest: identity uses the supplied record reference when a display name is unavailable
+ok 50 - identity uses the supplied record reference when a display name is unavailable
+  ---
+  duration_ms: 0.5985
+  type: 'test'
+  ...
+# Subtest: search matches readable names, localized state and reference without indexing arbitrary private payload
+ok 51 - search matches readable names, localized state and reference without indexing arbitrary private payload
+  ---
+  duration_ms: 1.7806
+  type: 'test'
+  ...
+# Subtest: large collections expose eight records, a named search and reversible paging
+ok 52 - large collections expose eight records, a named search and reversible paging
+  ---
+  duration_ms: 37.6059
+  type: 'test'
+  ...
+# Subtest: governance alerts preserve known zero, unknown and source evidence in compact rows
+ok 53 - governance alerts preserve known zero, unknown and source evidence in compact rows
+  ---
+  duration_ms: 6.7772
+  type: 'test'
+  ...
+# Subtest: source disclosure retains field meaning, period, uncertainty and escaped hostile text
+ok 54 - source disclosure retains field meaning, period, uncertainty and escaped hostile text
+  ---
+  duration_ms: 51.9573
+  type: 'test'
+  ...
+# Subtest: all new operational vocabulary is available in six languages
+ok 55 - all new operational vocabulary is available in six languages
+  ---
+  duration_ms: 0.8592
+  type: 'test'
+  ...
+# Subtest: missing real source explains the limitation while retaining its exact reason code
+ok 56 - missing real source explains the limitation while retaining its exact reason code
+  ---
+  duration_ms: 13.2696
+  type: 'test'
+  ...
+# Subtest: a locator becomes the label and public address an attention needs
+ok 57 - a locator becomes the label and public address an attention needs
+  ---
+  duration_ms: 5.4161
+  type: 'test'
+  ...
+# Subtest: the Admin portfolio is the inventory read as the Observatory's: readable when identified, pending when not
+ok 58 - the Admin portfolio is the inventory read as the Observatory's: readable when identified, pending when not
+  ---
+  duration_ms: 3.2651
+  type: 'test'
+  ...
+# Subtest: an Admin has no capacity, purchase or contracting: capacity is unknown, never zero or free
+ok 59 - an Admin has no capacity, purchase or contracting: capacity is unknown, never zero or free
+  ---
+  duration_ms: 0.9958
+  type: 'test'
+  ...
+# Subtest: the three contexts expose one source contract; only data and capabilities differ
+ok 60 - the three contexts expose one source contract; only data and capabilities differ
+  ---
+  duration_ms: 0.4742
+  type: 'test'
+  ...
+# Subtest: an Admin command adds attention or observes again, and refuses anything an account would purchase or manage
+ok 61 - an Admin command adds attention or observes again, and refuses anything an account would purchase or manage
+  ---
+  duration_ms: 81.2443
+  type: 'test'
+  ...
+# Subtest: Customer Zero reads through the one Observatory: no reading interface of its own
+ok 62 - Customer Zero reads through the one Observatory: no reading interface of its own
+  ---
+  duration_ms: 1.7824
+  type: 'test'
+  ...
+# Subtest: inside the Admin shell there is one sidebar: the portfolio navigation is drawn in the shell's own
+ok 63 - inside the Admin shell there is one sidebar: the portfolio navigation is drawn in the shell's own
+  ---
+  duration_ms: 5.923
+  type: 'test'
+  ...
+# Subtest: the authorized organizations are offered while adding, and a chosen name carries the address the service holds
+ok 64 - the authorized organizations are offered while adding, and a chosen name carries the address the service holds
+  ---
+  duration_ms: 1.7672
+  type: 'test'
+  ...
+# Subtest: an attention without an organization is asked again with the label and address it already holds
+ok 65 - an attention without an organization is asked again with the label and address it already holds
+  ---
+  duration_ms: 4.1932
+  type: 'test'
+  ...
+# Subtest: the service's answers keep their meaning: unresolved identity and insufficient evidence are saved, not concluded
+ok 66 - the service's answers keep their meaning: unresolved identity and insufficient evidence are saved, not concluded
+  ---
+  duration_ms: 1.5529
+  type: 'test'
+  ...
+# Subtest: a revoked authorization is listed with its reason and is never opened as a reading
+ok 67 - a revoked authorization is listed with its reason and is never opened as a reading
+  ---
+  duration_ms: 1.2904
+  type: 'test'
+  ...
+# Subtest: Customer Zero is functional, never synthetic: it reads the service and nothing from the demonstration
+ok 68 - Customer Zero is functional, never synthetic: it reads the service and nothing from the demonstration
+  ---
+  duration_ms: 1.2307
+  type: 'test'
+  ...
+# Subtest: inside the shell the reading and the sidebar keep one rhythm: no stray indentation, no flush blocks
+ok 69 - inside the shell the reading and the sidebar keep one rhythm: no stray indentation, no flush blocks
+  ---
+  duration_ms: 1.0299
+  type: 'test'
+  ...
+# Subtest: the Admin menu is one system: shell entries and the portfolio navigation share type, radius and states
+ok 70 - the Admin menu is one system: shell entries and the portfolio navigation share type, radius and states
+  ---
+  duration_ms: 1.4663
+  type: 'test'
+  ...
+# Subtest: the Admin carries no sample records and no demonstration label
+ok 71 - the Admin carries no sample records and no demonstration label
+  ---
+  duration_ms: 0.8789
+  type: 'test'
+  ...
+# Subtest: every Admin function stays in the menu and connects to its authorized owner service
+ok 72 - every Admin function stays in the menu and connects to its authorized owner service
+  ---
+  duration_ms: 0.774
+  type: 'test'
+  ...
+# Subtest: the phone drawer is modal: a real scrim closes it, the page behind does not scroll, targets fit a thumb
+ok 73 - the phone drawer is modal: a real scrim closes it, the page behind does not scroll, targets fit a thumb
+  ---
+  duration_ms: 0.5568
+  type: 'test'
+  ...
+# Subtest: Admin portfolio stays navigable with no selected focus or insufficient evidence, and technical details follow the chosen organization
+ok 74 - Admin portfolio stays navigable with no selected focus or insufficient evidence, and technical details follow the chosen organization
+  ---
+  duration_ms: 0.9197
+  type: 'test'
+  ...
+# Subtest: grounded AXENT answers through the runtime with only question, locale and compact memory
+ok 75 - grounded AXENT answers through the runtime with only question, locale and compact memory
+  ---
+  duration_ms: 83.7344
+  type: 'test'
+  ...
+# Subtest: without the flag or when the runtime cannot answer, the deterministic explanation is kept
+ok 76 - without the flag or when the runtime cannot answer, the deterministic explanation is kept
+  ---
+  duration_ms: 15.495
+  type: 'test'
+  ...
+# Subtest: private report citations get their own destination and cannot open canonical plan refs
+ok 77 - private report citations get their own destination and cannot open canonical plan refs
+  ---
+  duration_ms: 17.72
+  type: 'test'
+  ...
+# Subtest: product guide reauthorizes the reading but never invokes the model runtime
+ok 78 - product guide reauthorizes the reading but never invokes the model runtime
+  ---
+  duration_ms: 2.86
+  type: 'test'
+  ...
+# Subtest: product guide cannot bypass changed revision or selected object scope
+ok 79 - product guide cannot bypass changed revision or selected object scope
+  ---
+  duration_ms: 4.1721
+  type: 'test'
+  ...
+# Subtest: one shared product catalog covers all six languages without economic evidence
+ok 80 - one shared product catalog covers all six languages without economic evidence
+  ---
+  duration_ms: 33.0919
+  type: 'test'
+  ...
+# Subtest: mixed business questions and injected instructions stay outside the guide
+ok 81 - mixed business questions and injected instructions stay outside the guide
+  ---
+  duration_ms: 0.8137
+  type: 'test'
+  ...
+# Subtest: fallback preserves guidance and rejects a foreign selected signal before answering
+ok 82 - fallback preserves guidance and rejects a foreign selected signal before answering
+  ---
+  duration_ms: 2.5867
+  type: 'test'
+  ...
+# Subtest: every contextual follow-up routes in its own language
+ok 83 - every contextual follow-up routes in its own language
+  ---
+  duration_ms: 4.5581
+  type: 'test'
+  ...
+# Subtest: public demo explains fictional readings locally without enabling account operations
+ok 84 - public demo explains fictional readings locally without enabling account operations
+  ---
+  duration_ms: 445.4452
+  type: 'test'
+  ...
+# Subtest: missing evidence is explicit rather than promising citations below an empty answer
+ok 85 - missing evidence is explicit rather than promising citations below an empty answer
+  ---
+  duration_ms: 8.8492
+  type: 'test'
+  ...
+# Subtest: public demo has one canonical route; old deep links redirect permanently
+ok 86 - public demo has one canonical route; old deep links redirect permanently
+  ---
+  duration_ms: 2.7098
+  type: 'test'
+  ...
+# Subtest: Admin home opens Customer Zero without exposing its operator API
+ok 87 - Admin home opens Customer Zero without exposing its operator API
+  ---
+  duration_ms: 1.27
+  type: 'test'
+  ...
+# Subtest: canvas proof is a labelled non-modal dialog so the separate AXENT rail stays usable
+ok 88 - canvas proof is a labelled non-modal dialog so the separate AXENT rail stays usable
+  ---
+  duration_ms: 29.769
+  type: 'test'
+  ...
+# Subtest: the sheet preserves the provided source, currentness and uncertainty verbatim
+ok 89 - the sheet preserves the provided source, currentness and uncertainty verbatim
+  ---
+  duration_ms: 2.7546
+  type: 'test'
+  ...
+# Subtest: maps governed opportunities and keeps source provenance intact
+ok 90 - maps governed opportunities and keeps source provenance intact
+  ---
+  duration_ms: 54.3244
+  type: 'test'
+  ...
+# Subtest: future observations and post-cut currentness evaluations cannot leak into a historical cut
+ok 91 - future observations and post-cut currentness evaluations cannot leak into a historical cut
+  ---
+  duration_ms: 1.6306
+  type: 'test'
+  ...
+# Subtest: UNKNOWN opportunity and missing buyer stay unknown; families do not share facts
+ok 92 - UNKNOWN opportunity and missing buyer stay unknown; families do not share facts
+  ---
+  duration_ms: 10.0717
+  type: 'test'
+  ...
+# Subtest: an unsupported runtime context never falls back to the Norte fixture
+ok 93 - an unsupported runtime context never falls back to the Norte fixture
+  ---
+  duration_ms: 2.891
+  type: 'test'
+  ...
+# Subtest: organization provenance retains authorized sources without requiring a node
+ok 94 - organization provenance retains authorized sources without requiring a node
+  ---
+  duration_ms: 1.0015
+  type: 'test'
+  ...
+# Subtest: signal provenance selects exact support ids before falling back to source URLs
+ok 95 - signal provenance selects exact support ids before falling back to source URLs
+  ---
+  duration_ms: 1.9973
+  type: 'test'
+  ...
+# Subtest: invalid asOf is rejected instead of widening the temporal cut
+ok 96 - invalid asOf is rejected instead of widening the temporal cut
+  ---
+  duration_ms: 1.7118
+  type: 'test'
+  ...
+# Subtest: AXENT provenance renders real ISO instants and preserves evaluated currentness
+ok 97 - AXENT provenance renders real ISO instants and preserves evaluated currentness
+  ---
+  duration_ms: 66.0154
+  type: 'test'
+  ...
+# Subtest: runtime lens renders only source-backed POTENTIAL and keeps UNKNOWN explicit
+ok 98 - runtime lens renders only source-backed POTENTIAL and keeps UNKNOWN explicit
+  ---
+  duration_ms: 42.621
+  type: 'test'
+  ...
+# Subtest: requirement matrix keeps potential opportunity context without promoting known details
+ok 99 - requirement matrix keeps potential opportunity context without promoting known details
+  ---
+  duration_ms: 7.7627
+  type: 'test'
+  ...
+# Subtest: historical cut hides later opportunity and currentness evaluation without inventing a zero
+ok 100 - historical cut hides later opportunity and currentness evaluation without inventing a zero
+  ---
+  duration_ms: 3.2299
+  type: 'test'
+  ...
+# Subtest: runtime cut clamps a caller-provided future cut to the projection horizon
+ok 101 - runtime cut clamps a caller-provided future cut to the projection horizon
+  ---
+  duration_ms: 9.5166
+  type: 'test'
+  ...
+# Subtest: new runtime revision replaces its previous reading
+ok 102 - new runtime revision replaces its previous reading
+  ---
+  duration_ms: 52.0914
+  type: 'test'
+  ...
+# Subtest: forged server plan is dropped before the local validated family plan renders
+ok 103 - forged server plan is dropped before the local validated family plan renders
+  ---
+  duration_ms: 9.0202
+  type: 'test'
+  ...
+# Subtest: empty runtime projection stays UNKNOWN and never falls back to illustrative facts
+ok 104 - empty runtime projection stays UNKNOWN and never falls back to illustrative facts
+  ---
+  duration_ms: 3.7231
+  type: 'test'
+  ...
+# Subtest: each family is explained in its own cognitive language
+ok 105 - each family is explained in its own cognitive language
+  ---
+  duration_ms: 4.7465
+  type: 'test'
+  ...
+# Subtest: the question changes the composition, not the facts
+ok 106 - the question changes the composition, not the facts
+  ---
+  duration_ms: 0.6711
+  type: 'test'
+  ...
+# Subtest: mobile keeps one primary component in the first ten seconds
+ok 107 - mobile keeps one primary component in the first ten seconds
+  ---
+  duration_ms: 0.4105
+  type: 'test'
+  ...
+# Subtest: the validator only renders allowlisted, compatible, available and honest components
+ok 108 - the validator only renders allowlisted, compatible, available and honest components
+  ---
+  duration_ms: 1.309
+  type: 'test'
+  ...
+# Subtest: nothing observed later leaks into an earlier time cut
+ok 109 - nothing observed later leaks into an earlier time cut
+  ---
+  duration_ms: 0.6096
+  type: 'test'
+  ...
+# Subtest: grammar: UNKNOWN is named and never drawn as zero
+ok 110 - grammar: UNKNOWN is named and never drawn as zero
+  ---
+  duration_ms: 74.6885
+  type: 'test'
+  ...
+# Subtest: grammar: POTENTIAL stays visually and structurally separate from OBSERVED
+ok 111 - grammar: POTENTIAL stays visually and structurally separate from OBSERVED
+  ---
+  duration_ms: 10.5173
+  type: 'test'
+  ...
+# Subtest: grammar: provenance and why are reachable from every family lens
+ok 112 - grammar: provenance and why are reachable from every family lens
+  ---
+  duration_ms: 121.6265
+  type: 'test'
+  ...
+# Subtest: AXENT composes family lenses for the question and governance re-checks them
+ok 113 - AXENT composes family lenses for the question and governance re-checks them
+  ---
+  duration_ms: 157.581
+  type: 'test'
+  ...
+# Subtest: MASTER EUR price is the only published price and does not localize into USD/GBP
+ok 114 - MASTER EUR price is the only published price and does not localize into USD/GBP
+  ---
+  duration_ms: 45.6329
+  type: 'test'
+  ...
+# Subtest: foreign prices require explicit approved Stripe references; no invented FX
+ok 115 - foreign prices require explicit approved Stripe references; no invented FX
+  ---
+  duration_ms: 0.7372
+  type: 'test'
+  ...
+# Subtest: fixed price rejects invalid quantities, precision and negative minor units
+ok 116 - fixed price rejects invalid quantities, precision and negative minor units
+  ---
+  duration_ms: 0.4972
+  type: 'test'
+  ...
+# Subtest: no UI or Stripe purchases use an unapproved conversion rate
+ok 117 - no UI or Stripe purchases use an unapproved conversion rate
+  ---
+  duration_ms: 1.59
+  type: 'test'
+  ...
+# Subtest: known scoped plan passes
+ok 118 - known scoped plan passes
+  ---
+  duration_ms: 16.0035
+  type: 'test'
+  ...
+# Subtest: arbitrary component, content and unknown references fail closed
+ok 119 - arbitrary component, content and unknown references fail closed
+  ---
+  duration_ms: 12.2007
+  type: 'test'
+  ...
+# Subtest: foreign organization reference and stale revision fail
+ok 120 - foreign organization reference and stale revision fail
+  ---
+  duration_ms: 1.4601
+  type: 'test'
+  ...
+# Subtest: future evidence and signal are not visible historically
+ok 121 - future evidence and signal are not visible historically
+  ---
+  duration_ms: 0.46
+  type: 'test'
+  ...
+# Subtest: duplicate refs, zero and >3 items reject
+ok 122 - duplicate refs, zero and >3 items reject
+  ---
+  duration_ms: 3.0175
+  type: 'test'
+  ...
+# Subtest: unknown is not false and potential remains potential
+ok 123 - unknown is not false and potential remains potential
+  ---
+  duration_ms: 0.2597
+  type: 'test'
+  ...
+# Subtest: context validates organization/date/signal association and revision
+ok 124 - context validates organization/date/signal association and revision
+  ---
+  duration_ms: 0.8943
+  type: 'test'
+  ...
+# Subtest: browser role cannot authorize a private operational write
+ok 125 - browser role cannot authorize a private operational write
+  ---
+  duration_ms: 1.682
+  type: 'test'
+  ...
+# Subtest: local browser origin follows public Host and rejects foreign or mismatched origins
+ok 126 - local browser origin follows public Host and rejects foreign or mismatched origins
+  ---
+  duration_ms: 6.6435
+  type: 'test'
+  ...
+# Subtest: Admin mutations reject billing, tenant selection, invalid TTL and control characters
+ok 127 - Admin mutations reject billing, tenant selection, invalid TTL and control characters
+  ---
+  duration_ms: 10.5843
+  type: 'test'
+  ...
+# Subtest: copied invitation is fragment-only, compatible with onboarding; response strips extras
+ok 128 - copied invitation is fragment-only, compatible with onboarding; response strips extras
+  ---
+  duration_ms: 2.439
+  type: 'test'
+  ...
+# Subtest: Admin invitation targets public signup, not the private operator tunnel
+ok 129 - Admin invitation targets public signup, not the private operator tunnel
+  ---
+  duration_ms: 0.7252
+  type: 'test'
+  ...
+# Subtest: diagnosis preserves unknown and separates billing, capacity, identity and runtime
+ok 130 - diagnosis preserves unknown and separates billing, capacity, identity and runtime
+  ---
+  duration_ms: 0.4543
+  type: 'test'
+  ...
+# Subtest: read projection never retains unexpected token material
+ok 131 - read projection never retains unexpected token material
+  ---
+  duration_ms: 7.803
+  type: 'test'
+  ...
+# Subtest: distinct runtime states never create a fallback signal
+ok 132 - distinct runtime states never create a fallback signal
+  ---
+  duration_ms: 14.1302
+  type: 'test'
+  ...
+# Subtest: projection identity, narrative, currentness and sources survive persisted reload; private fields do not
+ok 133 - projection identity, narrative, currentness and sources survive persisted reload; private fields do not
+  ---
+  duration_ms: 20.4025
+  type: 'test'
+  ...
+# Subtest: source navigation rejects credentials and potentially private URL material
+ok 134 - source navigation rejects credentials and potentially private URL material
+  ---
+  duration_ms: 0.413
+  type: 'test'
+  ...
+# Subtest: Customer Zero only sends canonical attention, and consumes the real read endpoint
+ok 135 - Customer Zero only sends canonical attention, and consumes the real read endpoint
+  ---
+  duration_ms: 6.2217
+  type: 'test'
+  ...
+# Subtest: product focus back/forward/home is reversible and never changes runtime truth
+ok 136 - product focus back/forward/home is reversible and never changes runtime truth
+  ---
+  duration_ms: 0.5648
+  type: 'test'
+  ...
+# Subtest: runtime AXENT selects exact authorized evidence and preserves uncertainty without writes
+ok 137 - runtime AXENT selects exact authorized evidence and preserves uncertainty without writes
+  ---
+  duration_ms: 10.4106
+  type: 'test'
+  ...
+# Subtest: subscriber and Customer Zero render the same economic shell; Staff adds only utility
+ok 138 - subscriber and Customer Zero render the same economic shell; Staff adds only utility
+  ---
+  duration_ms: 169.3914
+  type: 'test'
+  ...
+# Subtest: Admin hosts the real product with retained administrative navigation and one skip target
+ok 139 - Admin hosts the real product with retained administrative navigation and one skip target
+  ---
+  duration_ms: 13.206
+  type: 'test'
+  ...
+# Subtest: host navigation removes the duplicate product frame while preserving the actual reading
+ok 140 - host navigation removes the duplicate product frame while preserving the actual reading
+  ---
+  duration_ms: 54.1276
+  type: 'test'
+  ...
+# Subtest: runtime AXENT refuses economic input and foreign origin before authorized reading
+ok 141 - runtime AXENT refuses economic input and foreign origin before authorized reading
+  ---
+  duration_ms: 20.0469
+  type: 'test'
+  ...
+# Subtest: session transport rejects foreign origin, malformed, oversized and non-JSON bodies
+ok 142 - session transport rejects foreign origin, malformed, oversized and non-JSON bodies
+  ---
+  duration_ms: 5.0624
+  type: 'test'
+  ...
+# Subtest: organization availability separates internal no-payment use from unknown subscriber capacity
+ok 143 - organization availability separates internal no-payment use from unknown subscriber capacity
+  ---
+  duration_ms: 25.6427
+  type: 'test'
+  ...
+# Subtest: attention contracts reject economic authority and strip private inventory metadata
+ok 144 - attention contracts reject economic authority and strip private inventory metadata
+  ---
+  duration_ms: 3.0856
+  type: 'test'
+  ...
+# Subtest: what fits best leads; the rest is apart, each saying why (spec 087)
+ok 145 - what fits best leads; the rest is apart, each saying why (spec 087)
+  ---
+  duration_ms: 8.7338
+  type: 'test'
+  ...
+# Subtest: runtime origin remains loopback by default and admits only the Compose runtime peer when containerized
+ok 146 - runtime origin remains loopback by default and admits only the Compose runtime peer when containerized
+  ---
+  duration_ms: 2.1468
+  type: 'test'
+  ...
+# Subtest: production experience is loopback-only and shares the isolated AXIGNAL Compose network
+ok 147 - production experience is loopback-only and shares the isolated AXIGNAL Compose network
+  ---
+  duration_ms: 0.6412
+  type: 'test'
+  ...
+# Subtest: public Traefik allowlist serves the modern homepage without exposing Admin
+ok 148 - public Traefik allowlist serves the modern homepage without exposing Admin
+  ---
+  duration_ms: 0.4813
+  type: 'test'
+  ...
+# Subtest: explicit deep links must override any demo initial family
+ok 149 - explicit deep links must override any demo initial family
+  ---
+  duration_ms: 2.0214
+  type: 'test'
+  ...
+# Subtest: demo source provenance never becomes an outbound hyperlink; actual links remain available
+ok 150 - demo source provenance never becomes an outbound hyperlink; actual links remain available
+  ---
+  duration_ms: 29.4397
+  type: 'test'
+  ...
+# Subtest: root visitor-facing metadata is provided for every supported language
+ok 151 - root visitor-facing metadata is provided for every supported language
+  ---
+  duration_ms: 0.5415
+  type: 'test'
+  ...
+# Subtest: economic POTENTIAL Xignal uses the existing runtime/read-model contract
+ok 152 - economic POTENTIAL Xignal uses the existing runtime/read-model contract
+  ---
+  duration_ms: 27.7601
+  type: 'test'
+  ...
+# Subtest: day X against day Y states exactly what the engine states (spec 076 parity)
+ok 153 - day X against day Y states exactly what the engine states (spec 076 parity)
+  ---
+  duration_ms: 2.4652
+  type: 'test'
+  ...
+# Subtest: collapsed versions cover every recorded day and an unmeasured day is never zero
+ok 154 - collapsed versions cover every recorded day and an unmeasured day is never zero
+  ---
+  duration_ms: 1.8646
+  type: 'test'
+  ...
+# Subtest: Visibilidad's canvas reads the production measurements as they are (design base phase 2)
+ok 155 - Visibilidad's canvas reads the production measurements as they are (design base phase 2)
+  ---
+  duration_ms: 96.2315
+  type: 'test'
+  ...
+# Subtest: a panel with nothing measured says so and is unknown, never zero
+ok 156 - a panel with nothing measured says so and is unknown, never zero
+  ---
+  duration_ms: 3.7793
+  type: 'test'
+  ...
+# Subtest: a family canvas shows states, the most telling findings, months and sources, each with its proof
+ok 157 - a family canvas shows states, the most telling findings, months and sources, each with its proof
+  ---
+  duration_ms: 43.5268
+  type: 'test'
+  ...
+# Subtest: a family with fewer than two known findings gets no canvas: the lanes already say it
+ok 158 - a family with fewer than two known findings gets no canvas: the lanes already say it
+  ---
+  duration_ms: 0.9281
+  type: 'test'
+  ...
+# Subtest: Demand's canvas shows open calls by deadline and their fit, never past deadlines
+ok 159 - Demand's canvas shows open calls by deadline and their fit, never past deadlines
+  ---
+  duration_ms: 8.099
+  type: 'test'
+  ...
+# Subtest: Economics' canvas tells each figure's source kind and year apart
+ok 160 - Economics' canvas tells each figure's source kind and year apart
+  ---
+  duration_ms: 13.493
+  type: 'test'
+  ...
+# Subtest: Relationships' canvas draws ties around the organization and keeps their epistemic state
+ok 161 - Relationships' canvas draws ties around the organization and keeps their epistemic state
+  ---
+  duration_ms: 22.6527
+  type: 'test'
+  ...
+# Subtest: Activity's canvas shows its pace as counted facts and what happened, newest first
+ok 162 - Activity's canvas shows its pace as counted facts and what happened, newest first
+  ---
+  duration_ms: 25.8028
+  type: 'test'
+  ...
+# Subtest: Organization's canvas shows each identity anchor with its state, and that only a registry admits
+ok 163 - Organization's canvas shows each identity anchor with its state, and that only a registry admits
+  ---
+  duration_ms: 9.2779
+  type: 'test'
+  ...
+# Subtest: every family gets one row, in the fixed family order (spec 093)
+ok 164 - every family gets one row, in the fixed family order (spec 093)
+  ---
+  duration_ms: 3.7947
+  type: 'test'
+  ...
+# Subtest: a crossing comes first, then the family's most telling finding, by a visible order
+ok 165 - a crossing comes first, then the family's most telling finding, by a visible order
+  ---
+  duration_ms: 0.9169
+  type: 'test'
+  ...
+# Subtest: a family with nothing observed names what is unknown, never another family's value
+ok 166 - a family with nothing observed names what is unknown, never another family's value
+  ---
+  duration_ms: 0.5065
+  type: 'test'
+  ...
+# Subtest: the ten canonical families are unchanged and every one has everyday words
+ok 167 - the ten canonical families are unchanged and every one has everyday words
+  ---
+  duration_ms: 3.59
+  type: 'test'
+  ...
+# Subtest: each searched topic is visibly written in exactly one family, in Spanish
+ok 168 - each searched topic is visibly written in exactly one family, in Spanish
+  ---
+  duration_ms: 2.4071
+  type: 'test'
+  ...
+# Subtest: one concept, one expression: no visible term is shared by two families in any language
+ok 169 - one concept, one expression: no visible term is shared by two families in any language
+  ---
+  duration_ms: 1.4234
+  type: 'test'
+  ...
+# Subtest: everyday questions in any product language reach the canonical family
+ok 170 - everyday questions in any product language reach the canonical family
+  ---
+  duration_ms: 242.2956
+  type: 'test'
+  ...
+# Subtest: Axent may only point at a canonical family
+ok 171 - Axent may only point at a canonical family
+  ---
+  duration_ms: 9.4168
+  type: 'test'
+  ...
+# Subtest: Axent answers an everyday question by pointing at the family where it lives
+ok 172 - Axent answers an everyday question by pointing at the family where it lives
+  ---
+  duration_ms: 643.4623
+  type: 'test'
+  ...
+# Subtest: the funnel has one name per depth across lenses, signal tabs and Axent
+ok 173 - the funnel has one name per depth across lenses, signal tabs and Axent
+  ---
+  duration_ms: 16.9822
+  type: 'test'
+  ...
+# Subtest: AXENT answers every question about every finding of every family from that finding, in the reader's language
+ok 174 - AXENT answers every question about every finding of every family from that finding, in the reader's language
+  ---
+  duration_ms: 246.3722
+  type: 'test'
+  ...
+# Subtest: the case that broke it: «how do you know» about images answers with that finding, not the organization's narrative
+ok 175 - the case that broke it: «how do you know» about images answers with that finding, not the organization's narrative
+  ---
+  duration_ms: 4.6203
+  type: 'test'
+  ...
+# Subtest: a change is said against the earlier reading; without one, no change is declared
+ok 176 - a change is said against the earlier reading; without one, no change is declared
+  ---
+  duration_ms: 2.0684
+  type: 'test'
+  ...
+# Subtest: asked how to fix a finding, AXENT gives that finding's own steps, not its headline again
+ok 177 - asked how to fix a finding, AXENT gives that finding's own steps, not its headline again
+  ---
+  duration_ms: 2.304
+  type: 'test'
+  ...
+# Subtest: every family's findings carry their own steps and research, not a generic sentence
+ok 178 - every family's findings carry their own steps and research, not a generic sentence
+  ---
+  duration_ms: 3.388
+  type: 'test'
+  ...
+# Subtest: with no finding selected, AXENT answers about the family on screen, not the whole organization
+ok 179 - with no finding selected, AXENT answers about the family on screen, not the whole organization
+  ---
+  duration_ms: 3.8343
+  type: 'test'
+  ...
+# Subtest: every backend unknown code has its own fixed copy, never a generic or generated one
+ok 180 - every backend unknown code has its own fixed copy, never a generic or generated one
+  ---
+  duration_ms: 40.3218
+  type: 'test'
+  ...
+# Subtest: findings explain why they matter without promoting potential to fact
+ok 181 - findings explain why they matter without promoting potential to fact
+  ---
+  duration_ms: 0.9276
+  type: 'test'
+  ...
+# Subtest: only public http(s) evidence links are rendered
+ok 182 - only public http(s) evidence links are rendered
+  ---
+  duration_ms: 0.694
+  type: 'test'
+  ...
+# Subtest: new observation states are accepted end to end
+ok 183 - new observation states are accepted end to end
+  ---
+  duration_ms: 10.7258
+  type: 'test'
+  ...
+# Subtest: pending attention output passes the proxy and drops the private ledger
+ok 184 - pending attention output passes the proxy and drops the private ledger
+  ---
+  duration_ms: 53.7765
+  type: 'test'
+  ...
+# Subtest: a provider's confidence is never shown as a percentage or a probability of truth
+ok 185 - a provider's confidence is never shown as a percentage or a probability of truth
+  ---
+  duration_ms: 1.5751
+  type: 'test'
+  ...
+# Subtest: own-site signals keep their voice: observed technology, declared clients, hiring and ratings
+ok 186 - own-site signals keep their voice: observed technology, declared clients, hiring and ratings
+  ---
+  duration_ms: 8.2033
+  type: 'test'
+  ...
+# Subtest: a change in time names the metric, both readings and its direction, never a cause
+ok 187 - a change in time names the metric, both readings and its direction, never a cause
+  ---
+  duration_ms: 2.7088
+  type: 'test'
+  ...
+# Subtest: an evaluator's fit judgment labels a tender and a set-aside list survives the contract (spec 075)
+ok 188 - an evaluator's fit judgment labels a tender and a set-aside list survives the contract (spec 075)
+  ---
+  duration_ms: 3.4948
+  type: 'test'
+  ...
+# Subtest: a call's published size is shown as facts, and nothing published shows nothing (spec 081)
+ok 189 - a call's published size is shown as facts, and nothing published shows nothing (spec 081)
+  ---
+  duration_ms: 1.7132
+  type: 'test'
+  ...
+# Subtest: an unclear offer is a representation gap in the reader's language (spec 084)
+ok 190 - an unclear offer is a representation gap in the reader's language (spec 084)
+  ---
+  duration_ms: 0.2919
+  type: 'test'
+  ...
+# Subtest: AI visibility shows share of voice, position, who it names instead and cited sites (spec 090)
+ok 191 - AI visibility shows share of voice, position, who it names instead and cited sites (spec 090)
+  ---
+  duration_ms: 0.4211
+  type: 'test'
+  ...
+# Subtest: search ranking shows each search, its position, who ranks instead and a Google link (spec 091)
+ok 192 - search ranking shows each search, its position, who ranks instead and a Google link (spec 091)
+  ---
+  duration_ms: 0.5986
+  type: 'test'
+  ...
+# Subtest: a declared register identifier reads as people say it, not as a scheme code (spec 094)
+ok 193 - a declared register identifier reads as people say it, not as a scheme code (spec 094)
+  ---
+  duration_ms: 0.2974
+  type: 'test'
+  ...
+# Subtest: its sector's market reads as the sector's, and its size as an order of magnitude (spec 095)
+ok 194 - its sector's market reads as the sector's, and its size as an order of magnitude (spec 095)
+  ---
+  duration_ms: 2.2222
+  type: 'test'
+  ...
+# Subtest: its own channel's pace and its country versions read in people's words (spec 096)
+ok 195 - its own channel's pace and its country versions read in people's words (spec 096)
+  ---
+  duration_ms: 1.0837
+  type: 'test'
+  ...
+# Subtest: what it sells reads in its own catalog's words (spec 097)
+ok 196 - what it sells reads in its own catalog's words (spec 097)
+  ---
+  duration_ms: 0.3097
+  type: 'test'
+  ...
+# Subtest: only explicit authority for the current model enables measurement
+ok 197 - only explicit authority for the current model enables measurement
+  ---
+  duration_ms: 69.0072
+  type: 'test'
+  ...
+# Subtest: an error response releases its unread body and stays unavailable
+ok 198 - an error response releases its unread body and stays unavailable
+  ---
+  duration_ms: 1.2649
+  type: 'test'
+  ...
+# Subtest: deadline bounds even a transport that ignores cancellation
+ok 199 - deadline bounds even a transport that ignores cancellation
+  ---
+  duration_ms: 6.3934
+  type: 'test'
+  ...
+# Subtest: deadline also bounds a stalled JSON body
+ok 200 - deadline also bounds a stalled JSON body
+  ---
+  duration_ms: 8.9216
+  type: 'test'
+  ...
+# Subtest: public surfaces link only to public destinations, never to staff tools
+ok 201 - public surfaces link only to public destinations, never to staff tools
+  ---
+  duration_ms: 33.1427
+  type: 'test'
+  ...
+# Subtest: there is one public example and every 'show me' converges on it
+ok 202 - there is one public example and every 'show me' converges on it
+  ---
+  duration_ms: 7.2655
+  type: 'test'
+  ...
+# Subtest: no public copy makes the product feel like a prototype
+ok 203 - no public copy makes the product feel like a prototype
+  ---
+  duration_ms: 6.8971
+  type: 'test'
+  ...
+# Subtest: the home page is in the sitemap
+ok 204 - the home page is in the sitemap
+  ---
+  duration_ms: 34.7128
+  type: 'test'
+  ...
+# Subtest: funnel events reuse the AO-12 contract and stay within its bounds
+ok 205 - funnel events reuse the AO-12 contract and stay within its bounds
+  ---
+  duration_ms: 2.9972
+  type: 'test'
+  ...
+# Subtest: measurement stays inert unless the runtime reports the model enabled
+ok 206 - measurement stays inert unless the runtime reports the model enabled
+  ---
+  duration_ms: 0.465
+  type: 'test'
+  ...
+# Subtest: the example garden keeps reach, expansion and exposure apart
+ok 207 - the example garden keeps reach, expansion and exposure apart
+  ---
+  duration_ms: 0.9918
+  type: 'test'
+  ...
+# Subtest: the landing glance shows all three epistemic states from the same example
+ok 208 - the landing glance shows all three epistemic states from the same example
+  ---
+  duration_ms: 1.529
+  type: 'test'
+  ...
+# Subtest: the subscriber reading shows the real garden with the example's grammar, never stronger
+ok 209 - the subscriber reading shows the real garden with the example's grammar, never stronger
+  ---
+  duration_ms: 267.4466
+  type: 'test'
+  ...
+# Subtest: the landing's living window is the one public example, honestly labelled and time-faithful
+ok 210 - the landing's living window is the one public example, honestly labelled and time-faithful
+  ---
+  duration_ms: 14.1556
+  type: 'test'
+  ...
+# Subtest: the same source is linked for a real reading and explicitly non-navigable in the synthetic context
+ok 211 - the same source is linked for a real reading and explicitly non-navigable in the synthetic context
+  ---
+  duration_ms: 92.5659
+  type: 'test'
+  ...
+# Subtest: sharing proof does not turn a missing source, quotation or date into a fact
+ok 212 - sharing proof does not turn a missing source, quotation or date into a fact
+  ---
+  duration_ms: 0.8456
+  type: 'test'
+  ...
+# Subtest: all discovery choices resolve to an existing fixture and earlier time never borrows a future finding
+ok 213 - all discovery choices resolve to an existing fixture and earlier time never borrows a future finding
+  ---
+  duration_ms: 1.3755
+  type: 'test'
+  ...
+# Subtest: the new commercial narrative has authored copy for all six languages
+ok 214 - the new commercial narrative has authored copy for all six languages
+  ---
+  duration_ms: 0.8088
+  type: 'test'
+  ...
+# Subtest: digital proof preserves the instrument, sample and uncertainty, without borrowing future evidence
+ok 215 - digital proof preserves the instrument, sample and uncertainty, without borrowing future evidence
+  ---
+  duration_ms: 1.2944
+  type: 'test'
+  ...
+# Subtest: desktop and native deep links keep the original eager type path
+ok 216 - desktop and native deep links keep the original eager type path
+  ---
+  duration_ms: 8.3159
+  type: 'test'
+  ...
+# Subtest: secondary type waits for DOM, primary fonts and real paint, then two frames
+ok 217 - secondary type waits for DOM, primary fonts and real paint, then two frames
+  ---
+  duration_ms: 2.8897
+  type: 'test'
+  ...
+# Subtest: human intent restores notes immediately and cleans up even when a font fails
+ok 218 - human intent restores notes immediately and cleans up even when a font fails
+  ---
+  duration_ms: 6.6888
+  type: 'test'
+  ...
+# Subtest: browsers without paint observation retain readable content and release normally
+ok 219 - browsers without paint observation retain readable content and release normally
+  ---
+  duration_ms: 2.1456
+  type: 'test'
+  ...
+# Subtest: real paint still waits for the fonts actually selected by CSS
+ok 220 - real paint still waits for the fonts actually selected by CSS
+  ---
+  duration_ms: 1.7685
+  type: 'test'
+  ...
+# Subtest: focused attention never substitutes another nature for a missing lane
+ok 221 - focused attention never substitutes another nature for a missing lane
+  ---
+  duration_ms: 2.0831
+  type: 'test'
+  ...
+# Subtest: returning to an earlier moment discards an unavailable selection
+ok 222 - returning to an earlier moment discards an unavailable selection
+  ---
+  duration_ms: 0.623
+  type: 'test'
+  ...
+# Subtest: focus instructions and accessible control names exist in every supported locale
+ok 223 - focus instructions and accessible control names exist in every supported locale
+  ---
+  duration_ms: 0.4299
+  type: 'test'
+  ...
+# Subtest: Observer image reservations match the actual WebP canvas, including all method variants
+ok 224 - Observer image reservations match the actual WebP canvas, including all method variants
+  ---
+  duration_ms: 107.1665
+  type: 'test'
+  ...
+# Subtest: server-delivered landing wording preserves every es text and non-text value
+ok 225 - server-delivered landing wording preserves every es text and non-text value
+  ---
+  duration_ms: 34.8142
+  type: 'test'
+  ...
+# Subtest: server-delivered landing wording preserves every en text and non-text value
+ok 226 - server-delivered landing wording preserves every en text and non-text value
+  ---
+  duration_ms: 30.8888
+  type: 'test'
+  ...
+# Subtest: server-delivered landing wording preserves every de text and non-text value
+ok 227 - server-delivered landing wording preserves every de text and non-text value
+  ---
+  duration_ms: 25.7331
+  type: 'test'
+  ...
+# Subtest: server-delivered landing wording preserves every pt text and non-text value
+ok 228 - server-delivered landing wording preserves every pt text and non-text value
+  ---
+  duration_ms: 21.1471
+  type: 'test'
+  ...
+# Subtest: server-delivered landing wording preserves every fr text and non-text value
+ok 229 - server-delivered landing wording preserves every fr text and non-text value
+  ---
+  duration_ms: 54.6039
+  type: 'test'
+  ...
+# Subtest: server-delivered landing wording preserves every it text and non-text value
+ok 230 - server-delivered landing wording preserves every it text and non-text value
+  ---
+  duration_ms: 18.4266
+  type: 'test'
+  ...
+# Subtest: landing delivery does not mutate canonical wording or transfer industry article bodies
+ok 231 - landing delivery does not mutate canonical wording or transfer industry article bodies
+  ---
+  duration_ms: 76.6033
+  type: 'test'
+  ...
+# Subtest: all 15 server-delivered es states and the hero exactly match the existing models
+ok 232 - all 15 server-delivered es states and the hero exactly match the existing models
+  ---
+  duration_ms: 36.4315
+  type: 'test'
+  ...
+# Subtest: all 15 server-delivered en states and the hero exactly match the existing models
+ok 233 - all 15 server-delivered en states and the hero exactly match the existing models
+  ---
+  duration_ms: 16.8055
+  type: 'test'
+  ...
+# Subtest: all 15 server-delivered de states and the hero exactly match the existing models
+ok 234 - all 15 server-delivered de states and the hero exactly match the existing models
+  ---
+  duration_ms: 22.781
+  type: 'test'
+  ...
+# Subtest: all 15 server-delivered pt states and the hero exactly match the existing models
+ok 235 - all 15 server-delivered pt states and the hero exactly match the existing models
+  ---
+  duration_ms: 14.3406
+  type: 'test'
+  ...
+# Subtest: all 15 server-delivered fr states and the hero exactly match the existing models
+ok 236 - all 15 server-delivered fr states and the hero exactly match the existing models
+  ---
+  duration_ms: 19.6872
+  type: 'test'
+  ...
+# Subtest: all 15 server-delivered it states and the hero exactly match the existing models
+ok 237 - all 15 server-delivered it states and the hero exactly match the existing models
+  ---
+  duration_ms: 16.4553
+  type: 'test'
+  ...
+# Subtest: English is the international fallback locale
+ok 238 - English is the international fallback locale
+  ---
+  duration_ms: 1.5007
+  type: 'test'
+  ...
+# Subtest: browser language selects a supported locale by preference order
+ok 239 - browser language selects a supported locale by preference order
+  ---
+  duration_ms: 0.3316
+  type: 'test'
+  ...
+# Subtest: explicit route wins over saved preference and browser language
+ok 240 - explicit route wins over saved preference and browser language
+  ---
+  duration_ms: 0.2969
+  type: 'test'
+  ...
+# Subtest: saved preference wins over browser language
+ok 241 - saved preference wins over browser language
+  ---
+  duration_ms: 0.193
+  type: 'test'
+  ...
+# Subtest: the public catalog explains every canonical family in all supported languages
+ok 242 - the public catalog explains every canonical family in all supported languages
+  ---
+  duration_ms: 3.0338
+  type: 'test'
+  ...
+# Subtest: six industry paths have distinct questions and only canonical related families
+ok 243 - six industry paths have distinct questions and only canonical related families
+  ---
+  duration_ms: 3.6642
+  type: 'test'
+  ...
+# Subtest: editorial examples retain the specific epistemic boundaries they explain
+ok 244 - editorial examples retain the specific epistemic boundaries they explain
+  ---
+  duration_ms: 0.837
+  type: 'test'
+  ...
+# Subtest: every new public canonical has reciprocal language versions published in sitemap
+ok 245 - every new public canonical has reciprocal language versions published in sitemap
+  ---
+  duration_ms: 41.0519
+  type: 'test'
+  ...
+# Subtest: new shared copy is authored for every locale without a two-language fallback
+ok 246 - new shared copy is authored for every locale without a two-language fallback
+  ---
+  duration_ms: 0.8924
+  type: 'test'
+  ...
+# Subtest: static public HTML language processing is complete and leaves private output untouched
+ok 247 - static public HTML language processing is complete and leaves private output untouched
+  ---
+  duration_ms: 137.7724
+  type: 'test'
+  ...
+# Subtest: consent return path survives sign-in for a bounded time and carries only a request reference
+ok 248 - consent return path survives sign-in for a bounded time and carries only a request reference
+  ---
+  duration_ms: 30.4315
+  type: 'test'
+  ...
+# Subtest: only HTTPS or loopback client redirects are followed
+ok 249 - only HTTPS or loopback client redirects are followed
+  ---
+  duration_ms: 0.671
+  type: 'test'
+  ...
+# Subtest: consent and connection payloads are strict and read-only
+ok 250 - consent and connection payloads are strict and read-only
+  ---
+  duration_ms: 13.8046
+  type: 'test'
+  ...
+# Subtest: a discovery is placed by its typed kind and code, never by its wording
+ok 251 - a discovery is placed by its typed kind and code, never by its wording
+  ---
+  duration_ms: 4.9398
+  type: 'test'
+  ...
+# Subtest: a grounded unknown names its family through its code; an unknown code is left unplaced
+ok 252 - a grounded unknown names its family through its code; an unknown code is left unplaced
+  ---
+  duration_ms: 0.4977
+  type: 'test'
+  ...
+# Subtest: opportunities and observation sources are placed from their typed fields
+ok 253 - opportunities and observation sources are placed from their typed fields
+  ---
+  duration_ms: 0.3499
+  type: 'test'
+  ...
+# Subtest: the selection travels in the URL, ignores anything unrecognised and keeps channels inside Presence
+ok 254 - the selection travels in the URL, ignores anything unrecognised and keeps channels inside Presence
+  ---
+  duration_ms: 0.5709
+  type: 'test'
+  ...
+# Subtest: a finding matches a selection only inside its family and channel; an unplaced finding matches none
+ok 255 - a finding matches a selection only inside its family and channel; an unplaced finding matches none
+  ---
+  duration_ms: 0.2796
+  type: 'test'
+  ...
+# Subtest: counts exist only for placed findings and cover every family
+ok 256 - counts exist only for placed findings and cover every family
+  ---
+  duration_ms: 0.5004
+  type: 'test'
+  ...
+# Subtest: real readings carry a typed family on every finding the contract can place, and none by guesswork
+ok 257 - real readings carry a typed family on every finding the contract can place, and none by guesswork
+  ---
+  duration_ms: 99.0465
+  type: 'test'
+  ...
+# Subtest: the chips count what is unread: the number goes when it has been read, and a family with nothing reads quieter
+ok 258 - the chips count what is unread: the number goes when it has been read, and a family with nothing reads quieter
+  ---
+  duration_ms: 1.0127
+  type: 'test'
+  ...
+# Subtest: what is lit follows one rule for the chips, the rail and the desk: unread since the visit, or the declared families on a first look
+ok 259 - what is lit follows one rule for the chips, the rail and the desk: unread since the visit, or the declared families on a first look
+  ---
+  duration_ms: 9.3357
+  type: 'test'
+  ...
+# Subtest: the Observatory's radius tokens are the global ones
+ok 260 - the Observatory's radius tokens are the global ones
+  ---
+  duration_ms: 3.3089
+  type: 'test'
+  ...
+# Subtest: no Observatory rule invents a radius outside the scale
+ok 261 - no Observatory rule invents a radius outside the scale
+  ---
+  duration_ms: 2.1549
+  type: 'test'
+  ...
+# Subtest: disabled controls keep their contrast through colour, never through opacity
+ok 262 - disabled controls keep their contrast through colour, never through opacity
+  ---
+  duration_ms: 0.6619
+  type: 'test'
+  ...
+# Subtest: the selected chip is a soft tint with a one-pixel blue edge, and its count is a solid pill that keeps its contrast
+ok 263 - the selected chip is a soft tint with a one-pixel blue edge, and its count is a solid pill that keeps its contrast
+  ---
+  duration_ms: 0.7223
+  type: 'test'
+  ...
+# Subtest: a family without findings is spaced and sized like the lanes it replaces
+ok 264 - a family without findings is spaced and sized like the lanes it replaces
+  ---
+  duration_ms: 0.279
+  type: 'test'
+  ...
+# Subtest: the facet bar cannot widen the page: its grid column is constrained
+ok 265 - the facet bar cannot widen the page: its grid column is constrained
+  ---
+  duration_ms: 0.2195
+  type: 'test'
+  ...
+# Subtest: the portfolio list keeps a stable gutter between its rows and its scrollbar
+ok 266 - the portfolio list keeps a stable gutter between its rows and its scrollbar
+  ---
+  duration_ms: 0.3316
+  type: 'test'
+  ...
+# Subtest: the actions menu stays on screen: it hangs from its button and never exceeds the viewport
+ok 267 - the actions menu stays on screen: it hangs from its button and never exceeds the viewport
+  ---
+  duration_ms: 0.2196
+  type: 'test'
+  ...
+# Subtest: disabled menu actions keep their contrast through colour
+ok 268 - disabled menu actions keep their contrast through colour
+  ---
+  duration_ms: 0.6309
+  type: 'test'
+  ...
+# Subtest: the rail's controls centre their label alike
+ok 269 - the rail's controls centre their label alike
+  ---
+  duration_ms: 0.8622
+  type: 'test'
+  ...
+# Subtest: AXENT's entry is the header's primary action, flagged by a handwritten Bic note
+ok 270 - AXENT's entry is the header's primary action, flagged by a handwritten Bic note
+  ---
+  duration_ms: 1.4868
+  type: 'test'
+  ...
+# Subtest: /account and /demo mount the same Observatory container; only the source differs
+ok 271 - /account and /demo mount the same Observatory container; only the source differs
+  ---
+  duration_ms: 7.6862
+  type: 'test'
+  ...
+# Subtest: pages are thin: no route carries Observatory interface of its own
+ok 272 - pages are thin: no route carries Observatory interface of its own
+  ---
+  duration_ms: 1.5816
+  type: 'test'
+  ...
+# Subtest: there is one subscriber Observatory implementation
+ok 273 - there is one subscriber Observatory implementation
+  ---
+  duration_ms: 4.136
+  type: 'test'
+  ...
+# Subtest: shared components never ask which context they run in
+ok 274 - shared components never ask which context they run in
+  ---
+  duration_ms: 8.4429
+  type: 'test'
+  ...
+# Subtest: both contexts expose the same source contract and differ only in data and capability
+ok 275 - both contexts expose the same source contract and differ only in data and capability
+  ---
+  duration_ms: 0.4025
+  type: 'test'
+  ...
+# Subtest: the demo reads its snapshot only: no network, no storage, in every locale and for every organization
+ok 276 - the demo reads its snapshot only: no network, no storage, in every locale and for every organization
+  ---
+  duration_ms: 147.9497
+  type: 'test'
+  ...
+# Subtest: the demo cannot act and says so in its own words
+ok 277 - the demo cannot act and says so in its own words
+  ---
+  duration_ms: 0.8864
+  type: 'test'
+  ...
+# Subtest: the same reading pipeline serves both contexts: every organization yields findings placed by typed values only
+ok 278 - the same reading pipeline serves both contexts: every organization yields findings placed by typed values only
+  ---
+  duration_ms: 71.6513
+  type: 'test'
+  ...
+# Subtest: thematic navigation is part of the shared Observatory: ten families, three channels, in the URL, on every filtered view
+ok 279 - thematic navigation is part of the shared Observatory: ten families, three channels, in the URL, on every filtered view
+  ---
+  duration_ms: 1.9578
+  type: 'test'
+  ...
+# Subtest: the shared Observatory keeps its four states: loading, sign-in required, failure and ready
+ok 280 - the shared Observatory keeps its four states: loading, sign-in required, failure and ready
+  ---
+  duration_ms: 5.3914
+  type: 'test'
+  ...
+# Subtest: responsive: the family bar scrolls sideways on narrow screens with touch-sized targets, and wraps on wide ones
+ok 281 - responsive: the family bar scrolls sideways on narrow screens with touch-sized targets, and wraps on wide ones
+  ---
+  duration_ms: 1.2293
+  type: 'test'
+  ...
+# Subtest: lanes regroup the runtime's findings without upgrading or downgrading their state
+ok 282 - lanes regroup the runtime's findings without upgrading or downgrading their state
+  ---
+  duration_ms: 118.8844
+  type: 'test'
+  ...
+# Subtest: a website that says what it does is quoted as declared, and its own checks are read one by one
+ok 283 - a website that says what it does is quoted as declared, and its own checks are read one by one
+  ---
+  duration_ms: 3.2616
+  type: 'test'
+  ...
+# Subtest: opportunity depth shows each relevance dimension with its state and no score
+ok 284 - opportunity depth shows each relevance dimension with its state and no score
+  ---
+  duration_ms: 8.13
+  type: 'test'
+  ...
+# Subtest: constructive self-critique distinguishes strengths, conditional gaps and instrument limits
+ok 285 - constructive self-critique distinguishes strengths, conditional gaps and instrument limits
+  ---
+  duration_ms: 12.0608
+  type: 'test'
+  ...
+# Subtest: a failed or unavailable instrument is never presented as a company defect
+ok 286 - a failed or unavailable instrument is never presented as a company defect
+  ---
+  duration_ms: 3.1554
+  type: 'test'
+  ...
+# Subtest: the briefing hedges what is potential and admits what is not established
+ok 287 - the briefing hedges what is potential and admits what is not established
+  ---
+  duration_ms: 3.8259
+  type: 'test'
+  ...
+# Subtest: lit until seen: a first look lights nothing, a later change lights only what changed
+ok 288 - lit until seen: a first look lights nothing, a later change lights only what changed
+  ---
+  duration_ms: 7.7377
+  type: 'test'
+  ...
+# Subtest: the portfolio desk orients an agency without opening each organization
+ok 289 - the portfolio desk orients an agency without opening each organization
+  ---
+  duration_ms: 59.0256
+  type: 'test'
+  ...
+# Subtest: the organization view leads with meaning, lanes, depth tabs and real actions
+ok 290 - the organization view leads with meaning, lanes, depth tabs and real actions
+  ---
+  duration_ms: 55.1626
+  type: 'test'
+  ...
+# Subtest: AXENT already occupies one independent rail before a finding is opened
+ok 291 - AXENT already occupies one independent rail before a finding is opened
+  ---
+  duration_ms: 43.6297
+  type: 'test'
+  ...
+# Subtest: a pending organization still reads honestly while identity is unresolved
+ok 292 - a pending organization still reads honestly while identity is unresolved
+  ---
+  duration_ms: 35.0851
+  type: 'test'
+  ...
+# Subtest: observing shows only the stage the runtime reports, with no fake progress
+ok 293 - observing shows only the stage the runtime reports, with no fake progress
+  ---
+  duration_ms: 13.7794
+  type: 'test'
+  ...
+# Subtest: an empty portfolio opens the first-run question, not an empty dashboard
+ok 294 - an empty portfolio opens the first-run question, not an empty dashboard
+  ---
+  duration_ms: 5.5152
+  type: 'test'
+  ...
+# Subtest: new observatory copy resolves in all six locales, including whole-sentence templates
+ok 295 - new observatory copy resolves in all six locales, including whole-sentence templates
+  ---
+  duration_ms: 0.7536
+  type: 'test'
+  ...
+# Subtest: a reading with no first observation is read from the projection's own signals, in the runtime's wording and state
+ok 296 - a reading with no first observation is read from the projection's own signals, in the runtime's wording and state
+  ---
+  duration_ms: 1.0953
+  type: 'test'
+  ...
+# Subtest: the runtime's English sentences are shown in Spanish where the reader reads Spanish, and nothing else is guessed
+ok 297 - the runtime's English sentences are shown in Spanish where the reader reads Spanish, and nothing else is guessed
+  ---
+  duration_ms: 4.8023
+  type: 'test'
+  ...
+# Subtest: the chips, the badges and the notice are one thing: they clear only when the finding is marked as seen
+ok 298 - the chips, the badges and the notice are one thing: they clear only when the finding is marked as seen
+  ---
+  duration_ms: 0.992
+  type: 'test'
+  ...
+# Subtest: re-observing the same public homepage is not news: the finding's change key follows its content, not the run
+ok 299 - re-observing the same public homepage is not news: the finding's change key follows its content, not the run
+  ---
+  duration_ms: 1.1036
+  type: 'test'
+  ...
+# Subtest: potential buyers form their own block: most signals first, each signal with its source and date
+ok 300 - potential buyers form their own block: most signals first, each signal with its source and date
+  ---
+  duration_ms: 1.447
+  type: 'test'
+  ...
+# Subtest: invite survives OIDC only for bounded time; URL and terminal storage are cleared
+ok 301 - invite survives OIDC only for bounded time; URL and terminal storage are cleared
+  ---
+  duration_ms: 2.9235
+  type: 'test'
+  ...
+# Subtest: malformed invite and denied storage never grant authority; valid secret fragment is removed
+ok 302 - malformed invite and denied storage never grant authority; valid secret fragment is removed
+  ---
+  duration_ms: 0.4369
+  type: 'test'
+  ...
+# Subtest: pilot result rejects unconfirmed capacity or contradictory acceptance
+ok 303 - pilot result rejects unconfirmed capacity or contradictory acceptance
+  ---
+  duration_ms: 4.8555
+  type: 'test'
+  ...
+# Subtest: browser storage getter denial strips the fragment and fails closed
+ok 304 - browser storage getter denial strips the fragment and fails closed
+  ---
+  duration_ms: 0.3452
+  type: 'test'
+  ...
+# Subtest: pilot preparation validates blank/replacement/clear and duplicate or forged authority
+ok 305 - pilot preparation validates blank/replacement/clear and duplicate or forged authority
+  ---
+  duration_ms: 20.2059
+  type: 'test'
+  ...
+# Subtest: private SSH Admin origin remains usable with subscriber HTTPS, without accepting external origins
+ok 306 - private SSH Admin origin remains usable with subscriber HTTPS, without accepting external origins
+  ---
+  duration_ms: 61.2923
+  type: 'test'
+  ...
+# Subtest: reference pricing uses exact cents and rejects invalid attention allocations
+ok 307 - reference pricing uses exact cents and rejects invalid attention allocations
+  ---
+  duration_ms: 3.506
+  type: 'test'
+  ...
+# Subtest: six supported languages preserve unknown dates and local draft boundaries
+ok 308 - six supported languages preserve unknown dates and local draft boundaries
+  ---
+  duration_ms: 0.6553
+  type: 'test'
+  ...
+# Subtest: all six languages can receive a scoped deterministic Axent stream; other languages fail
+ok 309 - all six languages can receive a scoped deterministic Axent stream; other languages fail
+  ---
+  duration_ms: 234.4844
+  type: 'test'
+  ...
+# Subtest: a 'why' answer composes its evidence and labels what is still unknown
+ok 310 - a 'why' answer composes its evidence and labels what is still unknown
+  ---
+  duration_ms: 13.8259
+  type: 'test'
+  ...
+# Subtest: public /demo is the subscriber Observatory in its demonstration context, with no account surface
+ok 311 - public /demo is the subscriber Observatory in its demonstration context, with no account surface
+  ---
+  duration_ms: 3.8331
+  type: 'test'
+  ...
+# Subtest: fictional example is temporal, epistemically labeled and has no invented external evidence URLs
+ok 312 - fictional example is temporal, epistemically labeled and has no invented external evidence URLs
+  ---
+  duration_ms: 2.1817
+  type: 'test'
+  ...
+# Subtest: production release entrypoint cannot silently drop configured subscriber profile
+ok 313 - production release entrypoint cannot silently drop configured subscriber profile
+  ---
+  duration_ms: 1.2314
+  type: 'test'
+  ...
+# Subtest: public vector logos retain the approved original geometry, transforms and fills
+ok 314 - public vector logos retain the approved original geometry, transforms and fills
+  ---
+  duration_ms: 16.3636
+  type: 'test'
+  ...
+# Subtest: public vector logos contain no raster, font substitution or external image
+ok 315 - public vector logos contain no raster, font substitution or external image
+  ---
+  duration_ms: 4.0591
+  type: 'test'
+  ...
+# Subtest: sign-in refuses caller-supplied scopes, return URLs, identities and privilege claims
+ok 316 - sign-in refuses caller-supplied scopes, return URLs, identities and privilege claims
+  ---
+  duration_ms: 4.1705
+  type: 'test'
+  ...
+# Subtest: prepared identity options never imply verification, membership or sessions
+ok 317 - prepared identity options never imply verification, membership or sessions
+  ---
+  duration_ms: 0.547
+  type: 'test'
+  ...
+# Subtest: public sign-in requires exact approved origin and matching public Host
+ok 318 - public sign-in requires exact approved origin and matching public Host
+  ---
+  duration_ms: 1.8057
+  type: 'test'
+  ...
+# Subtest: both prepared provider routes return 503 without a cookie or redirect
+ok 319 - both prepared provider routes return 503 without a cookie or redirect
+  ---
+  duration_ms: 69.0003
+  type: 'test'
+  ...
+# Subtest: start endpoint rejects malformed/cross-site/oversized and wrong content type
+ok 320 - start endpoint rejects malformed/cross-site/oversized and wrong content type
+  ---
+  duration_ms: 12.805
+  type: 'test'
+  ...
+# Subtest: status discloses identity-only scopes and unavailable connections
+ok 321 - status discloses identity-only scopes and unavailable connections
+  ---
+  duration_ms: 2.1455
+  type: 'test'
+  ...
+# Subtest: responsive art keeps the approved full plate and bounded, correctly hashed variants
+ok 322 - responsive art keeps the approved full plate and bounded, correctly hashed variants
+  ---
+  duration_ms: 41.6316
+  type: 'test'
+  ...
+# Subtest: WOFF2 delivery preserves the original font assets with a smaller immutable transfer
+ok 323 - WOFF2 delivery preserves the original font assets with a smaller immutable transfer
+  ---
+  duration_ms: 2.9981
+  type: 'test'
+  ...
+# Subtest: year-long cache is limited to content-hashed public assets
+ok 324 - year-long cache is limited to content-hashed public assets
+  ---
+  duration_ms: 1.4369
+  type: 'test'
+  ...
+# Subtest: status relays actual availability and never invents a public email
+ok 325 - status relays actual availability and never invents a public email
+  ---
+  duration_ms: 78.1632
+  type: 'test'
+  ...
+# Subtest: unknown channel status remains unavailable, distinct from a verified disabled status
+ok 326 - unknown channel status remains unavailable, distinct from a verified disabled status
+  ---
+  duration_ms: 2.6734
+  type: 'test'
+  ...
+# Subtest: cross-origin requests and wrong notice versions do not reach the runtime
+ok 327 - cross-origin requests and wrong notice versions do not reach the runtime
+  ---
+  duration_ms: 6.1144
+  type: 'test'
+  ...
+# Subtest: submission preserves notice, category and request reference; receipt carries no delivery assertion
+ok 328 - submission preserves notice, category and request reference; receipt carries no delivery assertion
+  ---
+  duration_ms: 11.5266
+  type: 'test'
+  ...
+# Subtest: all canonical GDPR categories use the privacy endpoint, never the contact endpoint
+ok 329 - all canonical GDPR categories use the privacy endpoint, never the contact endpoint
+  ---
+  duration_ms: 15.6377
+  type: 'test'
+  ...
+# Subtest: runtime rejections stay rejections and infrastructure messages are human-readable
+ok 330 - runtime rejections stay rejections and infrastructure messages are human-readable
+  ---
+  duration_ms: 2.9314
+  type: 'test'
+  ...
+# Subtest: public requests reject extra authority, malformed identifiers and unknown rights
+ok 331 - public requests reject extra authority, malformed identifiers and unknown rights
+  ---
+  duration_ms: 0.9508
+  type: 'test'
+  ...
+# Subtest: remote runtime URLs are refused before forwarding private request data
+ok 332 - remote runtime URLs are refused before forwarding private request data
+  ---
+  duration_ms: 1.2936
+  type: 'test'
+  ...
+# Subtest: weekly brief stays disabled when the owning runtime disables it
+ok 333 - weekly brief stays disabled when the owning runtime disables it
+  ---
+  duration_ms: 2.226
+  type: 'test'
+  ...
+# Subtest: brief processing notice is mandatory; optional newsletter consent has its own version
+ok 334 - brief processing notice is mandatory; optional newsletter consent has its own version
+  ---
+  duration_ms: 15.8787
+  type: 'test'
+  ...
+# Subtest: public report schema strips evaluator trace and private operational fields
+ok 335 - public report schema strips evaluator trace and private operational fields
+  ---
+  duration_ms: 13.9222
+  type: 'test'
+  ...
+# Subtest: public report schema rejects canonical authority, invented states, and oversized quotes
+ok 336 - public report schema rejects canonical authority, invented states, and oversized quotes
+  ---
+  duration_ms: 1.88
+  type: 'test'
+  ...
+# Subtest: subscriber report renders cited strengths, conditional gaps, uncertainty, history, and comparison
+ok 337 - subscriber report renders cited strengths, conditional gaps, uncertainty, history, and comparison
+  ---
+  duration_ms: 28.9582
+  type: 'test'
+  ...
+# Subtest: instrument failure is reported without presenting a company critique
+ok 338 - instrument failure is reported without presenting a company critique
+  ---
+  duration_ms: 4.0409
+  type: 'test'
+  ...
+# Subtest: all new report copy resolves in the six supported locales
+ok 339 - all new report copy resolves in the six supported locales
+  ---
+  duration_ms: 1.899
+  type: 'test'
+  ...
+# Subtest: comparison exposes the complete exact basis and reports source conditions
+ok 340 - comparison exposes the complete exact basis and reports source conditions
+  ---
+  duration_ms: 16.6205
+  type: 'test'
+  ...
+# Subtest: AXENT report references remain private and require the authorized citation basis
+ok 341 - AXENT report references remain private and require the authorized citation basis
+  ---
+  duration_ms: 0.7908
+  type: 'test'
+  ...
+# Subtest: a quick synthesis comes first and each explanation or quotation appears once
+ok 342 - a quick synthesis comes first and each explanation or quotation appears once
+  ---
+  duration_ms: 11.0982
+  type: 'test'
+  ...
+# Subtest: a single selected quotation is still shown on its strength
+ok 343 - a single selected quotation is still shown on its strength
+  ---
+  duration_ms: 4.6903
+  type: 'test'
+  ...
+# Subtest: withdrawn content rights show why quotations disappeared, without a critique
+ok 344 - withdrawn content rights show why quotations disappeared, without a critique
+  ---
+  duration_ms: 2.9546
+  type: 'test'
+  ...
+# Subtest: reobservation timestamp/context churn is not a material change
+ok 345 - reobservation timestamp/context churn is not a material change
+  ---
+  duration_ms: 2.765
+  type: 'test'
+  ...
+# Subtest: epistemic or evidence-content differences are material to the projection
+ok 346 - epistemic or evidence-content differences are material to the projection
+  ---
+  duration_ms: 0.4809
+  type: 'test'
+  ...
+# Subtest: runtime-authored copy localizes in all supported locales without rewriting evidence
+ok 347 - runtime-authored copy localizes in all supported locales without rewriting evidence
+  ---
+  duration_ms: 1.7953
+  type: 'test'
+  ...
+# Subtest: runtime metadata is humanized without changing canonical codes
+ok 348 - runtime metadata is humanized without changing canonical codes
+  ---
+  duration_ms: 0.3084
+  type: 'test'
+  ...
+# Subtest: AXENT presentation localizes governed discourse but preserves source-observed text
+ok 349 - AXENT presentation localizes governed discourse but preserves source-observed text
+  ---
+  duration_ms: 0.9225
+  type: 'test'
+  ...
+# Subtest: dynamic organization title localizes in every supported locale
+ok 350 - dynamic organization title localizes in every supported locale
+  ---
+  duration_ms: 0.3831
+  type: 'test'
+  ...
+# Subtest: Signals prioritizes epistemic state, currentness and recency without mutation
+ok 351 - Signals prioritizes epistemic state, currentness and recency without mutation
+  ---
+  duration_ms: 2.7757
+  type: 'test'
+  ...
+# Subtest: Today fallback selects latest known observation but does not fabricate a Today item
+ok 352 - Today fallback selects latest known observation but does not fabricate a Today item
+  ---
+  duration_ms: 0.4275
+  type: 'test'
+  ...
+# Subtest: Today fallback is null when no observation exists
+ok 353 - Today fallback is null when no observation exists
+  ---
+  duration_ms: 0.1967
+  type: 'test'
+  ...
+# Subtest: FIRST_MAP brief increases comprehension density without inventing graph facts
+ok 354 - FIRST_MAP brief increases comprehension density without inventing graph facts
+  ---
+  duration_ms: 21.0795
+  type: 'test'
+  ...
+# Subtest: FIRST_MAP brief never fabricates a finding for an empty projection
+ok 355 - FIRST_MAP brief never fabricates a finding for an empty projection
+  ---
+  duration_ms: 0.2909
+  type: 'test'
+  ...
+# Subtest: an acquired source without a representable page remains visible without a finding
+ok 356 - an acquired source without a representable page remains visible without a finding
+  ---
+  duration_ms: 0.3856
+  type: 'test'
+  ...
+# Subtest: temporal history is ordered newest first without mutating canonical projection
+ok 357 - temporal history is ordered newest first without mutating canonical projection
+  ---
+  duration_ms: 3.4922
+  type: 'test'
+  ...
+# Subtest: focused signal temporal history filters to its governed public source
+ok 358 - focused signal temporal history filters to its governed public source
+  ---
+  duration_ms: 0.4626
+  type: 'test'
+  ...
+# Subtest: AXIGNAL's own home titles and descriptions stay inside the audit's ranges
+ok 359 - AXIGNAL's own home titles and descriptions stay inside the audit's ranges
+  ---
+  duration_ms: 2.7534
+  type: 'test'
+  ...
+# Subtest: its Organization declares a real contact channel and nothing invented
+ok 360 - its Organization declares a real contact channel and nothing invented
+  ---
+  duration_ms: 2.1467
+  type: 'test'
+  ...
+# Subtest: a profile linked for people but not declared is named, not reported as missing
+ok 361 - a profile linked for people but not declared is named, not reported as missing
+  ---
+  duration_ms: 1.1336
+  type: 'test'
+  ...
+# Subtest: the isolated landing reuses the governed graph with its own page URL and unchanged service identity
+ok 362 - the isolated landing reuses the governed graph with its own page URL and unchanged service identity
+  ---
+  duration_ms: 0.8216
+  type: 'test'
+  ...
+# Subtest: spacing contract rejects the reported collapsed status/title regression
+ok 363 - spacing contract rejects the reported collapsed status/title regression
+  ---
+  duration_ms: 3.8127
+  type: 'test'
+  ...
+# Subtest: spacing contract rejects clipped content, tiny targets and absent measurements
+ok 364 - spacing contract rejects clipped content, tiny targets and absent measurements
+  ---
+  duration_ms: 0.6228
+  type: 'test'
+  ...
+# Subtest: cognitive layout rejects the observed small targets and lost typography hierarchy
+ok 365 - cognitive layout rejects the observed small targets and lost typography hierarchy
+  ---
+  duration_ms: 1.4747
+  type: 'test'
+  ...
+# Subtest: staff commands are strict: no billing, price or subscription can ride along
+ok 366 - staff commands are strict: no billing, price or subscription can ride along
+  ---
+  duration_ms: 16.0996
+  type: 'test'
+  ...
+# Subtest: runtime results must declare they are not billing and created no checkout
+ok 367 - runtime results must declare they are not billing and created no checkout
+  ---
+  duration_ms: 6.7259
+  type: 'test'
+  ...
+# Subtest: unknown runtime reasons collapse to a generic failure
+ok 368 - unknown runtime reasons collapse to a generic failure
+  ---
+  duration_ms: 0.3548
+  type: 'test'
+  ...
+# Subtest: operator step-up keeps an isolated short-lived cookie, primary pairing and bounded input
+ok 369 - operator step-up keeps an isolated short-lived cookie, primary pairing and bounded input
+  ---
+  duration_ms: 3.0072
+  type: 'test'
+  ...
+# Subtest: localized knowledge build helper rewrites only prerendered knowledge html lang
+ok 370 - localized knowledge build helper rewrites only prerendered knowledge html lang
+  ---
+  duration_ms: 65.882
+  type: 'test'
+  ...
+# Subtest: localized knowledge build helper fails closed on incomplete prerender output
+ok 371 - localized knowledge build helper fails closed on incomplete prerender output
+  ---
+  duration_ms: 4.0957
+  type: 'test'
+  ...
+# Subtest: the build's expected knowledge count follows the published pages (hub + one per page)
+ok 372 - the build's expected knowledge count follows the published pages (hub + one per page)
+  ---
+  duration_ms: 92.2007
+  type: 'test'
+  ...
+# Subtest: the subscriber preview is the Observatory in its demonstration context, never served in production
+ok 373 - the subscriber preview is the Observatory in its demonstration context, never served in production
+  ---
+  duration_ms: 1.6727
+  type: 'test'
+  ...
+# Subtest: public landing enters real account routes only when identity is available and recovers from unavailable status
+ok 374 - public landing enters real account routes only when identity is available and recovers from unavailable status
+  ---
+  duration_ms: 6.8399
+  type: 'test'
+  ...
+# Subtest: representation proxy retains bounded evidence and conditional context, strips private extensions and binds revision
+ok 375 - representation proxy retains bounded evidence and conditional context, strips private extensions and binds revision
+  ---
+  duration_ms: 47.4523
+  type: 'test'
+  ...
+# Subtest: representation context cannot silently become confirmed or promise performance
+ok 376 - representation context cannot silently become confirmed or promise performance
+  ---
+  duration_ms: 3.7242
+  type: 'test'
+  ...
+# Subtest: subscriber commands reject client authority and preserve exact capacity for 1/2/100
+ok 377 - subscriber commands reject client authority and preserve exact capacity for 1/2/100
+  ---
+  duration_ms: 2.9369
+  type: 'test'
+  ...
+# Subtest: payment navigation accepts only exact Stripe HTTPS hosts
+ok 378 - payment navigation accepts only exact Stripe HTTPS hosts
+  ---
+  duration_ms: 0.6567
+  type: 'test'
+  ...
+# Subtest: billing ingress preserves signed raw bytes and uses no subscriber identity
+ok 379 - billing ingress preserves signed raw bytes and uses no subscriber identity
+  ---
+  duration_ms: 2.2767
+  type: 'test'
+  ...
+# Subtest: unsigned and oversized billing ingress never reaches backend
+ok 380 - unsigned and oversized billing ingress never reaches backend
+  ---
+  duration_ms: 2.449
+  type: 'test'
+  ...
+# Subtest: configured sign-in keeps browser transaction token solely in a secure HttpOnly cookie
+ok 381 - configured sign-in keeps browser transaction token solely in a secure HttpOnly cookie
+  ---
+  duration_ms: 2.1387
+  type: 'test'
+  ...
+# Subtest: provider redirect rejection creates no transaction cookie
+ok 382 - provider redirect rejection creates no transaction cookie
+  ---
+  duration_ms: 1.0467
+  type: 'test'
+  ...
+# Subtest: callback forwards only browser-bound transaction to fixed backend and returns no token in body or URL
+ok 383 - callback forwards only browser-bound transaction to fixed backend and returns no token in body or URL
+  ---
+  duration_ms: 2.0378
+  type: 'test'
+  ...
+# Subtest: callback without a unique transaction cookie or with duplicate state never exchanges the code
+ok 384 - callback without a unique transaction cookie or with duplicate state never exchanges the code
+  ---
+  duration_ms: 1.1026
+  type: 'test'
+  ...
+# Subtest: subscriber proxy never substitutes Customer Zero or browser identity for its own session
+ok 385 - subscriber proxy never substitutes Customer Zero or browser identity for its own session
+  ---
+  duration_ms: 0.7131
+  type: 'test'
+  ...
+# Subtest: revocation outage preserves cookie so sign-out is not falsely claimed
+ok 386 - revocation outage preserves cookie so sign-out is not falsely claimed
+  ---
+  duration_ms: 0.7309
+  type: 'test'
+  ...
+# Subtest: streaming request limit is enforced without trusting Content-Length
+ok 387 - streaming request limit is enforced without trusting Content-Length
+  ---
+  duration_ms: 0.8563
+  type: 'test'
+  ...
+# Subtest: subscriber reading reauthorizes fresh output and refuses stale or foreign plans
+ok 388 - subscriber reading reauthorizes fresh output and refuses stale or foreign plans
+  ---
+  duration_ms: 11.8154
+  type: 'test'
+  ...
+# Subtest: real cognitive reading survives clock refresh but evidence and currentness changes invalidate it
+ok 389 - real cognitive reading survives clock refresh but evidence and currentness changes invalidate it
+  ---
+  duration_ms: 14.0447
+  type: 'test'
+  ...
+# Subtest: pilot redemption is same-origin, session-bound and forwards only to the fixed pilot endpoint
+ok 390 - pilot redemption is same-origin, session-bound and forwards only to the fixed pilot endpoint
+  ---
+  duration_ms: 1.7118
+  type: 'test'
+  ...
+# Subtest: pilot redemption rejects missing session, cross-site writes and malformed tokens before runtime
+ok 391 - pilot redemption rejects missing session, cross-site writes and malformed tokens before runtime
+  ---
+  duration_ms: 1.3834
+  type: 'test'
+  ...
+# Subtest: the legacy stylesheet preserves every original rule in original import order
+ok 392 - the legacy stylesheet preserves every original rule in original import order
+  ---
+  duration_ms: 11.9663
+  type: 'test'
+  ...
+# Subtest: shared foundation retains accessibility, dialog, privacy and real request controls
+ok 393 - shared foundation retains accessibility, dialog, privacy and real request controls
+  ---
+  duration_ms: 2.8556
+  type: 'test'
+  ...
+# Subtest: only the isolated lab omits the legacy skin
+ok 394 - only the isolated lab omits the legacy skin
+  ---
+  duration_ms: 0.6443
+  type: 'test'
+  ...
+# Subtest: only exact immutable style assets enter the public router; the lab remains isolated
+ok 395 - only exact immutable style assets enter the public router; the lab remains isolated
+  ---
+  duration_ms: 0.5746
+  type: 'test'
+  ...
+# Subtest: the isolated lab keeps every source rule and declaration in order after lossless minification
+ok 396 - the isolated lab keeps every source rule and declaration in order after lossless minification
+  ---
+  duration_ms: 130.1151
+  type: 'test'
+  ...
+# Subtest: font provenance uses Git LF text, independent of Windows working-copy newlines
+ok 397 - font provenance uses Git LF text, independent of Windows working-copy newlines
+  ---
+  duration_ms: 0.4519
+  type: 'test'
+  ...
+# Subtest: formatting compression preserves custom-property whitespace, quoted commas and nested rules
+ok 398 - formatting compression preserves custom-property whitespace, quoted commas and nested rules
+  ---
+  duration_ms: 0.8991
+  type: 'test'
+  ...
+# Subtest: every SEO and GEO measurement states how it was made and what it does not cover
+ok 399 - every SEO and GEO measurement states how it was made and what it does not cover
+  ---
+  duration_ms: 1.6586
+  type: 'test'
+  ...
+# Subtest: a change is stated only against a comparable earlier observation
+ok 400 - a change is stated only against a comparable earlier observation
+  ---
+  duration_ms: 23.4903
+  type: 'test'
+  ...
+# Subtest: where nothing was measured nothing is invented: the energy organization has no SEO or GEO measurement
+ok 401 - where nothing was measured nothing is invented: the energy organization has no SEO or GEO measurement
+  ---
+  duration_ms: 1.5043
+  type: 'test'
+  ...
+# Subtest: every phrase of the synthetic measurements is translated into the other five locales
+ok 402 - every phrase of the synthetic measurements is translated into the other five locales
+  ---
+  duration_ms: 0.9519
+  type: 'test'
+  ...
+# Subtest: the rail's language select fills its label, so no language name is clipped
+ok 403 - the rail's language select fills its label, so no language name is clipped
+  ---
+  duration_ms: 1.2923
+  type: 'test'
+  ...
+# Subtest: every active demo reading carries a revision, so AXENT's entry exists in the demo as in the account
+ok 404 - every active demo reading carries a revision, so AXENT's entry exists in the demo as in the account
+  ---
+  duration_ms: 1.1431
+  type: 'test'
+  ...
+# Subtest: the demonstration opens on the organization that shows SEO and GEO, so the families are in view at once
+ok 405 - the demonstration opens on the organization that shows SEO and GEO, so the families are in view at once
+  ---
+  duration_ms: 295.8891
+  type: 'test'
+  ...
+# Subtest: the demo snapshot is labelled synthetic and points only at reserved example hosts
+ok 406 - the demo snapshot is labelled synthetic and points only at reserved example hosts
+  ---
+  duration_ms: 3.3574
+  type: 'test'
+  ...
+# Subtest: every snapshot read parses with the same contracts as the live subscriber read
+ok 407 - every snapshot read parses with the same contracts as the live subscriber read
+  ---
+  duration_ms: 359.562
+  type: 'test'
+  ...
+# Subtest: demo domains and names follow the reader's locale, with valid ASCII domains
+ok 408 - demo domains and names follow the reader's locale, with valid ASCII domains
+  ---
+  duration_ms: 7.673
+  type: 'test'
+  ...
+# Subtest: the SEO and GEO demonstration organization is named Demo Seo-Geo in every language
+ok 409 - the SEO and GEO demonstration organization is named Demo Seo-Geo in every language
+  ---
+  duration_ms: 4.1403
+  type: 'test'
+  ...
+# Subtest: every delivery catalog is an exact canonical column, without missing or additional keys
+ok 410 - every delivery catalog is an exact canonical column, without missing or additional keys
+  ---
+  duration_ms: 116.0942
+  type: 'test'
+  ...
+# Subtest: unsupported dates retain their exact canonical six-language meaning
+ok 411 - unsupported dates retain their exact canonical six-language meaning
+  ---
+  duration_ms: 0.6297
+  type: 'test'
+  ...
+# Subtest: font delivery files have the declared checksum, retain their source and reduce transfer
+ok 412 - font delivery files have the declared checksum, retain their source and reduce transfer
+  ---
+  duration_ms: 3.7261
+  type: 'test'
+  ...
+# Subtest: the handwritten face covers every character of the 24 canonical annotations
+ok 413 - the handwritten face covers every character of the 24 canonical annotations
+  ---
+  duration_ms: 2.7105
+  type: 'test'
+  ...
+# Subtest: editorial delivery covers the generated landing and all synthetic view characters
+ok 414 - editorial delivery covers the generated landing and all synthetic view characters
+  ---
+  duration_ms: 1.8523
+  type: 'test'
+  ...
+# Subtest: a web-anchored subject is never presented as verified by registry (biocultor.com canary)
+ok 415 - a web-anchored subject is never presented as verified by registry (biocultor.com canary)
+  ---
+  duration_ms: 2.4868
+  type: 'test'
+  ...
+# Subtest: this week: three different kinds of news, consequential first, never older than 7 days (spec 088)
+ok 416 - this week: three different kinds of news, consequential first, never older than 7 days (spec 088)
+  ---
+  duration_ms: 8.3527
+  type: 'test'
+  ...
+# Subtest: nothing new in seven days says so: no filler
+ok 417 - nothing new in seven days says so: no filler
+  ---
+  duration_ms: 0.2891
+  type: 'test'
+  ...
+# Subtest: weekly brief distinguishes explicit pause from unknown availability
+ok 418 - weekly brief distinguishes explicit pause from unknown availability
+  ---
+  duration_ms: 39.3317
+  type: 'test'
+  ...
+# Subtest: weekly brief never enables requests from malformed, failed or missing status
+ok 419 - weekly brief never enables requests from malformed, failed or missing status
+  ---
+  duration_ms: 4.6842
+  type: 'test'
+  ...
+# Subtest: weekly brief status reads use the caller's cancellation signal
+ok 420 - weekly brief status reads use the caller's cancellation signal
+  ---
+  duration_ms: 0.4121
+  type: 'test'
+  ...
+1..420
+# tests 420
+# suites 0
+# pass 420
+# fail 0
+# cancelled 0
+# skipped 0
+# todo 0
+# duration_ms 6821.0858

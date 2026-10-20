@@ -1,0 +1,172 @@
+{
+  "client": 1425,
+  "lang": "es",
+  "nodes": [
+    {
+      "color": "rgb(60, 60, 60)",
+      "font": "\"AXIGNAL Reading\", Manrope, Arial, sans-serif",
+      "rect": {
+        "bottom": 88,
+        "height": 88,
+        "left": 0,
+        "right": 1425,
+        "top": 0,
+        "width": 1425,
+        "x": 0,
+        "y": 0
+      },
+      "selector": "HEADER#.lab-header",
+      "size": "16px"
+    },
+    {
+      "color": "rgb(60, 60, 60)",
+      "font": "Fraunces, Georgia, serif",
+      "rect": {
+        "bottom": 393.359375,
+        "height": 220.171875,
+        "left": 57,
+        "right": 705.40625,
+        "top": 173.1875,
+        "width": 648.40625,
+        "x": 57,
+        "y": 173.1875
+      },
+      "selector": "H1#lab-heading.",
+      "size": "67.68px"
+    },
+    {
+      "color": "rgb(88, 98, 114)",
+      "font": "\"AXIGNAL Reading\", Manrope, Arial, sans-serif",
+      "rect": {
+        "bottom": 256.4375,
+        "height": 83.25,
+        "left": 836.5,
+        "right": 1358.046875,
+        "top": 173.1875,
+        "width": 521.546875,
+        "x": 836.5,
+        "y": 173.1875
+      },
+      "selector": "P#.lab-lead",
+      "size": "15px"
+    },
+    {
+      "color": "rgb(60, 60, 60)",
+      "font": "\"AXIGNAL Reading\", Manrope, Arial, sans-serif",
+      "rect": {
+        "bottom": 825.359375,
+        "height": 390,
+        "left": 57,
+        "right": 1368,
+        "top": 435.359375,
+        "width": 1311,
+        "x": 57,
+        "y": 435.359375
+      },
+      "selector": "DIV#.lab-world",
+      "size": "16px"
+    },
+    {
+      "color": "rgb(60, 60, 60)",
+      "font": "\"AXIGNAL Reading\", Manrope, Arial, sans-serif",
+      "rect": {
+        "bottom": 2225.921875,
+        "height": 1213.171875,
+        "left": 0,
+        "right": 1425,
+        "top": 1012.75,
+        "width": 1425,
+        "x": 0,
+        "y": 1012.75
+      },
+      "selector": "SECTION#discover.lab-discovery lab-section",
+      "size": "16px"
+    },
+    {
+      "color": "rgb(60, 60, 60)",
+      "font": "\"AXIGNAL Reading\", Manrope, Arial, sans-serif",
+      "rect": {
+        "bottom": 3088.859375,
+        "height": 862.9375,
+        "left": 0,
+        "right": 1425,
+        "top": 2225.921875,
+        "width": 1425,
+        "x": 0,
+        "y": 2225.921875
+      },
+      "selector": "SECTION#audience.lab-audience lab-section",
+      "size": "16px"
+    },
+    {
+      "color": "rgb(60, 60, 60)",
+      "font": "\"AXIGNAL Reading\", Manrope, Arial, sans-serif",
+      "rect": {
+        "bottom": 4001.40625,
+        "height": 912.546875,
+        "left": 0,
+        "right": 1425,
+        "top": 3088.859375,
+        "width": 1425,
+        "x": 0,
+        "y": 3088.859375
+      },
+      "selector": "SECTION#how.lab-method lab-section",
+      "size": "16px"
+    },
+    {
+      "color": "rgb(60, 60, 60)",
+      "font": "\"AXIGNAL Reading\", Manrope, Arial, sans-serif",
+      "rect": {
+        "bottom": 5139.359375,
+        "height": 566.21875,
+        "left": 0,
+        "right": 1425,
+        "top": 4573.140625,
+        "width": 1425,
+        "x": 0,
+        "y": 4573.140625
+      },
+      "selector": "SECTION#trust.lab-trust lab-section",
+      "size": "16px"
+    },
+    {
+      "color": "rgb(60, 60, 60)",
+      "font": "\"AXIGNAL Reading\", Manrope, Arial, sans-serif",
+      "rect": {
+        "bottom": 6082.046875,
+        "height": 942.6875,
+        "left": 0,
+        "right": 1425,
+        "top": 5139.359375,
+        "width": 1425,
+        "x": 0,
+        "y": 5139.359375
+      },
+      "selector": "SECTION#pricing.lab-pricing lab-section",
+      "size": "16px"
+    },
+    {
+      "color": "rgb(60, 60, 60)",
+      "font": "\"AXIGNAL Reading\", Manrope, Arial, sans-serif",
+      "rect": {
+        "bottom": 8386.6875,
+        "height": 1022.640625,
+        "left": 0,
+        "right": 1425,
+        "top": 7364.046875,
+        "width": 1425,
+        "x": 0,
+        "y": 7364.046875
+      },
+      "selector": "FOOTER#.lab-footer",
+      "size": "16px"
+    }
+  ],
+  "scrollY": 0,
+  "viewport": {
+    "height": 1000,
+    "width": 1440
+  },
+  "width": 1425
+}

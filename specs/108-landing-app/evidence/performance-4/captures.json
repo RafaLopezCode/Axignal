@@ -1,0 +1,236 @@
+{
+  "sourceCommit": "a31e80c37a510db8c3e9d1e40e85646ae29ff1e8",
+  "note": "Unedited native CUA JPEG captures. Full-page CUA export failed; unchanged comparison captures remain in performance-3 and native cold fullPageScreenshot images are extracted from the final Lighthouse reports with their own exact dimensions/provenance.",
+  "captures": [
+    {
+      "file": "ready-footer-mobile.jpg",
+      "at": "2026-10-20T13:14:26.411Z",
+      "fullPage": false,
+      "client": {
+        "height": 844,
+        "width": 375
+      },
+      "deferred": false,
+      "locale": "es",
+      "narrative": "complete",
+      "scrollY": 9899,
+      "url": "http://127.0.0.1:3822/es/landing-lab",
+      "viewport": {
+        "height": 844,
+        "width": 390
+      },
+      "pixels": [
+        375,
+        812
+      ],
+      "sha256": "4c2ee40aa85a77cbd80842e130ca473c97c1ed70c03edab79ca20d68c04569ee"
+    },
+    {
+      "file": "ready-mobile.jpg",
+      "at": "2026-10-20T13:16:01.143Z",
+      "fullPage": false,
+      "client": {
+        "height": 844,
+        "width": 375
+      },
+      "deferred": false,
+      "locale": "es",
+      "narrative": "complete",
+      "scrollY": 0,
+      "url": "http://127.0.0.1:3822/es/landing-lab#lab-top",
+      "viewport": {
+        "height": 844,
+        "width": 390
+      },
+      "pixels": [
+        375,
+        812
+      ],
+      "sha256": "fbaefc1c824484c81f1e44ffaf4072183c0dd11cc8d970509934c5920253bf13"
+    },
+    {
+      "file": "ready-desktop.jpg",
+      "at": "2026-10-20T13:21:58.380Z",
+      "fullPage": false,
+      "client": {
+        "height": 1000,
+        "width": 1425
+      },
+      "deferred": false,
+      "locale": "es",
+      "narrative": "complete",
+      "scrollY": 0,
+      "url": "http://127.0.0.1:3822/es/landing-lab",
+      "viewport": {
+        "height": 1000,
+        "width": 1440
+      },
+      "pixels": [
+        1425,
+        990
+      ],
+      "sha256": "4ee88cf0b5cd51742d649fa09eaaf34a6e9dc73df503bbcf0be5d5332c82ef25"
+    },
+    {
+      "file": "ready-motion-playing.jpg",
+      "at": "2026-10-20T13:33:34.562Z",
+      "fullPage": false,
+      "client": {
+        "height": 1000,
+        "width": 1425
+      },
+      "deferred": false,
+      "locale": "es",
+      "narrative": "playing",
+      "scrollY": 304,
+      "url": "http://127.0.0.1:3822/es/landing-lab",
+      "viewport": {
+        "height": 1000,
+        "width": 1440
+      },
+      "pixels": [
+        1425,
+        990
+      ],
+      "sha256": "5f75514f27ea4d6064e8faf52a58b9029b4e9bcef8e8b2388e5fe3c50b4565b8"
+    },
+    {
+      "file": "ready-evidence-desktop.jpg",
+      "at": "2026-10-20T13:33:35.604Z",
+      "fullPage": false,
+      "client": {
+        "height": 1000,
+        "width": 1425
+      },
+      "deferred": false,
+      "locale": "es",
+      "narrative": "playing",
+      "scrollY": 1318,
+      "url": "http://127.0.0.1:3822/es/landing-lab#discover",
+      "viewport": {
+        "height": 1000,
+        "width": 1440
+      },
+      "pixels": [
+        1425,
+        990
+      ],
+      "sha256": "7ba91b0dcea04563f1c3195e46f73339e797b22183ad136d15f2e2526b4ed942"
+    },
+    {
+      "file": "ready-connections-desktop.jpg",
+      "at": "2026-10-20T13:33:36.821Z",
+      "fullPage": false,
+      "client": {
+        "height": 1000,
+        "width": 1425
+      },
+      "deferred": false,
+      "locale": "es",
+      "narrative": "playing",
+      "scrollY": 926,
+      "url": "http://127.0.0.1:3822/es/landing-lab#discover",
+      "viewport": {
+        "height": 1000,
+        "width": 1440
+      },
+      "pixels": [
+        1425,
+        990
+      ],
+      "sha256": "a6fb933c987d7a804400f5e84e190b55c859ae7042810ed730d2fceb6fa3b8b6"
+    },
+    {
+      "file": "ready-temporal-desktop.jpg",
+      "at": "2026-10-20T13:35:12.180Z",
+      "fullPage": false,
+      "client": {
+        "height": 1000,
+        "width": 1425
+      },
+      "deferred": false,
+      "locale": "es",
+      "narrative": "complete",
+      "scrollY": 1360,
+      "url": "http://127.0.0.1:3822/es/landing-lab#discover",
+      "viewport": {
+        "height": 1000,
+        "width": 1440
+      },
+      "pixels": [
+        1425,
+        990
+      ],
+      "sha256": "345593d2e9252ab4a4186f035441995280113efa559c703f2e2f6766f9b4c0d3"
+    },
+    {
+      "file": "ready-how-desktop.jpg",
+      "at": "2026-10-20T13:35:59.155Z",
+      "fullPage": false,
+      "client": {
+        "height": 1000,
+        "width": 1425
+      },
+      "deferred": false,
+      "locale": "es",
+      "narrative": "complete",
+      "scrollY": 2889,
+      "url": "http://127.0.0.1:3822/es/landing-lab#how",
+      "viewport": {
+        "height": 1000,
+        "width": 1440
+      },
+      "pixels": [
+        1425,
+        990
+      ],
+      "sha256": "0c7b133eeb6a9e9674bed2db9513a9f661fe71beaca07631a2f39a8e3e4e649e"
+    },
+    {
+      "file": "ready-pricing-desktop.jpg",
+      "at": "2026-10-20T13:35:59.870Z",
+      "fullPage": false,
+      "client": {
+        "height": 1000,
+        "width": 1425
+      },
+      "deferred": false,
+      "locale": "es",
+      "narrative": "complete",
+      "scrollY": 5189,
+      "url": "http://127.0.0.1:3822/es/landing-lab#pricing",
+      "viewport": {
+        "height": 1000,
+        "width": 1440
+      },
+      "pixels": [
+        1425,
+        990
+      ],
+      "sha256": "11af00e3e30b0b60b676420b8c7b2a7d4ef7f070d8b29fde980d693b7795bfb5"
+    },
+    {
+      "file": "ready-closing-desktop.jpg",
+      "at": "2026-10-20T13:37:28.022Z",
+      "fullPage": false,
+      "client": {
+        "height": 1000,
+        "width": 1425
+      },
+      "deferred": false,
+      "locale": "es",
+      "narrative": "complete",
+      "scrollY": 6645,
+      "url": "http://127.0.0.1:3822/es/landing-lab#pricing",
+      "viewport": {
+        "height": 1000,
+        "width": 1440
+      },
+      "pixels": [
+        1425,
+        990
+      ],
+      "sha256": "9c32224963e52c7261beaf2395f6019dd2a426a51969c8c6ba5547b711d79c1f"
+    }
+  ]
+}

@@ -1,0 +1,281 @@
+{
+  "note": "Includes intermediate code revisions and variable shared-host conditions; not all repeated samples of one release. The eight frozen-* runs use the same final build. Mobile selection is the median LCP of three, not best-of.",
+  "runs": [
+    {
+      "file": "delivery-desktop-new.report.json",
+      "url": "http://127.0.0.1:3822/es/landing-lab",
+      "fetchTime": "2026-10-19T08:55:37.305Z",
+      "performance": 99,
+      "LCP_ms": 885.0346499999999,
+      "CLS": 0,
+      "TBT_ms": 4.5,
+      "warnings": [
+        "The page loaded too slowly to finish within the time limit. Results may be incomplete."
+      ]
+    },
+    {
+      "file": "delivery-mobile-new.report.json",
+      "url": "http://127.0.0.1:3822/es/landing-lab",
+      "fetchTime": "2026-10-19T08:54:38.470Z",
+      "performance": 80,
+      "LCP_ms": 4553.166149999999,
+      "CLS": 5.676207860839794e-05,
+      "TBT_ms": 149.5,
+      "warnings": [
+        "The page loaded too slowly to finish within the time limit. Results may be incomplete."
+      ]
+    },
+    {
+      "file": "final-desktop-new.report.json",
+      "url": "http://127.0.0.1:3822/es/landing-lab",
+      "fetchTime": "2026-10-19T08:45:33.104Z",
+      "performance": 99,
+      "LCP_ms": 885.57485,
+      "CLS": 3.828169605110514e-05,
+      "TBT_ms": 3.5,
+      "warnings": [
+        "The page loaded too slowly to finish within the time limit. Results may be incomplete."
+      ]
+    },
+    {
+      "file": "final-mobile-new.report.json",
+      "url": "http://127.0.0.1:3822/es/landing-lab",
+      "fetchTime": "2026-10-19T08:44:34.191Z",
+      "performance": 81,
+      "LCP_ms": 4484.446650000001,
+      "CLS": 5.676207860839794e-05,
+      "TBT_ms": 164,
+      "warnings": [
+        "The page loaded too slowly to finish within the time limit. Results may be incomplete."
+      ]
+    },
+    {
+      "file": "frozen-desktop-new.report.json",
+      "url": "http://127.0.0.1:3822/es/landing-lab",
+      "fetchTime": "2026-10-19T09:32:23.731Z",
+      "performance": 99,
+      "LCP_ms": 935.4159,
+      "CLS": 0,
+      "TBT_ms": 3,
+      "warnings": [
+        "The page loaded too slowly to finish within the time limit. Results may be incomplete."
+      ]
+    },
+    {
+      "file": "frozen-desktop-old.report.json",
+      "url": "http://127.0.0.1:3822/es",
+      "fetchTime": "2026-10-19T09:35:04.124Z",
+      "performance": 99,
+      "LCP_ms": 1016.6931999999999,
+      "CLS": 0.00013831382105741,
+      "TBT_ms": 2.5,
+      "warnings": [
+        "The page loaded too slowly to finish within the time limit. Results may be incomplete."
+      ]
+    },
+    {
+      "file": "frozen-mobile-new-2.report.json",
+      "url": "http://127.0.0.1:3822/es/landing-lab",
+      "fetchTime": "2026-10-19T09:36:32.358Z",
+      "performance": 80,
+      "LCP_ms": 4551.3313,
+      "CLS": 5.676207860839794e-05,
+      "TBT_ms": 149,
+      "warnings": [
+        "The page loaded too slowly to finish within the time limit. Results may be incomplete."
+      ]
+    },
+    {
+      "file": "frozen-mobile-new-3.report.json",
+      "url": "http://127.0.0.1:3822/es/landing-lab",
+      "fetchTime": "2026-10-19T09:38:58.526Z",
+      "performance": 81,
+      "LCP_ms": 4475.342049999999,
+      "CLS": 5.676207860839794e-05,
+      "TBT_ms": 149,
+      "warnings": [
+        "The page loaded too slowly to finish within the time limit. Results may be incomplete."
+      ]
+    },
+    {
+      "file": "frozen-mobile-new.report.json",
+      "url": "http://127.0.0.1:3822/es/landing-lab",
+      "fetchTime": "2026-10-19T09:30:44.079Z",
+      "performance": 72,
+      "LCP_ms": 6961.334299999999,
+      "CLS": 0,
+      "TBT_ms": 158.5,
+      "warnings": [
+        "The page loaded too slowly to finish within the time limit. Results may be incomplete."
+      ]
+    },
+    {
+      "file": "frozen-mobile-old-2.report.json",
+      "url": "http://127.0.0.1:3822/es",
+      "fetchTime": "2026-10-19T09:37:39.524Z",
+      "performance": 77,
+      "LCP_ms": 4892.29365,
+      "CLS": 0.0001903787216053256,
+      "TBT_ms": 177,
+      "warnings": [
+        "The page loaded too slowly to finish within the time limit. Results may be incomplete."
+      ]
+    },
+    {
+      "file": "frozen-mobile-old-3.report.json",
+      "url": "http://127.0.0.1:3822/es",
+      "fetchTime": "2026-10-19T09:40:07.024Z",
+      "performance": 78,
+      "LCP_ms": 4891.505550000001,
+      "CLS": 0.0001903787216053256,
+      "TBT_ms": 145,
+      "warnings": [
+        "The page loaded too slowly to finish within the time limit. Results may be incomplete."
+      ]
+    },
+    {
+      "file": "frozen-mobile-old.report.json",
+      "url": "http://127.0.0.1:3822/es",
+      "fetchTime": "2026-10-19T09:33:39.816Z",
+      "performance": 78,
+      "LCP_ms": 4892.5893,
+      "CLS": 0,
+      "TBT_ms": 145,
+      "warnings": [
+        "The page loaded too slowly to finish within the time limit. Results may be incomplete."
+      ]
+    },
+    {
+      "file": "lh-desktop-new.report.json",
+      "url": "http://127.0.0.1:3822/es/landing-lab",
+      "fetchTime": "2026-10-19T00:01:58.432Z",
+      "performance": 99,
+      "LCP_ms": 997.9934,
+      "CLS": 3.828169605110514e-05,
+      "TBT_ms": 2.5,
+      "warnings": [
+        "The page loaded too slowly to finish within the time limit. Results may be incomplete."
+      ]
+    },
+    {
+      "file": "lh-desktop-old.report.json",
+      "url": "http://127.0.0.1:3822/es",
+      "fetchTime": "2026-10-19T00:04:01.710Z",
+      "performance": 98,
+      "LCP_ms": 1021.2249999999999,
+      "CLS": 0.00013831382105741,
+      "TBT_ms": 3.5,
+      "warnings": [
+        "The page loaded too slowly to finish within the time limit. Results may be incomplete."
+      ]
+    },
+    {
+      "file": "lh-mobile-new.report.json",
+      "url": "http://127.0.0.1:3822/es/landing-lab",
+      "fetchTime": "2026-10-19T00:00:56.642Z",
+      "performance": 70,
+      "LCP_ms": 7371.162700000001,
+      "CLS": 0,
+      "TBT_ms": 168,
+      "warnings": [
+        "The page loaded too slowly to finish within the time limit. Results may be incomplete."
+      ]
+    },
+    {
+      "file": "lh-mobile-old.report.json",
+      "url": "http://127.0.0.1:3822/es",
+      "fetchTime": "2026-10-19T00:03:02.218Z",
+      "performance": 67,
+      "LCP_ms": 7998.224,
+      "CLS": 0,
+      "TBT_ms": 181,
+      "warnings": [
+        "The page loaded too slowly to finish within the time limit. Results may be incomplete."
+      ]
+    },
+    {
+      "file": "lighthouse-final-new-desktop.report.json",
+      "url": "http://127.0.0.1:3822/es/landing-lab",
+      "fetchTime": "2026-10-18T23:57:03.341Z",
+      "performance": 99,
+      "LCP_ms": 997.74065,
+      "CLS": 3.828169605110514e-05,
+      "TBT_ms": 6,
+      "warnings": [
+        "The page loaded too slowly to finish within the time limit. Results may be incomplete."
+      ]
+    },
+    {
+      "file": "lighthouse-final-new-mobile.report.json",
+      "url": "http://127.0.0.1:3822/es/landing-lab",
+      "fetchTime": "2026-10-18T23:54:25.030Z",
+      "performance": 70,
+      "LCP_ms": 7340.1054,
+      "CLS": 0,
+      "TBT_ms": 188.5,
+      "warnings": [
+        "The page loaded too slowly to finish within the time limit. Results may be incomplete."
+      ]
+    },
+    {
+      "file": "lighthouse-final-old-mobile.report.json",
+      "url": "http://127.0.0.1:3822/es",
+      "fetchTime": "2026-10-18T23:55:38.994Z",
+      "performance": 77,
+      "LCP_ms": 4821.65985,
+      "CLS": 0,
+      "TBT_ms": 167.5,
+      "warnings": [
+        "The page loaded too slowly to finish within the time limit. Results may be incomplete."
+      ]
+    },
+    {
+      "file": "release-desktop-new.report.json",
+      "url": "http://127.0.0.1:3822/es/landing-lab",
+      "fetchTime": "2026-10-19T08:37:51.616Z",
+      "performance": 99,
+      "LCP_ms": 995.0531,
+      "CLS": 0,
+      "TBT_ms": 3.5,
+      "warnings": [
+        "The page loaded too slowly to finish within the time limit. Results may be incomplete."
+      ]
+    },
+    {
+      "file": "release-desktop-old.report.json",
+      "url": "http://127.0.0.1:3822/es",
+      "fetchTime": "2026-10-19T08:39:54.633Z",
+      "performance": 98,
+      "LCP_ms": 1018.67515,
+      "CLS": 0,
+      "TBT_ms": 8.5,
+      "warnings": [
+        "The page loaded too slowly to finish within the time limit. Results may be incomplete."
+      ]
+    },
+    {
+      "file": "release-mobile-new.report.json",
+      "url": "http://127.0.0.1:3822/es/landing-lab",
+      "fetchTime": "2026-10-19T08:36:47.899Z",
+      "performance": 76,
+      "LCP_ms": 4969.34565,
+      "CLS": 5.676207860839794e-05,
+      "TBT_ms": 162,
+      "warnings": [
+        "The page loaded too slowly to finish within the time limit. Results may be incomplete."
+      ]
+    },
+    {
+      "file": "release-mobile-old.report.json",
+      "url": "http://127.0.0.1:3822/es",
+      "fetchTime": "2026-10-19T08:38:52.666Z",
+      "performance": 60,
+      "LCP_ms": 8504.117999999999,
+      "CLS": 0,
+      "TBT_ms": 379.4264999999996,
+      "warnings": [
+        "The page loaded too slowly to finish within the time limit. Results may be incomplete."
+      ]
+    }
+  ]
+}

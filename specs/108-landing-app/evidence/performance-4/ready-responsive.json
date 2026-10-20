@@ -1,0 +1,62 @@
+[
+  {
+    "client": 305,
+    "deferred": false,
+    "h1": "Tu mercado cambia.\nQue no se te escape lo importante.",
+    "height": 900,
+    "lang": "es",
+    "scrollWidth": 305,
+    "url": "http://127.0.0.1:3822/es/landing-lab",
+    "width": 320
+  },
+  {
+    "client": 305,
+    "deferred": false,
+    "h1": "Your market moves.\nKeep sight of what matters.",
+    "height": 900,
+    "lang": "en",
+    "scrollWidth": 305,
+    "url": "http://127.0.0.1:3822/en/landing-lab",
+    "width": 320
+  },
+  {
+    "client": 305,
+    "deferred": false,
+    "h1": "Ihr Markt verändert sich.\nBehalten Sie das Wesentliche im Blick.",
+    "height": 900,
+    "lang": "de",
+    "scrollWidth": 305,
+    "url": "http://127.0.0.1:3822/de/landing-lab",
+    "width": 320
+  },
+  {
+    "client": 305,
+    "deferred": false,
+    "h1": "O seu mercado muda.\nNão perca o que importa.",
+    "height": 900,
+    "lang": "pt",
+    "scrollWidth": 305,
+    "url": "http://127.0.0.1:3822/pt/landing-lab",
+    "width": 320
+  },
+  {
+    "client": 305,
+    "deferred": false,
+    "h1": "Votre marché évolue.\nGardez l’essentiel en vue.",
+    "height": 900,
+    "lang": "fr",
+    "scrollWidth": 305,
+    "url": "http://127.0.0.1:3822/fr/landing-lab",
+    "width": 320
+  },
+  {
+    "client": 305,
+    "deferred": false,
+    "h1": "Il tuo mercato cambia.\nNon perdere ciò che conta.",
+    "height": 900,
+    "lang": "it",
+    "scrollWidth": 305,
+    "url": "http://127.0.0.1:3822/it/landing-lab",
+    "width": 320
+  }
+]

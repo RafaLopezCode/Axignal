@@ -93,7 +93,12 @@ test("a family with fewer than two known findings gets no canvas: the lanes alre
   assert.equal(renderToStaticMarkup(createElement(FamilyCanvas, { family: "reputation", title: "Reputación", insights, onOpen() {} })), "");
 });
 
-const inDays = (n: number) => new Date(Date.now() + n * 86_400_000).toISOString().slice(0, 10);
+// The panel compares calendar deadlines with local today; UTC serialization can
+// silently move this fixture to yesterday around local midnight.
+const inDays = (n: number) => {
+  const day = new Date(); day.setDate(day.getDate() + n);
+  return `${day.getFullYear()}-${String(day.getMonth() + 1).padStart(2, "0")}-${String(day.getDate()).padStart(2, "0")}`;
+};
 const call = (title: string, days: number, fit: string) => ({ kind: "DEMAND", code: "POTENTIAL_DEMAND", statement: title, epistemicState: "POTENTIAL",
   sourceUrl: "https://ted.europa.eu/x", excerpt: null, observedAt: month(0), detail: { deadline: inDays(days), fit, buyer: "Ayuntamiento" } });
 

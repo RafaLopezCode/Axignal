@@ -1,0 +1,108 @@
+{
+  "note": "All delivered glyphs, including alternate glyphs, decomposed and compared with the original font at the CSS weights and optical sizes sampled. Max tolerance one font unit; this is outline/advance verification, not pixel rasterization identity.",
+  "fonts": [
+    {
+      "family": "Manrope",
+      "locations": [
+        {
+          "wght": 400
+        },
+        {
+          "wght": 500
+        },
+        {
+          "wght": 600
+        },
+        {
+          "wght": 650
+        },
+        {
+          "wght": 700
+        }
+      ],
+      "glyphInstances": 1180,
+      "maxCoordinateDeltaFontUnits": 0,
+      "sourceSha256": "15e95cd63aa1d00c420ed9f2e9368a159d5fc55463506e5942a190389ccb5769",
+      "deliveredSha256": "76d1ca24ef0dd23ff4b29480858eceda0169aef71052756c9b4ba33f7b897e58"
+    },
+    {
+      "family": "Fraunces",
+      "locations": [
+        {
+          "wght": 400,
+          "opsz": 14
+        },
+        {
+          "wght": 400,
+          "opsz": 32
+        },
+        {
+          "wght": 400,
+          "opsz": 48
+        },
+        {
+          "wght": 400,
+          "opsz": 76
+        },
+        {
+          "wght": 500,
+          "opsz": 14
+        },
+        {
+          "wght": 500,
+          "opsz": 32
+        },
+        {
+          "wght": 500,
+          "opsz": 48
+        },
+        {
+          "wght": 500,
+          "opsz": 76
+        },
+        {
+          "wght": 600,
+          "opsz": 14
+        },
+        {
+          "wght": 600,
+          "opsz": 32
+        },
+        {
+          "wght": 600,
+          "opsz": 48
+        },
+        {
+          "wght": 600,
+          "opsz": 76
+        }
+      ],
+      "glyphInstances": 1692,
+      "maxCoordinateDeltaFontUnits": 0,
+      "sourceSha256": "7234ed860a9cc83045413c4faee63c960a8f2d1917adcf728119307d56e0d783",
+      "deliveredSha256": "3bbb3a5b852090f458b055cad529dd1cfcdaccf64124655c4b88a6558617321e"
+    },
+    {
+      "family": "Bic Notes Lab",
+      "locations": [
+        {
+          "wght": 400
+        }
+      ],
+      "glyphInstances": 149,
+      "maxCoordinateDeltaFontUnits": 0,
+      "sourceSha256": "15bf208d5b2f9afb33421813862d50c0391a6ed06ca69b769a0ea053c441f501",
+      "deliveredSha256": "3137d89306705de5314ba9e5d1d413d376a0b871e9d6e4f079327f2da71d792b"
+    },
+    {
+      "family": "IBM Plex Mono",
+      "locations": [
+        {}
+      ],
+      "glyphInstances": 212,
+      "maxCoordinateDeltaFontUnits": 0,
+      "sourceSha256": "08949f728dc52d528e69b1667d15c89a5686a4ee9a296ff90983985f99c380f7",
+      "deliveredSha256": "75215d7282966e964bb0c98e60b4426f67c288f6482f40daa41e685bd0411a35"
+    }
+  ]
+}

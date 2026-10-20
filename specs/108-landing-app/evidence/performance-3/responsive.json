@@ -1,0 +1,326 @@
+[
+  {
+    "source": "92f0401df5290d40343f9e4426da1f30b9d924b1",
+    "requestedLocale": "es",
+    "requestedViewport": {
+      "width": 320,
+      "height": 844
+    },
+    "client": 305,
+    "h1Count": 1,
+    "locale": "es",
+    "mojibake": false,
+    "replayGap": 56,
+    "scrollWidth": 305,
+    "viewport": {
+      "height": 844,
+      "width": 320
+    }
+  },
+  {
+    "source": "92f0401df5290d40343f9e4426da1f30b9d924b1",
+    "requestedLocale": "es",
+    "requestedViewport": {
+      "width": 1440,
+      "height": 1000
+    },
+    "client": 1425,
+    "h1Count": 1,
+    "locale": "es",
+    "mojibake": false,
+    "replayGap": 0,
+    "scrollWidth": 1425,
+    "viewport": {
+      "height": 1000,
+      "width": 1440
+    }
+  },
+  {
+    "source": "92f0401df5290d40343f9e4426da1f30b9d924b1",
+    "requestedLocale": "en",
+    "requestedViewport": {
+      "width": 320,
+      "height": 844
+    },
+    "client": 305,
+    "h1Count": 1,
+    "locale": "en",
+    "mojibake": false,
+    "replayGap": 56,
+    "scrollWidth": 305,
+    "viewport": {
+      "height": 844,
+      "width": 320
+    }
+  },
+  {
+    "source": "92f0401df5290d40343f9e4426da1f30b9d924b1",
+    "requestedLocale": "en",
+    "requestedViewport": {
+      "width": 1440,
+      "height": 1000
+    },
+    "client": 1425,
+    "h1Count": 1,
+    "locale": "en",
+    "mojibake": false,
+    "replayGap": 0,
+    "scrollWidth": 1425,
+    "viewport": {
+      "height": 1000,
+      "width": 1440
+    }
+  },
+  {
+    "source": "92f0401df5290d40343f9e4426da1f30b9d924b1",
+    "requestedLocale": "de",
+    "requestedViewport": {
+      "width": 320,
+      "height": 844
+    },
+    "client": 305,
+    "h1Count": 1,
+    "locale": "de",
+    "mojibake": false,
+    "replayGap": 56,
+    "scrollWidth": 305,
+    "viewport": {
+      "height": 844,
+      "width": 320
+    }
+  },
+  {
+    "source": "92f0401df5290d40343f9e4426da1f30b9d924b1",
+    "requestedLocale": "de",
+    "requestedViewport": {
+      "width": 1440,
+      "height": 1000
+    },
+    "client": 1425,
+    "h1Count": 1,
+    "locale": "de",
+    "mojibake": false,
+    "replayGap": 0,
+    "scrollWidth": 1425,
+    "viewport": {
+      "height": 1000,
+      "width": 1440
+    }
+  },
+  {
+    "source": "92f0401df5290d40343f9e4426da1f30b9d924b1",
+    "requestedLocale": "pt",
+    "requestedViewport": {
+      "width": 320,
+      "height": 844
+    },
+    "client": 305,
+    "h1Count": 1,
+    "locale": "pt",
+    "mojibake": false,
+    "replayGap": 56,
+    "scrollWidth": 305,
+    "viewport": {
+      "height": 844,
+      "width": 320
+    }
+  },
+  {
+    "source": "92f0401df5290d40343f9e4426da1f30b9d924b1",
+    "requestedLocale": "pt",
+    "requestedViewport": {
+      "width": 1440,
+      "height": 1000
+    },
+    "client": 1425,
+    "h1Count": 1,
+    "locale": "pt",
+    "mojibake": false,
+    "replayGap": 0,
+    "scrollWidth": 1425,
+    "viewport": {
+      "height": 1000,
+      "width": 1440
+    }
+  },
+  {
+    "source": "92f0401df5290d40343f9e4426da1f30b9d924b1",
+    "requestedLocale": "fr",
+    "requestedViewport": {
+      "width": 320,
+      "height": 844
+    },
+    "client": 305,
+    "h1Count": 1,
+    "locale": "fr",
+    "mojibake": false,
+    "replayGap": 56,
+    "scrollWidth": 305,
+    "viewport": {
+      "height": 844,
+      "width": 320
+    }
+  },
+  {
+    "source": "92f0401df5290d40343f9e4426da1f30b9d924b1",
+    "requestedLocale": "fr",
+    "requestedViewport": {
+      "width": 1440,
+      "height": 1000
+    },
+    "client": 1425,
+    "h1Count": 1,
+    "locale": "fr",
+    "mojibake": false,
+    "replayGap": 0,
+    "scrollWidth": 1425,
+    "viewport": {
+      "height": 1000,
+      "width": 1440
+    }
+  },
+  {
+    "source": "92f0401df5290d40343f9e4426da1f30b9d924b1",
+    "requestedLocale": "it",
+    "requestedViewport": {
+      "width": 320,
+      "height": 844
+    },
+    "client": 305,
+    "h1Count": 1,
+    "locale": "it",
+    "mojibake": false,
+    "replayGap": 56,
+    "scrollWidth": 305,
+    "viewport": {
+      "height": 844,
+      "width": 320
+    }
+  },
+  {
+    "source": "92f0401df5290d40343f9e4426da1f30b9d924b1",
+    "requestedLocale": "it",
+    "requestedViewport": {
+      "width": 1440,
+      "height": 1000
+    },
+    "client": 1425,
+    "h1Count": 1,
+    "locale": "it",
+    "mojibake": false,
+    "replayGap": 0,
+    "scrollWidth": 1425,
+    "viewport": {
+      "height": 1000,
+      "width": 1440
+    }
+  },
+  {
+    "source": "92f0401df5290d40343f9e4426da1f30b9d924b1",
+    "requestedLocale": "es",
+    "requestedViewport": {
+      "width": 375,
+      "height": 1000
+    },
+    "client": 360,
+    "h1Count": 1,
+    "locale": "es",
+    "mojibake": false,
+    "replayGap": 56,
+    "scrollWidth": 360,
+    "viewport": {
+      "height": 1000,
+      "width": 375
+    }
+  },
+  {
+    "source": "92f0401df5290d40343f9e4426da1f30b9d924b1",
+    "requestedLocale": "es",
+    "requestedViewport": {
+      "width": 390,
+      "height": 1000
+    },
+    "client": 375,
+    "h1Count": 1,
+    "locale": "es",
+    "mojibake": false,
+    "replayGap": 56,
+    "scrollWidth": 375,
+    "viewport": {
+      "height": 1000,
+      "width": 390
+    }
+  },
+  {
+    "source": "92f0401df5290d40343f9e4426da1f30b9d924b1",
+    "requestedLocale": "es",
+    "requestedViewport": {
+      "width": 768,
+      "height": 1000
+    },
+    "client": 753,
+    "h1Count": 1,
+    "locale": "es",
+    "mojibake": false,
+    "replayGap": 24,
+    "scrollWidth": 753,
+    "viewport": {
+      "height": 1000,
+      "width": 768
+    }
+  },
+  {
+    "source": "92f0401df5290d40343f9e4426da1f30b9d924b1",
+    "requestedLocale": "es",
+    "requestedViewport": {
+      "width": 1024,
+      "height": 1000
+    },
+    "client": 1009,
+    "h1Count": 1,
+    "locale": "es",
+    "mojibake": false,
+    "replayGap": 0,
+    "scrollWidth": 1009,
+    "viewport": {
+      "height": 1000,
+      "width": 1024
+    }
+  },
+  {
+    "source": "92f0401df5290d40343f9e4426da1f30b9d924b1",
+    "requestedLocale": "es",
+    "requestedViewport": {
+      "width": 1920,
+      "height": 1000
+    },
+    "client": 1905,
+    "h1Count": 1,
+    "locale": "es",
+    "mojibake": false,
+    "replayGap": 0,
+    "scrollWidth": 1905,
+    "viewport": {
+      "height": 1000,
+      "width": 1920
+    }
+  },
+  {
+    "source": "92f0401df5290d40343f9e4426da1f30b9d924b1",
+    "requestedLocale": "de",
+    "requestedViewport": {
+      "width": 1024,
+      "height": 1000
+    },
+    "client": 1009,
+    "h1Count": 1,
+    "locale": "de",
+    "mojibake": false,
+    "replayGap": 0,
+    "scrollWidth": 1009,
+    "viewport": {
+      "height": 1000,
+      "width": 1024
+    }
+  }
+]

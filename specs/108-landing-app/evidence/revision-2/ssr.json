@@ -1,0 +1,133 @@
+{
+  "source": "d236a3e3b0b7411c95dba1fe243b77e8c214cf87",
+  "checkedAt": "2026-10-19T16:41:52.056822+00:00",
+  "base": "http://127.0.0.1:3822",
+  "locales": [
+    {
+      "route": "/es/landing-lab",
+      "status": 200,
+      "bytes": 94362,
+      "lang": "es",
+      "h1": 1,
+      "details": 11
+    },
+    {
+      "route": "/en/landing-lab",
+      "status": 200,
+      "bytes": 93685,
+      "lang": "en",
+      "h1": 1,
+      "details": 11
+    },
+    {
+      "route": "/de/landing-lab",
+      "status": 200,
+      "bytes": 94131,
+      "lang": "de",
+      "h1": 1,
+      "details": 11
+    },
+    {
+      "route": "/fr/landing-lab",
+      "status": 200,
+      "bytes": 94493,
+      "lang": "fr",
+      "h1": 1,
+      "details": 11
+    },
+    {
+      "route": "/it/landing-lab",
+      "status": 200,
+      "bytes": 93242,
+      "lang": "it",
+      "h1": 1,
+      "details": 11
+    },
+    {
+      "route": "/pt/landing-lab",
+      "status": 200,
+      "bytes": 93313,
+      "lang": "pt",
+      "h1": 1,
+      "details": 11
+    }
+  ],
+  "publicDestinations": 18,
+  "destinations": [
+    {
+      "path": "/contact",
+      "status": 200
+    },
+    {
+      "path": "/demo",
+      "status": 200
+    },
+    {
+      "path": "/es",
+      "status": 200
+    },
+    {
+      "path": "/es/data",
+      "status": 200
+    },
+    {
+      "path": "/es/industries/agencies",
+      "status": 200
+    },
+    {
+      "path": "/es/industries/construction",
+      "status": 200
+    },
+    {
+      "path": "/es/industries/energy",
+      "status": 200
+    },
+    {
+      "path": "/es/industries/industry",
+      "status": 200
+    },
+    {
+      "path": "/es/industries/logistics",
+      "status": 200
+    },
+    {
+      "path": "/es/industries/professional-services",
+      "status": 200
+    },
+    {
+      "path": "/es/knowledge",
+      "status": 200
+    },
+    {
+      "path": "/es/pricing",
+      "status": 200
+    },
+    {
+      "path": "/gdpr",
+      "status": 200
+    },
+    {
+      "path": "/login",
+      "status": 200
+    },
+    {
+      "path": "/policies",
+      "status": 200
+    },
+    {
+      "path": "/policies/privacy",
+      "status": 200
+    },
+    {
+      "path": "/policies/terms",
+      "status": 200
+    },
+    {
+      "path": "/signup",
+      "status": 200
+    }
+  ],
+  "ssr": true,
+  "noindex": true,
+  "sitemapExcluded": true
+}

@@ -1,17 +1,6 @@
-import type { Locale } from "./languages";
 import type { FamilyId } from "./projection";
-
-export type LocalizedText = Readonly<Record<Locale, string>>;
-export function words(
-  es: string,
-  en: string,
-  fr: string,
-  de: string,
-  it: string,
-  pt: string,
-): LocalizedText {
-  return { es, en, fr, de, it, pt };
-}
+import { words, type LocalizedText } from "./marketing-locale";
+export { words, marketingPath, type LocalizedText } from "./marketing-locale";
 
 export const marketingCopy = {
   observe: words(
@@ -335,7 +324,3 @@ export const familyQuestions: Readonly<Record<FamilyId, LocalizedText>> = {
     "O que ajuda a interpretá-la.",
   ),
 };
-
-export function marketingPath(path: string, locale: Locale): string {
-  return `/${locale}${path === "/" ? "" : path}`;
-}

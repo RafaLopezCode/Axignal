@@ -1,0 +1,12 @@
+Re-extracting code files in . (no LLM needed)...
+[graphify watch] 384 file(s) not classified (no supported extension or shebang), skipped: .dockerignore, .git, .gitattributes, .gitignore, .gitleaksignore, .graphify_version (+378 more)
+  AST extraction: 100/627 uncached files (15%) [12 workers]
+  AST extraction: 200/627 uncached files (31%) [12 workers]
+  AST extraction: 300/627 uncached files (47%) [12 workers]
+  AST extraction: 400/627 uncached files (63%) [12 workers]
+  AST extraction: 500/627 uncached files (79%) [12 workers]
+  AST extraction: 600/627 uncached files (95%) [12 workers]
+  AST extraction: 627/627 uncached files (100%) [12 workers]
+[graphify watch] Rebuilt (no clustering): 23764 nodes, 70002 edges
+[graphify watch] graph.json updated in graphify-out
+Code graph updated. For doc/paper/image changes run /graphify --update in your AI assistant.

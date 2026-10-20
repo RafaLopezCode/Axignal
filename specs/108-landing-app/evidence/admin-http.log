@@ -1,0 +1,178 @@
+TAP version 13
+# Subtest: unauthenticated Admin reads never reach the upstream
+ok 1 - unauthenticated Admin reads never reach the upstream
+  ---
+  duration_ms: 9547.9207
+  type: 'test'
+  ...
+# Subtest: /api/admin/marketing-pool: valid read retains the owning schema
+ok 2 - /api/admin/marketing-pool: valid read retains the owning schema
+  ---
+  duration_ms: 28.5327
+  type: 'test'
+  ...
+# Subtest: /api/admin/marketing-pool: malformed upstream JSON is 502, not invalid user input
+ok 3 - /api/admin/marketing-pool: malformed upstream JSON is 502, not invalid user input
+  ---
+  duration_ms: 5.9743
+  type: 'test'
+  ...
+# Subtest: /api/admin/marketing-pool: oversized upstream JSON fails closed
+ok 4 - /api/admin/marketing-pool: oversized upstream JSON fails closed
+  ---
+  duration_ms: 14.8498
+  type: 'test'
+  ...
+# Subtest: /api/admin/pilot-test-accounts: valid read retains the owning schema
+ok 5 - /api/admin/pilot-test-accounts: valid read retains the owning schema
+  ---
+  duration_ms: 7.2797
+  type: 'test'
+  ...
+# Subtest: /api/admin/pilot-test-accounts: malformed upstream JSON is 502, not invalid user input
+ok 6 - /api/admin/pilot-test-accounts: malformed upstream JSON is 502, not invalid user input
+  ---
+  duration_ms: 5.0167
+  type: 'test'
+  ...
+# Subtest: /api/admin/pilot-test-accounts: oversized upstream JSON fails closed
+ok 7 - /api/admin/pilot-test-accounts: oversized upstream JSON fails closed
+  ---
+  duration_ms: 12.7832
+  type: 'test'
+  ...
+# Subtest: /api/admin/customer-access: valid read retains the owning schema
+ok 8 - /api/admin/customer-access: valid read retains the owning schema
+  ---
+  duration_ms: 6.7086
+  type: 'test'
+  ...
+# Subtest: /api/admin/customer-access: malformed upstream JSON is 502, not invalid user input
+ok 9 - /api/admin/customer-access: malformed upstream JSON is 502, not invalid user input
+  ---
+  duration_ms: 6.0174
+  type: 'test'
+  ...
+# Subtest: /api/admin/customer-access: oversized upstream JSON fails closed
+ok 10 - /api/admin/customer-access: oversized upstream JSON fails closed
+  ---
+  duration_ms: 30.0589
+  type: 'test'
+  ...
+# Subtest: /api/admin/staff-capacity?tenantId=tenant_transport: valid read retains the owning schema
+ok 11 - /api/admin/staff-capacity?tenantId=tenant_transport: valid read retains the owning schema
+  ---
+  duration_ms: 5.9941
+  type: 'test'
+  ...
+# Subtest: /api/admin/staff-capacity?tenantId=tenant_transport: malformed upstream JSON is 502, not invalid user input
+ok 12 - /api/admin/staff-capacity?tenantId=tenant_transport: malformed upstream JSON is 502, not invalid user input
+  ---
+  duration_ms: 4.1079
+  type: 'test'
+  ...
+# Subtest: /api/admin/staff-capacity?tenantId=tenant_transport: oversized upstream JSON fails closed
+ok 13 - /api/admin/staff-capacity?tenantId=tenant_transport: oversized upstream JSON fails closed
+  ---
+  duration_ms: 12.0856
+  type: 'test'
+  ...
+# Subtest: /api/admin/marketing-pool: cross-origin and oversized commands do not reach the owning service
+ok 14 - /api/admin/marketing-pool: cross-origin and oversized commands do not reach the owning service
+  ---
+  duration_ms: 13.7524
+  type: 'test'
+  ...
+# Subtest: /api/admin/pilot-test-accounts: cross-origin and oversized commands do not reach the owning service
+ok 15 - /api/admin/pilot-test-accounts: cross-origin and oversized commands do not reach the owning service
+  ---
+  duration_ms: 11.8142
+  type: 'test'
+  ...
+# Subtest: /api/admin/customer-access/issue: cross-origin and oversized commands do not reach the owning service
+ok 16 - /api/admin/customer-access/issue: cross-origin and oversized commands do not reach the owning service
+  ---
+  duration_ms: 31.4567
+  type: 'test'
+  ...
+# Subtest: /api/admin/staff-capacity/revoke: cross-origin and oversized commands do not reach the owning service
+ok 17 - /api/admin/staff-capacity/revoke: cross-origin and oversized commands do not reach the owning service
+  ---
+  duration_ms: 25.0431
+  type: 'test'
+  ...
+# Subtest: marketing command limits UTF-8 bytes, not JavaScript character count
+ok 18 - marketing command limits UTF-8 bytes, not JavaScript character count
+  ---
+  duration_ms: 3.5144
+  type: 'test'
+  ...
+# Subtest: upstream denial does not expose arbitrary reason text
+ok 19 - upstream denial does not expose arbitrary reason text
+  ---
+  duration_ms: 4.0202
+  type: 'test'
+  ...
+# Subtest: known authorization denial survives an unreadable error body
+ok 20 - known authorization denial survives an unreadable error body
+  ---
+  duration_ms: 29.4296
+  type: 'test'
+  ...
+# Subtest: /api/admin/marketing-pool: valid command keeps its payload and existing credential boundary
+ok 21 - /api/admin/marketing-pool: valid command keeps its payload and existing credential boundary
+  ---
+  duration_ms: 6.4592
+  type: 'test'
+  ...
+# Subtest: /api/admin/pilot-test-accounts: valid command keeps its payload and existing credential boundary
+ok 22 - /api/admin/pilot-test-accounts: valid command keeps its payload and existing credential boundary
+  ---
+  duration_ms: 5.6595
+  type: 'test'
+  ...
+# Subtest: /api/admin/customer-access/issue: valid command keeps its payload and existing credential boundary
+ok 23 - /api/admin/customer-access/issue: valid command keeps its payload and existing credential boundary
+  ---
+  duration_ms: 7.8661
+  type: 'test'
+  ...
+# Subtest: /api/admin/staff-capacity/revoke: valid command keeps its payload and existing credential boundary
+ok 24 - /api/admin/staff-capacity/revoke: valid command keeps its payload and existing credential boundary
+  ---
+  duration_ms: 7.9151
+  type: 'test'
+  ...
+# Subtest: customer and staff commands still require their independent step-up cookie
+ok 25 - customer and staff commands still require their independent step-up cookie
+  ---
+  duration_ms: 6.1633
+  type: 'test'
+  ...
+# Subtest: documented marketing refusal codes retain their meaning
+ok 26 - documented marketing refusal codes retain their meaning
+  ---
+  duration_ms: 11.9476
+  type: 'test'
+  ...
+# Subtest: JSON and legacy projections preserve unknown and remove unrequested authority metadata
+ok 27 - JSON and legacy projections preserve unknown and remove unrequested authority metadata
+  ---
+  duration_ms: 11.7247
+  type: 'test'
+  ...
+# Subtest: corrupt or oversized legacy projections stay unavailable without forwarding HTML
+ok 28 - corrupt or oversized legacy projections stay unavailable without forwarding HTML
+  ---
+  duration_ms: 13.5643
+  type: 'test'
+  ...
+1..28
+# tests 28
+# suites 0
+# pass 28
+# fail 0
+# cancelled 0
+# skipped 0
+# todo 0
+# duration_ms 10033.6757

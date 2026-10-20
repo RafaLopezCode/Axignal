@@ -1,0 +1,389 @@
+{
+  "browser": "ChatGPT in-app Chromium browser",
+  "finalCodeRevision": "77f8f04e9f8f7d0cf3db3cfb659012c9d288a65f",
+  "inspection": "Real browser screenshots, unedited. Four long comparisons include hero, original poses, all commercial sections and footer. Responsive images in the old desktop capture completed after its pre-capture DOM check and are visibly present in the saved image.",
+  "sourceHashes": {
+    "apps/web/experience/components/landing-lab.tsx": "bec28ad5744263ffe483df1bc8c2b74990ea3e91a921bbd19fed90a90442000f",
+    "apps/web/experience/components/landing-lab.css": "7d7a7c2433ac4a009814357d69ffdf6ba5c1fd784c1bda601b8444cae236f670",
+    "apps/web/experience/components/landing-lab-motion.tsx": "d78713b1f86a90ab13e203b81d710245ac66b8011d95d2ee6ef08cfcd367fe5c",
+    "apps/web/experience/components/insight-sources.tsx": "e9f9bcb7a796e4821e04ab6efcf3a90311abef4dc90059804b7ed36d065f7472",
+    "apps/web/experience/lib/landing-lab-copy.ts": "2c348c7908f7895343cc7cbbaab10e01c2a14bc8469032a20bc7adeb04206570",
+    "apps/web/experience/lib/landing-lab-model.ts": "3e6d4023c165c5af00c4cc2451e0f15c83f744fd372394f059cf898439d339e4",
+    "apps/web/experience/lib/projection.ts": "48cbaf51849581b8b458336356cd7944c5b08a29adea3c81cf48aa7f8f76959b",
+    "apps/web/experience/lib/demo/synthetic-observatory.json": "a0dcc7e47d4526aa6b4dcfc8041b08d5a64232517c90a53d661ab17d3ffe86fc",
+    "apps/web/experience/lib/commercial-prices.ts": "d1766b73c05694b1d3cca88c756f43966261abddd67b9b33551447851b4664ef"
+  },
+  "screenshots": [
+    {
+      "file": "old-desktop-full.jpg",
+      "caption": "Landing anterior · escritorio completo",
+      "fullPage": true,
+      "nominalViewport": {
+        "width": 1440,
+        "height": 1000
+      },
+      "imagePixels": {
+        "width": 1425,
+        "height": 8507
+      },
+      "bytes": 949920,
+      "sha256": "081024afaba5a295d97d86b5b2d5b505de6844a6be9b37d589daf2debf46ce3d",
+      "capturedAt": "2026-10-19T08:48:31.913301+00:00"
+    },
+    {
+      "file": "new-desktop-full.jpg",
+      "caption": "Nueva landing-app · escritorio completo",
+      "fullPage": true,
+      "nominalViewport": {
+        "width": 1440,
+        "height": 1000
+      },
+      "imagePixels": {
+        "width": 1425,
+        "height": 7933
+      },
+      "bytes": 664541,
+      "sha256": "2ea81c4d95b83236a4fc92970528fb3c1f2b9cf99fb72c34faea69a84d846124",
+      "capturedAt": "2026-10-19T08:45:38.277967+00:00"
+    },
+    {
+      "file": "old-mobile-full.jpg",
+      "caption": "Landing anterior · móvil completo",
+      "fullPage": true,
+      "nominalViewport": {
+        "width": 390,
+        "height": 844
+      },
+      "imagePixels": {
+        "width": 375,
+        "height": 12005
+      },
+      "bytes": 572463,
+      "sha256": "09dc4ddb73ebe17c95437ee6a611f6d97d7dd0f8e0329b1c648e7bad57dcc46a",
+      "capturedAt": "2026-10-19T08:48:30.352014+00:00"
+    },
+    {
+      "file": "new-mobile-full.jpg",
+      "caption": "Nueva landing-app · móvil completo",
+      "fullPage": true,
+      "nominalViewport": {
+        "width": 390,
+        "height": 844
+      },
+      "imagePixels": {
+        "width": 375,
+        "height": 9787
+      },
+      "bytes": 419320,
+      "sha256": "d5b332a4df885ea04e317d3bb526a7ea52fcb881b1670e0334bb6a728a4f4687",
+      "capturedAt": "2026-10-19T08:45:39.838104+00:00"
+    },
+    {
+      "file": "old-desktop-hero.jpg",
+      "caption": "Primera impresión anterior",
+      "fullPage": false,
+      "nominalViewport": {
+        "width": 1440,
+        "height": 1000
+      },
+      "imagePixels": {
+        "width": 1440,
+        "height": 1000
+      },
+      "bytes": 193026,
+      "sha256": "26478032b41d840525abd23d15d1c916f8411ca31f14669fbec114ee84a3894a",
+      "capturedAt": "2026-10-19T08:58:11.991447+00:00"
+    },
+    {
+      "file": "new-desktop-hero.jpg",
+      "caption": "Primera impresión nueva",
+      "fullPage": false,
+      "nominalViewport": {
+        "width": 1440,
+        "height": 1000
+      },
+      "imagePixels": {
+        "width": 1440,
+        "height": 1000
+      },
+      "bytes": 119061,
+      "sha256": "8e379660f3dc28e2e8d0be2420b94109f8133e071f90ba1891f4ed034b5ea62f",
+      "capturedAt": "2026-10-19T08:45:38.337042+00:00"
+    },
+    {
+      "file": "new-mobile-hero.jpg",
+      "caption": "Primera impresión móvil nueva",
+      "fullPage": false,
+      "nominalViewport": {
+        "width": 390,
+        "height": 844
+      },
+      "imagePixels": {
+        "width": 390,
+        "height": 844
+      },
+      "bytes": 45030,
+      "sha256": "168ae0e8fba938bd60ef99b28194c42b52474fcca861518ef25b43867c2985be",
+      "capturedAt": "2026-10-19T08:45:39.896984+00:00"
+    },
+    {
+      "file": "discovery-desktop.jpg",
+      "caption": "Descubrimiento · demanda potencial",
+      "fullPage": false,
+      "nominalViewport": {
+        "width": 1440,
+        "height": 1000
+      },
+      "imagePixels": {
+        "width": 1425,
+        "height": 990
+      },
+      "bytes": 76668,
+      "sha256": "f65f4a91866c92e174c12b931be0ae42dc43dbbf09eeb4344c2c372afe8e8644",
+      "capturedAt": "2026-10-19T08:49:01.038145+00:00"
+    },
+    {
+      "file": "finding-reason-desktop.jpg",
+      "caption": "Hallazgo · razón y límites",
+      "fullPage": false,
+      "nominalViewport": {
+        "width": 1440,
+        "height": 1000
+      },
+      "imagePixels": {
+        "width": 1425,
+        "height": 990
+      },
+      "bytes": 79111,
+      "sha256": "890a34a9eef69f3a12952a5fa1f62c60090d99321c4fbab1336823d060de941c",
+      "capturedAt": "2026-10-19T08:49:01.388576+00:00"
+    },
+    {
+      "file": "connections-desktop.jpg",
+      "caption": "Conexiones · declaración pública, no contrato verificado",
+      "fullPage": false,
+      "nominalViewport": {
+        "width": 1440,
+        "height": 1000
+      },
+      "imagePixels": {
+        "width": 1425,
+        "height": 990
+      },
+      "bytes": 71853,
+      "sha256": "b4790f3e4753f5230feafb24237dfb08d6e1a1ee592537d4214fef5e25a31233",
+      "capturedAt": "2026-10-19T08:49:02.423370+00:00"
+    },
+    {
+      "file": "evidence-desktop.jpg",
+      "caption": "Evidencia · extractos, fechas y condiciones desconocidas",
+      "fullPage": false,
+      "nominalViewport": {
+        "width": 1440,
+        "height": 1200
+      },
+      "imagePixels": {
+        "width": 1425,
+        "height": 1188
+      },
+      "bytes": 108406,
+      "sha256": "e4c7c2e960d0965e908bf5be8b9c4dd6a5cd2c8c04b0d6af284ef4a489215ff6",
+      "capturedAt": "2026-10-19T08:49:01.759483+00:00"
+    },
+    {
+      "file": "temporal-july-desktop.jpg",
+      "caption": "Julio · señal aún no observada",
+      "fullPage": false,
+      "nominalViewport": {
+        "width": 1440,
+        "height": 1000
+      },
+      "imagePixels": {
+        "width": 1425,
+        "height": 990
+      },
+      "bytes": 64218,
+      "sha256": "a6d16b877e116c0673c8f897a0a4934f33385e0bd43a22adee37f2c4d7b8058e",
+      "capturedAt": "2026-10-19T08:49:03.065643+00:00"
+    },
+    {
+      "file": "temporal-september-desktop.jpg",
+      "caption": "Septiembre · aparece una oportunidad potencial",
+      "fullPage": false,
+      "nominalViewport": {
+        "width": 1440,
+        "height": 1000
+      },
+      "imagePixels": {
+        "width": 1425,
+        "height": 990
+      },
+      "bytes": 66642,
+      "sha256": "fb6ddf473d98bb92cd25d9a21f4d8d331b22c6d28ce457fcd3e906a8c211cd67",
+      "capturedAt": "2026-10-19T08:49:23.640035+00:00"
+    },
+    {
+      "file": "temporal-october-desktop.jpg",
+      "caption": "Octubre · actividad publicada observada",
+      "fullPage": false,
+      "nominalViewport": {
+        "width": 1440,
+        "height": 1000
+      },
+      "imagePixels": {
+        "width": 1425,
+        "height": 990
+      },
+      "bytes": 68827,
+      "sha256": "783606a6cb280461ea5df04d7ece2e389d3ca669ebb356549137fccd7e671fa9",
+      "capturedAt": "2026-10-19T08:49:24.324264+00:00"
+    },
+    {
+      "file": "digital-evidence-desktop.jpg",
+      "caption": "Observación digital · instrumento y dos muestras",
+      "fullPage": false,
+      "nominalViewport": {
+        "width": 1440,
+        "height": 1000
+      },
+      "imagePixels": {
+        "width": 1425,
+        "height": 990
+      },
+      "bytes": 77702,
+      "sha256": "add7e5013e8a3beecf3be765894f49ad2a8df9ea41c639f4fa4d854e1e5de99b",
+      "capturedAt": "2026-10-19T08:49:25.006143+00:00"
+    },
+    {
+      "file": "unknown-desktop.jpg",
+      "caption": "Reputación · desconocido no es negativo",
+      "fullPage": false,
+      "nominalViewport": {
+        "width": 1440,
+        "height": 1000
+      },
+      "imagePixels": {
+        "width": 1425,
+        "height": 990
+      },
+      "bytes": 68009,
+      "sha256": "64b9b88d283df5c6c61936572f629327d101982e1b13374e1b543ac06b88be94",
+      "capturedAt": "2026-10-19T08:49:25.349685+00:00"
+    },
+    {
+      "file": "professional-workflow-desktop.jpg",
+      "caption": "Perfil profesional · desarrollo de negocio",
+      "fullPage": false,
+      "nominalViewport": {
+        "width": 1440,
+        "height": 1000
+      },
+      "imagePixels": {
+        "width": 1425,
+        "height": 990
+      },
+      "bytes": 73539,
+      "sha256": "f7843cc3cc545576557109f2198fa8873e1ccfb761d8dbbad76b30b2d0b18f85",
+      "capturedAt": "2026-10-19T08:49:25.715466+00:00"
+    },
+    {
+      "file": "pricing-desktop.jpg",
+      "caption": "Precio · 25 organizaciones y asesoría separada",
+      "fullPage": false,
+      "nominalViewport": {
+        "width": 1440,
+        "height": 1000
+      },
+      "imagePixels": {
+        "width": 1425,
+        "height": 990
+      },
+      "bytes": 73995,
+      "sha256": "bb78d67ba6f1dd61ce36cf0e8cd6c175d08766d87d5ef21bd78a49d5af8c6fba",
+      "capturedAt": "2026-10-19T09:01:38.180723+00:00"
+    },
+    {
+      "file": "observer-journey-desktop.jpg",
+      "caption": "El Observador · recorrido de las tres poses originales",
+      "fullPage": false,
+      "nominalViewport": {
+        "width": 1440,
+        "height": 1000
+      },
+      "imagePixels": {
+        "width": 1425,
+        "height": 990
+      },
+      "bytes": 83913,
+      "sha256": "8613681dc8db8d7386ace27afb9a51e0d63d820fea73ac4e1bb09c89faf86bd8",
+      "capturedAt": "2026-10-19T09:01:52.629527+00:00"
+    },
+    {
+      "file": "reduced-motion-desktop.jpg",
+      "caption": "Movimiento reducido · timelines retirados",
+      "fullPage": false,
+      "nominalViewport": {
+        "width": 1440,
+        "height": 1000
+      },
+      "imagePixels": {
+        "width": 1425,
+        "height": 990
+      },
+      "bytes": 107433,
+      "sha256": "7d7037bfc474b8f29fbe5e773e85d5b9d4d8dc02d7ea48cb28d68965613b50f5",
+      "capturedAt": "2026-10-19T08:45:14.194683+00:00"
+    },
+    {
+      "file": "evidence-mobile-full.jpg",
+      "caption": "Evidencia abierta en móvil · página completa",
+      "fullPage": true,
+      "nominalViewport": {
+        "width": 390,
+        "height": 844
+      },
+      "imagePixels": {
+        "width": 375,
+        "height": 10412
+      },
+      "bytes": 457692,
+      "sha256": "9cde40032b271c9e0b3038902e0c1c3ceeecdd1c02c5aa5329161ddacd0588fd",
+      "capturedAt": "2026-10-19T08:45:55.570364+00:00"
+    },
+    {
+      "file": "observatory-axent-mobile.jpg",
+      "caption": "Observatorio actual · AXENT por familia",
+      "fullPage": false,
+      "nominalViewport": {
+        "width": 390,
+        "height": 844
+      },
+      "imagePixels": {
+        "width": 375,
+        "height": 812
+      },
+      "bytes": 32532,
+      "sha256": "51d2f081f871b2cf41eed1c192c986b419dff57bbaf363c7a7c5c0df2b07c765",
+      "capturedAt": "2026-10-19T08:47:18.443376+00:00"
+    },
+    {
+      "file": "mcp-guide-mobile-full.jpg",
+      "caption": "Guía MCP actual · ejemplo sin autorización de conexión",
+      "fullPage": true,
+      "nominalViewport": {
+        "width": 390,
+        "height": 844
+      },
+      "imagePixels": {
+        "width": 375,
+        "height": 2595
+      },
+      "bytes": 171803,
+      "sha256": "db14a98332d2ebbb4a314b155a77a2878d75ce015ef594081641cd12946d0140",
+      "capturedAt": "2026-10-19T08:47:47.578625+00:00"
+    }
+  ],
+  "localBuildReferenceAtCapture": "197f9eecb8817145e1bdeee1380060f6d6df059e",
+  "reviewedBase": "637ba6542debf1b6ba610b4d85bb35410bed98ab",
+  "compatibility": "Captured presentation files, assets and all 90 read-only fixture outputs are unchanged. Subsequent #348/#349 source additions do not appear in these illustrative cases; Presence keeps its existing canvas and other demo families have insufficient known findings for the new canvas. The recorded capture build was local, not a published commit."
+}

@@ -1,0 +1,21 @@
+{
+  "source": "77f8f04e9f8f7d0cf3db3cfb659012c9d288a65f",
+  "checkedAt": "2026-10-19T09:41:12.181977+00:00",
+  "method": "Unique initial script src responses; gzip compressed independently. The GSAP/ScrollTrigger chunk was identified from its engine license. This is an inventory, not a field transfer or INP measurement.",
+  "rows": [
+    {
+      "path": "/es",
+      "files": 12,
+      "raw": 2149514,
+      "gzip": 684130,
+      "gsapInInitialScripts": false
+    },
+    {
+      "path": "/es/landing-lab",
+      "files": 13,
+      "raw": 2188743,
+      "gzip": 697185,
+      "gsapInInitialScripts": false
+    }
+  ]
+}

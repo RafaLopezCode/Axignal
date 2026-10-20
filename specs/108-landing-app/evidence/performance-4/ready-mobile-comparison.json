@@ -1,0 +1,165 @@
+{
+  "note": "Final layout compared with the previous loaded-image composition; the old cold trust placeholder was 36.53125px too tall.",
+  "nodes": [
+    {
+      "selector": "HEADER#.lab-header",
+      "delta": {
+        "bottom": 0,
+        "height": 0,
+        "left": 0,
+        "right": 0,
+        "top": 0,
+        "width": 0,
+        "x": 0,
+        "y": 0
+      },
+      "font": true,
+      "color": true,
+      "size": true
+    },
+    {
+      "selector": "H1#lab-heading.",
+      "delta": {
+        "bottom": 0,
+        "height": 0,
+        "left": 0,
+        "right": 0,
+        "top": 0,
+        "width": 0,
+        "x": 0,
+        "y": 0
+      },
+      "font": true,
+      "color": true,
+      "size": true
+    },
+    {
+      "selector": "P#.lab-lead",
+      "delta": {
+        "bottom": 0,
+        "height": 0,
+        "left": 0,
+        "right": 0,
+        "top": 0,
+        "width": 0,
+        "x": 0,
+        "y": 0
+      },
+      "font": true,
+      "color": true,
+      "size": true
+    },
+    {
+      "selector": "DIV#.lab-world",
+      "delta": {
+        "bottom": 0,
+        "height": 0,
+        "left": 0,
+        "right": 0,
+        "top": 0,
+        "width": 0,
+        "x": 0,
+        "y": 0
+      },
+      "font": true,
+      "color": true,
+      "size": true
+    },
+    {
+      "selector": "SECTION#discover.lab-discovery lab-section",
+      "delta": {
+        "bottom": 0,
+        "height": 0,
+        "left": 0,
+        "right": 0,
+        "top": 0,
+        "width": 0,
+        "x": 0,
+        "y": 0
+      },
+      "font": true,
+      "color": true,
+      "size": true
+    },
+    {
+      "selector": "SECTION#audience.lab-audience lab-section",
+      "delta": {
+        "bottom": 0,
+        "height": 0,
+        "left": 0,
+        "right": 0,
+        "top": 0,
+        "width": 0,
+        "x": 0,
+        "y": 0
+      },
+      "font": true,
+      "color": true,
+      "size": true
+    },
+    {
+      "selector": "SECTION#how.lab-method lab-section",
+      "delta": {
+        "bottom": 0,
+        "height": 0,
+        "left": 0,
+        "right": 0,
+        "top": 0,
+        "width": 0,
+        "x": 0,
+        "y": 0
+      },
+      "font": true,
+      "color": true,
+      "size": true
+    },
+    {
+      "selector": "SECTION#trust.lab-trust lab-section",
+      "delta": {
+        "bottom": 0,
+        "height": 0,
+        "left": 0,
+        "right": 0,
+        "top": 0,
+        "width": 0,
+        "x": 0,
+        "y": 0
+      },
+      "font": true,
+      "color": true,
+      "size": true
+    },
+    {
+      "selector": "SECTION#pricing.lab-pricing lab-section",
+      "delta": {
+        "bottom": 0,
+        "height": 0,
+        "left": 0,
+        "right": 0,
+        "top": 0,
+        "width": 0,
+        "x": 0,
+        "y": 0
+      },
+      "font": true,
+      "color": true,
+      "size": true
+    },
+    {
+      "selector": "FOOTER#.lab-footer",
+      "delta": {
+        "bottom": 0,
+        "height": 0,
+        "left": 0,
+        "right": 0,
+        "top": 0,
+        "width": 0,
+        "x": 0,
+        "y": 0
+      },
+      "font": true,
+      "color": true,
+      "size": true
+    }
+  ]
+}

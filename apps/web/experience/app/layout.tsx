@@ -1,16 +1,12 @@
 import type { Metadata } from "next";
-import "./globals.css";
-import "./public.css";
-import "./typography.css";
-import "./acquisition.css";
-import "./funnel.css";
-import "./public-layout.css";
-import "../components/cognition/cognition.css";
 import { LocaleProvider } from "@/lib/locale";
+import { SurfaceStyles } from "@/components/surface-styles";
 import { PrivacyNotice } from "@/components/privacy-notice";
 
 export const metadata: Metadata = {
-  metadataBase: new URL(process.env.NEXT_PUBLIC_SITE_URL ?? "https://axignal.com"),
+  metadataBase: new URL(
+    process.env.NEXT_PUBLIC_SITE_URL ?? "https://axignal.com",
+  ),
   title: {
     default: "AXIGNAL — What changes around your company, and why it matters",
     template: "%s · AXIGNAL",
@@ -29,6 +25,9 @@ export default function RootLayout({
 }: Readonly<{ children: React.ReactNode }>) {
   return (
     <html lang="en" data-scroll-behavior="smooth">
+      <head>
+        <SurfaceStyles />
+      </head>
       <body>
         <LocaleProvider>
           <a className="skip-link" href="#main">

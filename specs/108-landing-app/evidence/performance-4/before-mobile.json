@@ -1,0 +1,172 @@
+{
+  "client": 375,
+  "lang": "es",
+  "nodes": [
+    {
+      "color": "rgb(60, 60, 60)",
+      "font": "\"AXIGNAL Reading\", Manrope, Arial, sans-serif",
+      "rect": {
+        "bottom": 76,
+        "height": 76,
+        "left": 0,
+        "right": 375,
+        "top": 0,
+        "width": 375,
+        "x": 0,
+        "y": 0
+      },
+      "selector": "HEADER#.lab-header",
+      "size": "16px"
+    },
+    {
+      "color": "rgb(60, 60, 60)",
+      "font": "Fraunces, Georgia, serif",
+      "rect": {
+        "bottom": 276.984375,
+        "height": 132.984375,
+        "left": 22.5,
+        "right": 352.5,
+        "top": 144,
+        "width": 330,
+        "x": 22.5,
+        "y": 144
+      },
+      "selector": "H1#lab-heading.",
+      "size": "39px"
+    },
+    {
+      "color": "rgb(88, 98, 114)",
+      "font": "\"AXIGNAL Reading\", Manrope, Arial, sans-serif",
+      "rect": {
+        "bottom": 400.546875,
+        "height": 103.5625,
+        "left": 22.5,
+        "right": 352.5,
+        "top": 296.984375,
+        "width": 330,
+        "x": 22.5,
+        "y": 296.984375
+      },
+      "selector": "P#.lab-lead",
+      "size": "14px"
+    },
+    {
+      "color": "rgb(60, 60, 60)",
+      "font": "\"AXIGNAL Reading\", Manrope, Arial, sans-serif",
+      "rect": {
+        "bottom": 1154.546875,
+        "height": 540,
+        "left": 22.5,
+        "right": 352.5,
+        "top": 614.546875,
+        "width": 330,
+        "x": 22.5,
+        "y": 614.546875
+      },
+      "selector": "DIV#.lab-world",
+      "size": "16px"
+    },
+    {
+      "color": "rgb(60, 60, 60)",
+      "font": "\"AXIGNAL Reading\", Manrope, Arial, sans-serif",
+      "rect": {
+        "bottom": 2855,
+        "height": 1330.671875,
+        "left": 0,
+        "right": 375,
+        "top": 1524.328125,
+        "width": 375,
+        "x": 0,
+        "y": 1524.328125
+      },
+      "selector": "SECTION#discover.lab-discovery lab-section",
+      "size": "16px"
+    },
+    {
+      "color": "rgb(60, 60, 60)",
+      "font": "\"AXIGNAL Reading\", Manrope, Arial, sans-serif",
+      "rect": {
+        "bottom": 3745.515625,
+        "height": 890.515625,
+        "left": 0,
+        "right": 375,
+        "top": 2855,
+        "width": 375,
+        "x": 0,
+        "y": 2855
+      },
+      "selector": "SECTION#audience.lab-audience lab-section",
+      "size": "16px"
+    },
+    {
+      "color": "rgb(60, 60, 60)",
+      "font": "\"AXIGNAL Reading\", Manrope, Arial, sans-serif",
+      "rect": {
+        "bottom": 4766.0625,
+        "height": 1020.546875,
+        "left": 0,
+        "right": 375,
+        "top": 3745.515625,
+        "width": 375,
+        "x": 0,
+        "y": 3745.515625
+      },
+      "selector": "SECTION#how.lab-method lab-section",
+      "size": "16px"
+    },
+    {
+      "color": "rgb(60, 60, 60)",
+      "font": "\"AXIGNAL Reading\", Manrope, Arial, sans-serif",
+      "rect": {
+        "bottom": 6427.71875,
+        "height": 806.40625,
+        "left": 0,
+        "right": 375,
+        "top": 5621.3125,
+        "width": 375,
+        "x": 0,
+        "y": 5621.3125
+      },
+      "selector": "SECTION#trust.lab-trust lab-section",
+      "size": "16px"
+    },
+    {
+      "color": "rgb(60, 60, 60)",
+      "font": "\"AXIGNAL Reading\", Manrope, Arial, sans-serif",
+      "rect": {
+        "bottom": 8124.71875,
+        "height": 1697,
+        "left": 0,
+        "right": 375,
+        "top": 6427.71875,
+        "width": 375,
+        "x": 0,
+        "y": 6427.71875
+      },
+      "selector": "SECTION#pricing.lab-pricing lab-section",
+      "size": "16px"
+    },
+    {
+      "color": "rgb(60, 60, 60)",
+      "font": "\"AXIGNAL Reading\", Manrope, Arial, sans-serif",
+      "rect": {
+        "bottom": 11387.234375,
+        "height": 1733.8125,
+        "left": 0,
+        "right": 375,
+        "top": 9653.421875,
+        "width": 375,
+        "x": 0,
+        "y": 9653.421875
+      },
+      "selector": "FOOTER#.lab-footer",
+      "size": "16px"
+    }
+  ],
+  "scrollY": 0,
+  "viewport": {
+    "height": 844,
+    "width": 390
+  },
+  "width": 375
+}

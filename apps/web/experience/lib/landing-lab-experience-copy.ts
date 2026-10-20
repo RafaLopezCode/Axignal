@@ -1,0 +1,68 @@
+import { words } from "./marketing-content";
+
+export const labExperienceCopy = {
+  replay: words(
+    "Ver cómo conecta",
+    "Watch the connection",
+    "Voir la connexion",
+    "Verbindung ansehen",
+    "Guarda il collegamento",
+    "Ver a ligação",
+  ),
+  trustNote: words(
+    "Una buena explicación deja ver sus fuentes.",
+    "A good explanation shows its sources.",
+    "Une bonne explication montre ses sources.",
+    "Eine gute Erklärung zeigt ihre Quellen.",
+    "Una buona spiegazione mostra le fonti.",
+    "Uma boa explicação mostra as fontes.",
+  ),
+  advisoryKicker: words(
+    "Una perspectiva humana",
+    "A human perspective",
+    "Une perspective humaine",
+    "Eine menschliche Perspektive",
+    "Una prospettiva umana",
+    "Uma perspetiva humana",
+  ),
+  newsletterAction: words(
+    "Quiero recibir el boletín",
+    "Request the newsletter",
+    "Demander la newsletter",
+    "Newsletter anfragen",
+    "Richiedi la newsletter",
+    "Pedir a newsletter",
+  ),
+  openChannel: words(
+    "Abrir el canal de solicitudes",
+    "Open the request channel",
+    "Ouvrir le canal de demandes",
+    "Anfragekanal öffnen",
+    "Apri il canale di richiesta",
+    "Abrir o canal de pedidos",
+  ),
+  footerProduct: words(
+    "Explora AXIGNAL",
+    "Explore AXIGNAL",
+    "Explorer AXIGNAL",
+    "AXIGNAL entdecken",
+    "Esplora AXIGNAL",
+    "Explorar AXIGNAL",
+  ),
+  footerTrust: words(
+    "Hablemos con confianza",
+    "Built on trust",
+    "En toute confiance",
+    "Auf Vertrauen gebaut",
+    "Con fiducia",
+    "Com confiança",
+  ),
+  backTop: words(
+    "Volver arriba",
+    "Back to top",
+    "Retour en haut",
+    "Nach oben",
+    "Torna su",
+    "Voltar ao topo",
+  ),
+};

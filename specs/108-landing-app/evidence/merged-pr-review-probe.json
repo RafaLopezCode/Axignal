@@ -1,0 +1,21 @@
+{
+  "base": "29de7a9ff323f8082c21de29dbbb97e64b0ba990",
+  "source": "tools/runtime/web_research.py::WebResearchRunner.ask",
+  "network": false,
+  "quota": {
+    "startingCount": 9,
+    "parallelQuestions": 2,
+    "states": [
+      "DONE",
+      "DONE"
+    ],
+    "finalCount": 11,
+    "limit": 10
+  },
+  "deadline": {
+    "budgetSeconds": 15,
+    "simulatedBlockingReadSeconds": 20,
+    "returnedAfterSeconds": 20.0,
+    "state": "DONE"
+  }
+}

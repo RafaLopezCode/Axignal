@@ -1,0 +1,5 @@
+
+> axignal-experience@0.1.0 check:i18n
+> node tools/locale-inventory.mjs --check
+
+{ entries: 2786, missing: [] }

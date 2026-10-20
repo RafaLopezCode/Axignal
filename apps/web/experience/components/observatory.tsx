@@ -23,6 +23,7 @@ import { briefing, buyersOf, byLane, currentnessLabel, familyValue, fill, insigh
 import { baseline, litKeys, markSeen, observedSinceVisit, readSeen, touch, writeSeen, type SeenStore } from "@/lib/observatory-seen";
 import { activityLabel, FirstObservationView, observationStateCopy } from "./first-observation";
 import { SubscriberReading } from "./subscriber-reading";
+import { InsightSources } from "./insight-sources";
 import { useEvidenceLink } from "./evidence-link-context";
 import { causeCopy, dimensionCopy, stateCopy } from "./public-understanding";
 import { SubscriberRepresentation } from "./subscriber-representation";
@@ -881,7 +882,6 @@ export function InsightCard({ insight, lit, active, onOpen }: { insight: Insight
 /** GLANCE → UNDERSTAND → REASON → PROVE for one finding; the same body wherever it is shown. */
 export function InsightBody({ insight, onEvidence, onAsk, organization }: { insight: Insight; onEvidence?: () => void; onAsk?: () => void; organization?: string }) {
   const { t, locale } = useLocale();
-  const evidenceLink = useEvidenceLink();
   return <article className="obs-depth-body">
       <NatureMark nature={insight.nature} label={natureLabel(insight.nature, t)}/>
       <h2 tabIndex={-1}>{insight.headline}</h2>
@@ -898,11 +898,7 @@ export function InsightBody({ insight, onEvidence, onAsk, organization }: { insi
       {insight.reasoning.length > 0 && <section><h3>{t("Por qué lo dice AXIGNAL", "Why AXIGNAL says so")}</h3>{insight.reasoning.map(x => <p key={x}>{x}</p>)}</section>}
       {insight.proposal && <section className="obs-proposal"><h3>{t("Propuesta condicionada", "Conditional proposal")}</h3><p>{insight.proposal}</p><p className="obs-quiet">{t("Una mejora sugerida no es una causa demostrada. Vuelve a observar después para comprobar si cambia la interpretación.", "A suggested improvement is not a demonstrated cause. Observe again afterwards to check whether the interpretation changes.")}</p></section>}
       {(insight.sources.length > 0 || insight.proof.length > 0) && <section><h3>{t("Pruebas", "Evidence")}</h3>
-        {insight.sources.map((s, i) => { const link = evidenceLink.href(s.url); return <figure key={i} className="obs-source">
-          {s.quote && <blockquote>“{s.quote}”</blockquote>}
-          <figcaption>{link ? <a href={link} target="_blank" rel="noopener noreferrer">{s.label}<ExternalLink size={13} aria-hidden="true"/><span className="sr-only">{t("(se abre en otra pestaña)", "(opens in a new tab)")}</span></a> : <span>{s.label}</span>}{evidenceLink.synthetic && <small>{t("Fuente ficticia, ejemplo no navegable", "Fictional source, non-navigable example")}</small>}{s.observedAt && <time dateTime={s.observedAt}>{formatDate(s.observedAt, locale)}</time>}</figcaption>
-        </figure>; })}
-        {insight.proof.length > 0 && <dl className="obs-proof">{insight.proof.map(p => <div key={p.label + p.value}><dt>{p.label}</dt><dd>{p.value}</dd></div>)}</dl>}
+        <InsightSources sources={insight.sources} proof={insight.proof}/>
         {onEvidence && <button className="obs-link" onClick={onEvidence}>{t("Ver todas las evidencias de esta organización", "See all evidence for this organization")}<ArrowRight size={14} aria-hidden="true"/></button>}
       </section>}
   </article>;

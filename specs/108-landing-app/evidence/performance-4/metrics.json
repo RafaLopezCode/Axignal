@@ -1,0 +1,511 @@
+{
+  "note": "Five consecutive cold mobile navigations and one desktop navigation. Default Lighthouse profiles, local production Next server, no simultaneous test/build/browser work. No field INP or field CWV claim.",
+  "baselineCode": "4b2a7fbc7937d01f81efa8820315b6755ab9f8dc",
+  "sameMobileConditionsAsBaseline": true,
+  "allMobileUnder2500": true,
+  "median": "ready-mobile-2",
+  "medianLCP": 2484.6259,
+  "range": [
+    2484.0328,
+    2487.1041999999998
+  ],
+  "allMobileCLSZero": true,
+  "allAccessibility100": true,
+  "allWarningsEmpty": true,
+  "INP": null,
+  "INPReason": "No real field data available",
+  "sources": [
+    {
+      "file": "components/landing-lab-critical-type.tsx",
+      "sha256": "2da84f39393be9a3ad750ef160612e69ba5fd556c3ee22adf34681d142e14889"
+    },
+    {
+      "file": "components/landing-lab.css",
+      "sha256": "98fb1d8e30d09bb05e68d783ea3242a442f704910e8a85eb4748c4a289fa6101"
+    },
+    {
+      "file": "components/landing-lab.tsx",
+      "sha256": "87259b492bdca8c5e9b3b196698cde545aca86b641358aca5661fd4573da3737"
+    },
+    {
+      "file": "lib/landing-first-reading.ts",
+      "sha256": "ed89a9e696144030b8f9c5867e143a765cd34b7cb7d60ae091c9f838d0bacd8f"
+    },
+    {
+      "file": "lib/surface-styles.json",
+      "sha256": "149e86418e4bff2825f7f7486f3e9e888112d586b2e0c8faca30c3e12a09af80"
+    },
+    {
+      "file": "next.config.ts",
+      "sha256": "632c089ac72764baf4c4a75abaa722e088c109ab0883bf01171d8ca1ec4bf15c"
+    },
+    {
+      "file": "tools/minify-lab-styles.mjs",
+      "sha256": "0175a347eb820a12482180422bef568eedb208ef60047d70403f238f26579a4a"
+    },
+    {
+      "file": "tools/surface-styles.mjs",
+      "sha256": "533a5d05c385f5977e1874deba9ca8273591df9dda5907d77b45e15e2818741a"
+    }
+  ],
+  "samples": [
+    {
+      "name": "ready-mobile-1",
+      "reportSha256": "277c69ae38375e4e5bdf3a3c203a5457998a615f93ab357b11b09c478a48b3d4",
+      "fetchTime": "2026-10-20T13:00:40.460Z",
+      "url": "http://127.0.0.1:3822/es/landing-lab",
+      "version": "13.5.0",
+      "userAgent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) HeadlessChrome/155.0.0.0 Safari/537.36",
+      "benchmarkIndex": 2506,
+      "settings": {
+        "output": [
+          "json",
+          "html"
+        ],
+        "maxWaitForFcp": 30000,
+        "maxWaitForLoad": 45000,
+        "pauseAfterFcpMs": 1000,
+        "pauseAfterLoadMs": 1000,
+        "networkQuietThresholdMs": 1000,
+        "cpuQuietThresholdMs": 1000,
+        "formFactor": "mobile",
+        "throttling": {
+          "rttMs": 150,
+          "throughputKbps": 1638.4,
+          "requestLatencyMs": 562.5,
+          "downloadThroughputKbps": 1474.5600000000002,
+          "uploadThroughputKbps": 675,
+          "cpuSlowdownMultiplier": 4
+        },
+        "throttlingMethod": "simulate",
+        "screenEmulation": {
+          "mobile": true,
+          "width": 412,
+          "height": 823,
+          "deviceScaleFactor": 1.75,
+          "disabled": false
+        },
+        "emulatedUserAgent": "Mozilla/5.0 (Linux; Android 11; moto g power (2022)) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/136.0.0.0 Mobile Safari/537.36",
+        "auditMode": false,
+        "gatherMode": false,
+        "clearStorageTypes": [
+          "file_systems",
+          "shader_cache",
+          "service_workers",
+          "cache_storage"
+        ],
+        "disableStorageReset": false,
+        "debugNavigation": false,
+        "channel": "cli",
+        "usePassiveGathering": false,
+        "disableFullPageScreenshot": false,
+        "skipAboutBlank": false,
+        "blankPage": "about:blank",
+        "ignoreStatusCode": false,
+        "locale": "en-US",
+        "blockedUrlPatterns": null,
+        "additionalTraceCategories": null,
+        "extraHeaders": null,
+        "precomputedLanternData": null,
+        "onlyAudits": null,
+        "onlyCategories": [
+          "performance",
+          "accessibility",
+          "best-practices",
+          "seo"
+        ],
+        "skipAudits": null
+      },
+      "performance": 97,
+      "accessibility": 100,
+      "bestPractices": 96,
+      "seo": 69,
+      "LCP": 2487.1041999999998,
+      "CLS": 0,
+      "TBT": 46,
+      "warnings": []
+    },
+    {
+      "name": "ready-mobile-2",
+      "reportSha256": "c217f9a8f31af48eb8735e01a2451512925c46f705352cc2d912a4c9ad7cedc0",
+      "fetchTime": "2026-10-20T13:00:55.210Z",
+      "url": "http://127.0.0.1:3822/es/landing-lab",
+      "version": "13.5.0",
+      "userAgent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) HeadlessChrome/155.0.0.0 Safari/537.36",
+      "benchmarkIndex": 2510.5,
+      "settings": {
+        "output": [
+          "json",
+          "html"
+        ],
+        "maxWaitForFcp": 30000,
+        "maxWaitForLoad": 45000,
+        "pauseAfterFcpMs": 1000,
+        "pauseAfterLoadMs": 1000,
+        "networkQuietThresholdMs": 1000,
+        "cpuQuietThresholdMs": 1000,
+        "formFactor": "mobile",
+        "throttling": {
+          "rttMs": 150,
+          "throughputKbps": 1638.4,
+          "requestLatencyMs": 562.5,
+          "downloadThroughputKbps": 1474.5600000000002,
+          "uploadThroughputKbps": 675,
+          "cpuSlowdownMultiplier": 4
+        },
+        "throttlingMethod": "simulate",
+        "screenEmulation": {
+          "mobile": true,
+          "width": 412,
+          "height": 823,
+          "deviceScaleFactor": 1.75,
+          "disabled": false
+        },
+        "emulatedUserAgent": "Mozilla/5.0 (Linux; Android 11; moto g power (2022)) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/136.0.0.0 Mobile Safari/537.36",
+        "auditMode": false,
+        "gatherMode": false,
+        "clearStorageTypes": [
+          "file_systems",
+          "shader_cache",
+          "service_workers",
+          "cache_storage"
+        ],
+        "disableStorageReset": false,
+        "debugNavigation": false,
+        "channel": "cli",
+        "usePassiveGathering": false,
+        "disableFullPageScreenshot": false,
+        "skipAboutBlank": false,
+        "blankPage": "about:blank",
+        "ignoreStatusCode": false,
+        "locale": "en-US",
+        "blockedUrlPatterns": null,
+        "additionalTraceCategories": null,
+        "extraHeaders": null,
+        "precomputedLanternData": null,
+        "onlyAudits": null,
+        "onlyCategories": [
+          "performance",
+          "accessibility",
+          "best-practices",
+          "seo"
+        ],
+        "skipAudits": null
+      },
+      "performance": 98,
+      "accessibility": 100,
+      "bestPractices": 96,
+      "seo": 69,
+      "LCP": 2484.6259,
+      "CLS": 0,
+      "TBT": 44,
+      "warnings": []
+    },
+    {
+      "name": "ready-mobile-3",
+      "reportSha256": "f17af083c4496f6c9ac29ab6a49931994ad8f5ec887594faa24171a71e610160",
+      "fetchTime": "2026-10-20T13:01:09.744Z",
+      "url": "http://127.0.0.1:3822/es/landing-lab",
+      "version": "13.5.0",
+      "userAgent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) HeadlessChrome/155.0.0.0 Safari/537.36",
+      "benchmarkIndex": 2529,
+      "settings": {
+        "output": [
+          "json",
+          "html"
+        ],
+        "maxWaitForFcp": 30000,
+        "maxWaitForLoad": 45000,
+        "pauseAfterFcpMs": 1000,
+        "pauseAfterLoadMs": 1000,
+        "networkQuietThresholdMs": 1000,
+        "cpuQuietThresholdMs": 1000,
+        "formFactor": "mobile",
+        "throttling": {
+          "rttMs": 150,
+          "throughputKbps": 1638.4,
+          "requestLatencyMs": 562.5,
+          "downloadThroughputKbps": 1474.5600000000002,
+          "uploadThroughputKbps": 675,
+          "cpuSlowdownMultiplier": 4
+        },
+        "throttlingMethod": "simulate",
+        "screenEmulation": {
+          "mobile": true,
+          "width": 412,
+          "height": 823,
+          "deviceScaleFactor": 1.75,
+          "disabled": false
+        },
+        "emulatedUserAgent": "Mozilla/5.0 (Linux; Android 11; moto g power (2022)) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/136.0.0.0 Mobile Safari/537.36",
+        "auditMode": false,
+        "gatherMode": false,
+        "clearStorageTypes": [
+          "file_systems",
+          "shader_cache",
+          "service_workers",
+          "cache_storage"
+        ],
+        "disableStorageReset": false,
+        "debugNavigation": false,
+        "channel": "cli",
+        "usePassiveGathering": false,
+        "disableFullPageScreenshot": false,
+        "skipAboutBlank": false,
+        "blankPage": "about:blank",
+        "ignoreStatusCode": false,
+        "locale": "en-US",
+        "blockedUrlPatterns": null,
+        "additionalTraceCategories": null,
+        "extraHeaders": null,
+        "precomputedLanternData": null,
+        "onlyAudits": null,
+        "onlyCategories": [
+          "performance",
+          "accessibility",
+          "best-practices",
+          "seo"
+        ],
+        "skipAudits": null
+      },
+      "performance": 98,
+      "accessibility": 100,
+      "bestPractices": 96,
+      "seo": 69,
+      "LCP": 2484.4084000000003,
+      "CLS": 0,
+      "TBT": 36.5,
+      "warnings": []
+    },
+    {
+      "name": "ready-mobile-4",
+      "reportSha256": "4da06309deff4cb7d7002a57d18472965f9932988f736a5feb6fe17421546e4e",
+      "fetchTime": "2026-10-20T13:01:24.536Z",
+      "url": "http://127.0.0.1:3822/es/landing-lab",
+      "version": "13.5.0",
+      "userAgent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) HeadlessChrome/155.0.0.0 Safari/537.36",
+      "benchmarkIndex": 2318.5,
+      "settings": {
+        "output": [
+          "json",
+          "html"
+        ],
+        "maxWaitForFcp": 30000,
+        "maxWaitForLoad": 45000,
+        "pauseAfterFcpMs": 1000,
+        "pauseAfterLoadMs": 1000,
+        "networkQuietThresholdMs": 1000,
+        "cpuQuietThresholdMs": 1000,
+        "formFactor": "mobile",
+        "throttling": {
+          "rttMs": 150,
+          "throughputKbps": 1638.4,
+          "requestLatencyMs": 562.5,
+          "downloadThroughputKbps": 1474.5600000000002,
+          "uploadThroughputKbps": 675,
+          "cpuSlowdownMultiplier": 4
+        },
+        "throttlingMethod": "simulate",
+        "screenEmulation": {
+          "mobile": true,
+          "width": 412,
+          "height": 823,
+          "deviceScaleFactor": 1.75,
+          "disabled": false
+        },
+        "emulatedUserAgent": "Mozilla/5.0 (Linux; Android 11; moto g power (2022)) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/136.0.0.0 Mobile Safari/537.36",
+        "auditMode": false,
+        "gatherMode": false,
+        "clearStorageTypes": [
+          "file_systems",
+          "shader_cache",
+          "service_workers",
+          "cache_storage"
+        ],
+        "disableStorageReset": false,
+        "debugNavigation": false,
+        "channel": "cli",
+        "usePassiveGathering": false,
+        "disableFullPageScreenshot": false,
+        "skipAboutBlank": false,
+        "blankPage": "about:blank",
+        "ignoreStatusCode": false,
+        "locale": "en-US",
+        "blockedUrlPatterns": null,
+        "additionalTraceCategories": null,
+        "extraHeaders": null,
+        "precomputedLanternData": null,
+        "onlyAudits": null,
+        "onlyCategories": [
+          "performance",
+          "accessibility",
+          "best-practices",
+          "seo"
+        ],
+        "skipAudits": null
+      },
+      "performance": 98,
+      "accessibility": 100,
+      "bestPractices": 96,
+      "seo": 69,
+      "LCP": 2485.3183,
+      "CLS": 0,
+      "TBT": 37,
+      "warnings": []
+    },
+    {
+      "name": "ready-mobile-5",
+      "reportSha256": "9a6c05c4193abfcfecbf123e2696d43e06806d6ea9fe68b2fe3f137752e494b6",
+      "fetchTime": "2026-10-20T13:01:39.217Z",
+      "url": "http://127.0.0.1:3822/es/landing-lab",
+      "version": "13.5.0",
+      "userAgent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) HeadlessChrome/155.0.0.0 Safari/537.36",
+      "benchmarkIndex": 2509.5,
+      "settings": {
+        "output": [
+          "json",
+          "html"
+        ],
+        "maxWaitForFcp": 30000,
+        "maxWaitForLoad": 45000,
+        "pauseAfterFcpMs": 1000,
+        "pauseAfterLoadMs": 1000,
+        "networkQuietThresholdMs": 1000,
+        "cpuQuietThresholdMs": 1000,
+        "formFactor": "mobile",
+        "throttling": {
+          "rttMs": 150,
+          "throughputKbps": 1638.4,
+          "requestLatencyMs": 562.5,
+          "downloadThroughputKbps": 1474.5600000000002,
+          "uploadThroughputKbps": 675,
+          "cpuSlowdownMultiplier": 4
+        },
+        "throttlingMethod": "simulate",
+        "screenEmulation": {
+          "mobile": true,
+          "width": 412,
+          "height": 823,
+          "deviceScaleFactor": 1.75,
+          "disabled": false
+        },
+        "emulatedUserAgent": "Mozilla/5.0 (Linux; Android 11; moto g power (2022)) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/136.0.0.0 Mobile Safari/537.36",
+        "auditMode": false,
+        "gatherMode": false,
+        "clearStorageTypes": [
+          "file_systems",
+          "shader_cache",
+          "service_workers",
+          "cache_storage"
+        ],
+        "disableStorageReset": false,
+        "debugNavigation": false,
+        "channel": "cli",
+        "usePassiveGathering": false,
+        "disableFullPageScreenshot": false,
+        "skipAboutBlank": false,
+        "blankPage": "about:blank",
+        "ignoreStatusCode": false,
+        "locale": "en-US",
+        "blockedUrlPatterns": null,
+        "additionalTraceCategories": null,
+        "extraHeaders": null,
+        "precomputedLanternData": null,
+        "onlyAudits": null,
+        "onlyCategories": [
+          "performance",
+          "accessibility",
+          "best-practices",
+          "seo"
+        ],
+        "skipAudits": null
+      },
+      "performance": 98,
+      "accessibility": 100,
+      "bestPractices": 96,
+      "seo": 69,
+      "LCP": 2484.0328,
+      "CLS": 0,
+      "TBT": 36.5,
+      "warnings": []
+    },
+    {
+      "name": "ready-desktop-1",
+      "reportSha256": "f527e0ec1187208c00b78402f342f993018ba7b03f680c8fb128a753f89cbe83",
+      "fetchTime": "2026-10-20T13:01:54.159Z",
+      "url": "http://127.0.0.1:3822/es/landing-lab",
+      "version": "13.5.0",
+      "userAgent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) HeadlessChrome/155.0.0.0 Safari/537.36",
+      "benchmarkIndex": 2480,
+      "settings": {
+        "output": [
+          "json",
+          "html"
+        ],
+        "maxWaitForFcp": 30000,
+        "maxWaitForLoad": 45000,
+        "pauseAfterFcpMs": 1000,
+        "pauseAfterLoadMs": 1000,
+        "networkQuietThresholdMs": 1000,
+        "cpuQuietThresholdMs": 1000,
+        "formFactor": "desktop",
+        "throttling": {
+          "rttMs": 40,
+          "throughputKbps": 10240,
+          "requestLatencyMs": 0,
+          "downloadThroughputKbps": 0,
+          "uploadThroughputKbps": 0,
+          "cpuSlowdownMultiplier": 1
+        },
+        "throttlingMethod": "simulate",
+        "screenEmulation": {
+          "mobile": false,
+          "width": 1350,
+          "height": 940,
+          "deviceScaleFactor": 1,
+          "disabled": false
+        },
+        "emulatedUserAgent": "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/136.0.0.0 Safari/537.36",
+        "auditMode": false,
+        "gatherMode": false,
+        "clearStorageTypes": [
+          "file_systems",
+          "shader_cache",
+          "service_workers",
+          "cache_storage"
+        ],
+        "disableStorageReset": false,
+        "debugNavigation": false,
+        "channel": "cli",
+        "usePassiveGathering": false,
+        "disableFullPageScreenshot": false,
+        "skipAboutBlank": false,
+        "blankPage": "about:blank",
+        "ignoreStatusCode": false,
+        "locale": "en-US",
+        "blockedUrlPatterns": null,
+        "additionalTraceCategories": null,
+        "extraHeaders": null,
+        "precomputedLanternData": null,
+        "onlyAudits": null,
+        "onlyCategories": [
+          "performance",
+          "accessibility",
+          "best-practices",
+          "seo"
+        ],
+        "skipAudits": null
+      },
+      "performance": 100,
+      "accessibility": 100,
+      "bestPractices": 96,
+      "seo": 69,
+      "LCP": 726.76875,
+      "CLS": 0,
+      "TBT": 0,
+      "warnings": []
+    }
+  ],
+  "sourceCommit": "a31e80c37a510db8c3e9d1e40e85646ae29ff1e8",
+  "captureProvenance": "Captured from a production build before committing; every listed source hash has been checked against this commit. Subsequent evidence/docs commits do not change the runtime."
+}

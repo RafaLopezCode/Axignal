@@ -1,0 +1,81 @@
+{
+  "reference": "e0c82a89cfdb6506b3972187a61129de4420008d",
+  "assets": [
+    {
+      "path": "/fonts/lab-manrope.76d1ca24ef0d.woff2",
+      "sha256": "76d1ca24ef0dd23ff4b29480858eceda0169aef71052756c9b4ba33f7b897e58",
+      "bytes": 20408,
+      "byteIdenticalToHead": true
+    },
+    {
+      "path": "/fonts/lab-fraunces.3bbb3a5b8520.woff2",
+      "sha256": "3bbb3a5b852090f458b055cad529dd1cfcdaccf64124655c4b88a6558617321e",
+      "bytes": 44724,
+      "byteIdenticalToHead": true
+    },
+    {
+      "path": "/fonts/lab-bic-notes-lab.3137d8930670.woff2",
+      "sha256": "3137d89306705de5314ba9e5d1d413d376a0b871e9d6e4f079327f2da71d792b",
+      "bytes": 25500,
+      "byteIdenticalToHead": true
+    },
+    {
+      "path": "/fonts/lab-ibm-plex-mono.75215d728296.woff2",
+      "sha256": "75215d7282966e964bb0c98e60b4426f67c288f6482f40daa41e685bd0411a35",
+      "bytes": 10480,
+      "byteIdenticalToHead": true
+    },
+    {
+      "path": "/brand/logo-light.svg",
+      "sha256": "3df29aa09f405b6a5de898841c90c7775909dfbdf344e17a5b6dc73a39c4e8b4",
+      "bytes": 18880,
+      "byteIdenticalToHead": true
+    },
+    {
+      "path": "/brand/isotope.svg",
+      "sha256": "a685a164c1b05862da26825c0f74ed9228f6152ddef96f29a199dbbfe6dddd61",
+      "bytes": 2252,
+      "byteIdenticalToHead": true
+    },
+    {
+      "path": "/marketing/focus.webp",
+      "sha256": "7edcf131ad862819040d39379205a5d0b5d7329f85288abf689168d2b331dbdc",
+      "bytes": 30942,
+      "byteIdenticalToHead": true,
+      "canvas": [
+        640,
+        427
+      ]
+    },
+    {
+      "path": "/marketing/explain.webp",
+      "sha256": "a678ebe55cdc48a86775632e713a17211ebf2266443bf863ad5d0b5299e81e61",
+      "bytes": 28264,
+      "byteIdenticalToHead": true,
+      "canvas": [
+        640,
+        427
+      ]
+    },
+    {
+      "path": "/marketing/memory.webp",
+      "sha256": "eeed08414bdf7474589fda792fc725422189f37e4228cf6a979633494ca9106a",
+      "bytes": 27988,
+      "byteIdenticalToHead": true,
+      "canvas": [
+        640,
+        427
+      ]
+    }
+  ],
+  "legacyStylesByteExact": true,
+  "legacySha256": "6cd6be449f6bb7e7434755cafacd411796dfa5ac463c074b764b2f7ccc5b2e61",
+  "originalLabRulesUnchanged": true,
+  "onlyAppendedLabRule": "\n/* Only while the first small-screen reading is being painted. Pointer, keyboard\n   or scroll intent restores full layout immediately; deep links and no-JS keep\n   the original layout. Motion measures sections after this phase has ended. */\n@supports (content-visibility: auto) {\n  :root[data-lab-first-reading] .landing-lab .lab-section,\n  :root[data-lab-first-reading] .landing-lab .lab-closing,\n  :root[data-lab-first-reading] .landing-lab .lab-footer {\n    content-visibility: auto;\n    contain-intrinsic-block-size: auto 900px;\n  }\n}\n",
+  "labCss": {
+    "url": "/styles/lab.d2094b618da9.css",
+    "bytes": 60825,
+    "sha256": "d2094b618da912652603fb5776f13c12d6b3e13ce922d7f6a637ea960bada5d3"
+  },
+  "note": "Normal loaded composition and all original art/font bytes are retained. The only authored CSS addition is conditional first-reading layout priority. Ordered CSS semantic equivalence is enforced by the frontend tests. Corrected WebP height reservations remove the prior 36.53125px cold/warm difference in the narrow trust block."
+}

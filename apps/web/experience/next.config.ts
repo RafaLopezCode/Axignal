@@ -1,5 +1,7 @@
 import type { NextConfig } from "next";
 import publicDelivery from "./lib/marketing-delivery.json";
+import labFonts from "./lib/landing-lab-fonts.json";
+import surfaceStyles from "./lib/surface-styles.json";
 // Baseline CSP in report-only mode: collect browser compatibility evidence before
 // enforcing a policy on OAuth, payment or the Next.js hydration runtime.
 const cspReportOnly = [
@@ -18,8 +20,18 @@ const config: NextConfig = {
   async headers() {
     return [
       { source: "/:path*", headers: [{ key: "Content-Security-Policy-Report-Only", value: cspReportOnly }] },
+      // Announce only the two essential faces before parsing the lab document.
+      // HTML preloads remain for native/client navigation and are coalesced by URL.
+      ...["/landing-lab", "/:locale(es|en|de|pt|fr|it)/landing-lab"].map(source => ({
+        source,
+        headers: [{ key: "Link", value: labFonts.fonts.slice(0, 2).map(font =>
+          `<${font.url}>; rel=preload; as=font; type="font/woff2"; crossorigin=anonymous; fetchpriority=high`
+        ).join(", ") }],
+      })),
       ...[
         ...publicDelivery.fonts.map(({url}) => url),
+        ...labFonts.fonts.map(({url}) => url),
+        surfaceStyles.base.url, surfaceStyles.legacy.url, surfaceStyles.lab.url,
         ...Object.values(publicDelivery.images).flatMap(({variants}) => variants.map(({url}) => url)),
       ].map(source => ({source, headers: [{key: "Cache-Control", value: "public, max-age=31536000, immutable"}]})),
     ];

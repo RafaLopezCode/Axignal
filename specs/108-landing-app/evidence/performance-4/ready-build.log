@@ -1,0 +1,219 @@
+
+> axignal-experience@0.1.0 build
+> npm run check:repertoire && npm run check:styles && npm run check:seo && next build && node tools/localize-static-html-lang.mjs
+
+
+> axignal-experience@0.1.0 check:repertoire
+> tsx tools/landing-lab-repertoire.ts --check
+
+118 editorial characters
+
+> axignal-experience@0.1.0 check:styles
+> node tools/surface-styles.mjs --check
+
+{"sources":["app/globals.css","app/public.css","app/typography.css","app/acquisition.css","app/funnel.css","app/public-layout.css","components/cognition/cognition.css"],"fontManifestSha256":"ee068481c0ad543988532942f06dd3c22937ce1662d6582120f4171701814122","base":{"url":"/styles/base.6a1b27358c35.css","bytes":23597,"sha256":"6a1b27358c35577f0b4d6245d6102436d588241a65d152e31abd5dc60cf89b29"},"legacy":{"url":"/styles/legacy.6cd6be449f6b.css","bytes":243199,"sha256":"6cd6be449f6bb7e7434755cafacd411796dfa5ac463c074b764b2f7ccc5b2e61"},"lab":{"url":"/styles/lab.d2094b618da9.css","bytes":60825,"sha256":"d2094b618da912652603fb5776f13c12d6b3e13ce922d7f6a637ea960bada5d3"}}
+
+> axignal-experience@0.1.0 check:seo
+> tsx --test tests/acquisition.test.ts
+
+TAP version 13
+# Subtest: acquisition corpus is substantial and every published page passes editorial gates
+ok 1 - acquisition corpus is substantial and every published page passes editorial gates
+  ---
+  duration_ms: 406.5049
+  type: 'test'
+  ...
+# Subtest: each page has six localized slugs and route lookup is one-to-one
+ok 2 - each page has six localized slugs and route lookup is one-to-one
+  ---
+  duration_ms: 1.7335
+  type: 'test'
+  ...
+# Subtest: all canonical, hreflang and x-default URLs are reciprocal and in the sitemap
+ok 3 - all canonical, hreflang and x-default URLs are reciprocal and in the sitemap
+  ---
+  duration_ms: 17.7591
+  type: 'test'
+  ...
+# Subtest: article and breadcrumb structured data matches the visible localized document
+ok 4 - article and breadcrumb structured data matches the visible localized document
+  ---
+  duration_ms: 0.5145
+  type: 'test'
+  ...
+# Subtest: hub structured data identifies the localized Knowledge collection
+ok 5 - hub structured data identifies the localized Knowledge collection
+  ---
+  duration_ms: 0.2369
+  type: 'test'
+  ...
+# Subtest: route metadata localizes canonical, hreflang, OpenGraph and Twitter for every page
+ok 6 - route metadata localizes canonical, hreflang, OpenGraph and Twitter for every page
+  ---
+  duration_ms: 30.3283
+  type: 'test'
+  ...
+# Subtest: hreflang uses the Spanish x-default and robots expose the XML sitemap
+ok 7 - hreflang uses the Spanish x-default and robots expose the XML sitemap
+  ---
+  duration_ms: 0.2264
+  type: 'test'
+  ...
+# Subtest: GSC sitemap contains only canonical public indexable pages, not redirects, demo or private sessions
+ok 8 - GSC sitemap contains only canonical public indexable pages, not redirects, demo or private sessions
+  ---
+  duration_ms: 10.2356
+  type: 'test'
+  ...
+1..8
+# tests 8
+# suites 0
+# pass 8
+# fail 0
+# cancelled 0
+# skipped 0
+# todo 0
+# duration_ms 787.5306
+▲ Next.js 16.3.8 (Turbopack)
+✓ Running next.config.ts took 40ms
+
+  Creating an optimized production build ...
+✓ Compiled successfully in 2.0s
+  Running TypeScript ...
+  Finished TypeScript in 3.3s ...
+  Collecting page data using 11 workers ...
+  Generating static pages using 11 workers (0/663) ...
+  Generating static pages using 11 workers (165/663)
+  Generating static pages using 11 workers (331/663)
+  Generating static pages using 11 workers (497/663)
+✓ Generating static pages using 11 workers (663/663) in 12.5s
+  Finalizing page optimization ...
+
+Route (app)
+┌ ○ /
+├ ○ /_not-found
+├   /[locale]
+│ ├ ● /es
+│ ├ ● /en
+│ ├ ● /de
+│ └ ● [+3 more paths]
+├   /[locale]/data
+│ ├ ● /es/data
+│ ├ ● /en/data
+│ ├ ● /de/data
+│ └ ● [+3 more paths]
+├   /[locale]/industries
+│ ├ ● /es/industries
+│ ├ ● /en/industries
+│ ├ ● /de/industries
+│ └ ● [+3 more paths]
+├   /[locale]/industries/[industry]
+│ ├ ● /es/industries/industry
+│ ├ ● /es/industries/construction
+│ ├ ● /es/industries/energy
+│ └ ● [+33 more paths]
+├   /[locale]/knowledge
+│ ├ ● /es/knowledge
+│ ├ ● /en/knowledge
+│ ├ ● /de/knowledge
+│ └ ● [+3 more paths]
+├   /[locale]/knowledge/[slug]
+│ ├ ● /es/knowledge/que-hace-axignal
+│ ├ ● /es/knowledge/observar-una-organizacion-desde-fuera
+│ ├ ● /es/knowledge/observacion-persistente-o-busqueda-puntual
+│ └ ● [+525 more paths]
+├   /[locale]/landing-lab
+│ ├ ● /es/landing-lab
+│ ├ ● /en/landing-lab
+│ ├ ● /de/landing-lab
+│ └ ● [+3 more paths]
+├   /[locale]/pricing
+│ ├ ● /es/pricing
+│ ├ ● /en/pricing
+│ ├ ● /de/pricing
+│ └ ● [+3 more paths]
+├ ○ /account
+├ ○ /account/connect
+├ ○ /admin
+├ ƒ /api/admin/action
+├ ƒ /api/admin/customer-access
+├ ƒ /api/admin/customer-access/[action]
+├ ƒ /api/admin/marketing-pool
+├ ƒ /api/admin/pilot-test-accounts
+├ ƒ /api/admin/projections/[domain]
+├ ƒ /api/admin/session
+├ ƒ /api/admin/staff-capacity
+├ ƒ /api/admin/staff-capacity/[action]
+├ ƒ /api/admin/step-up
+├ ƒ /api/auth/callback/[provider]
+├ ƒ /api/auth/logout
+├ ƒ /api/auth/start
+├ ƒ /api/auth/status
+├ ƒ /api/axent
+├ ƒ /api/contact
+├ ƒ /api/contact/status
+├ ƒ /api/gdpr/status
+├ ƒ /api/marketing/unsubscribe/[token]
+├ ƒ /api/organizations
+├ ƒ /api/privacy/request
+├ ƒ /api/projection
+├ ƒ /api/subscriber-context
+├ ƒ /api/subscriber/axent
+├ ƒ /api/subscriber/billing/management
+├ ƒ /api/subscriber/billing/webhook
+├ ƒ /api/subscriber/identity/candidates
+├ ƒ /api/subscriber/mcp/connections
+├ ƒ /api/subscriber/mcp/requests/[id]
+├ ƒ /api/subscriber/organizations/[focus]/demand-markets
+├ ƒ /api/subscriber/organizations/[focus]/output
+├ ƒ /api/subscriber/organizations/[focus]/research
+├ ƒ /api/subscriber/pilot/redeem
+├ ƒ /api/subscriber/portfolio
+├ ƒ /api/subscriber/profile
+├ ƒ /api/subscriber/reading
+├ ƒ /api/weekly-brief/requests
+├ ƒ /api/weekly-brief/status
+├ ƒ /api/xeeds
+├ ○ /contact
+├ ○ /data
+├ ○ /demo
+├ ○ /design
+├ ○ /design/panorama
+├ ○ /design/recovery
+├ ○ /gdpr
+├ ○ /industries
+├   /industries/[industry]
+│ ├ ● /industries/industry
+│ ├ ● /industries/construction
+│ ├ ● /industries/energy
+│ └ ● [+3 more paths]
+├ ○ /knowledge
+├   /knowledge/[slug]
+│ ├ ● /knowledge/una-senal-no-es-una-certeza
+│ ├ ● /knowledge/una-organizacion-una-mirada-un-mundo
+│ ├ ● /knowledge/el-contexto-tambien-tiene-fecha
+│ └ ● [+3 more paths]
+├   /knowledge/basis/[source]
+│ ├ ● /knowledge/basis/product-model
+│ └ ● /knowledge/basis/human-first
+├ ○ /landing-lab
+├ ○ /llms.txt
+├ ƒ /login
+├ ○ /panorama/live
+├ ○ /policies
+├ ƒ /policies/[slug]
+├ ○ /preview/subscriber
+├ ○ /pricing
+├ ƒ /r/[token]
+├ ƒ /r/[token]/unsubscribe
+├ ○ /robots.txt
+├ ○ /signup
+├ ○ /sitemap.xml
+└ ƒ /sources/[id]
+
+
+○  (Static)   prerendered as static content
+●  (SSG)      prerendered as static HTML (uses generateStaticParams)
+ƒ  (Dynamic)  server-rendered on demand
+
+Localized html lang for 534 knowledge and 66 public catalog pages.

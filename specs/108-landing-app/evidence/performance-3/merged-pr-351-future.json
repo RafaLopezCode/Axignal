@@ -1,0 +1,11 @@
+{
+  "input": "Hawkers abrirá en México.",
+  "expectedFromSpec": "No entry: future announcement",
+  "actual": {
+    "countries": [
+      "MX"
+    ],
+    "excerpt": "Hawkers abrira en Mexico"
+  },
+  "scope": "Inherited from merged PR 351. The synthetic landing demo does not invoke web research or this extractor."
+}

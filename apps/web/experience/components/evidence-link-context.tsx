@@ -5,7 +5,7 @@
  * remain governed by the existing URL validator.
  */
 import { createContext, useContext, type ReactNode } from "react";
-import { evidenceUrl } from "@/lib/subscriber-contracts";
+import { evidenceUrl } from "@/lib/evidence-url";
 
 const SyntheticEvidence = createContext(false);
 

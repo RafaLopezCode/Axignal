@@ -1,0 +1,36 @@
+[
+  {
+    "file": "ready-mobile-2-lighthouse-full.webp",
+    "origin": "Native fullPageScreenshot returned by Lighthouse; extracted without image editing",
+    "report": "ready-mobile-2.json",
+    "reportSha256": "c217f9a8f31af48eb8735e01a2451512925c46f705352cc2d912a4c9ad7cedc0",
+    "imageSha256": "2069fdedfec73f8b6e7a19391dd6ed247d863b05cf56446ec78513f96d859190",
+    "mime": "image/webp",
+    "width": 412,
+    "height": 10977,
+    "viewport": {
+      "mobile": true,
+      "width": 412,
+      "height": 823,
+      "deviceScaleFactor": 1.75,
+      "disabled": false
+    }
+  },
+  {
+    "file": "ready-desktop-1-lighthouse-full.webp",
+    "origin": "Native fullPageScreenshot returned by Lighthouse; extracted without image editing",
+    "report": "ready-desktop-1.json",
+    "reportSha256": "f527e0ec1187208c00b78402f342f993018ba7b03f680c8fb128a753f89cbe83",
+    "imageSha256": "737a84c0a71c91e389b6a8142e1021cfbd918b24d16cf59f4e2870315c13c0a4",
+    "mime": "image/webp",
+    "width": 1350,
+    "height": 8323,
+    "viewport": {
+      "mobile": false,
+      "width": 1350,
+      "height": 940,
+      "deviceScaleFactor": 1,
+      "disabled": false
+    }
+  }
+]
