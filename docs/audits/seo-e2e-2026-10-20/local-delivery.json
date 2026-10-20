@@ -1,0 +1,445 @@
+{
+  "instrument": "Unauthenticated SSR HTTP + HTMLParser; current main/accepted preview on 3822 versus SEO candidate on 3824. Scripts/style bodies excluded from presentation comparison; all other body elements, attributes and text compared exactly.",
+  "checks": [
+    {
+      "path": "/",
+      "body_identical": true,
+      "canonical_identical": true,
+      "html_language_identical": true,
+      "declared_icons": [
+        {
+          "rel": "icon",
+          "href": "/brand/favicon-96x96.png",
+          "type": "image/png",
+          "sizes": "96x96"
+        },
+        {
+          "rel": "icon",
+          "href": "/brand/favicon.ico",
+          "type": "image/x-icon",
+          "sizes": "16x16 32x32 48x48"
+        },
+        {
+          "rel": "icon",
+          "href": "/brand/favicon.svg",
+          "type": "image/svg+xml",
+          "sizes": "any"
+        },
+        {
+          "rel": "apple-touch-icon",
+          "href": "/brand/apple-touch-icon.png",
+          "sizes": "180x180",
+          "type": "image/png"
+        },
+        {
+          "rel": "icon",
+          "href": "/brand/icon-192.png",
+          "sizes": "192x192",
+          "type": "image/png"
+        },
+        {
+          "rel": "icon",
+          "href": "/brand/icon-512.png",
+          "sizes": "512x512",
+          "type": "image/png"
+        }
+      ]
+    },
+    {
+      "path": "/es",
+      "body_identical": true,
+      "canonical_identical": true,
+      "html_language_identical": true,
+      "declared_icons": [
+        {
+          "rel": "icon",
+          "href": "/brand/favicon-96x96.png",
+          "type": "image/png",
+          "sizes": "96x96"
+        },
+        {
+          "rel": "icon",
+          "href": "/brand/favicon.ico",
+          "type": "image/x-icon",
+          "sizes": "16x16 32x32 48x48"
+        },
+        {
+          "rel": "icon",
+          "href": "/brand/favicon.svg",
+          "type": "image/svg+xml",
+          "sizes": "any"
+        },
+        {
+          "rel": "apple-touch-icon",
+          "href": "/brand/apple-touch-icon.png",
+          "sizes": "180x180",
+          "type": "image/png"
+        },
+        {
+          "rel": "icon",
+          "href": "/brand/icon-192.png",
+          "sizes": "192x192",
+          "type": "image/png"
+        },
+        {
+          "rel": "icon",
+          "href": "/brand/icon-512.png",
+          "sizes": "512x512",
+          "type": "image/png"
+        }
+      ]
+    },
+    {
+      "path": "/en",
+      "body_identical": true,
+      "canonical_identical": true,
+      "html_language_identical": true,
+      "declared_icons": [
+        {
+          "rel": "icon",
+          "href": "/brand/favicon-96x96.png",
+          "type": "image/png",
+          "sizes": "96x96"
+        },
+        {
+          "rel": "icon",
+          "href": "/brand/favicon.ico",
+          "type": "image/x-icon",
+          "sizes": "16x16 32x32 48x48"
+        },
+        {
+          "rel": "icon",
+          "href": "/brand/favicon.svg",
+          "type": "image/svg+xml",
+          "sizes": "any"
+        },
+        {
+          "rel": "apple-touch-icon",
+          "href": "/brand/apple-touch-icon.png",
+          "sizes": "180x180",
+          "type": "image/png"
+        },
+        {
+          "rel": "icon",
+          "href": "/brand/icon-192.png",
+          "sizes": "192x192",
+          "type": "image/png"
+        },
+        {
+          "rel": "icon",
+          "href": "/brand/icon-512.png",
+          "sizes": "512x512",
+          "type": "image/png"
+        }
+      ]
+    },
+    {
+      "path": "/de",
+      "body_identical": true,
+      "canonical_identical": true,
+      "html_language_identical": true,
+      "declared_icons": [
+        {
+          "rel": "icon",
+          "href": "/brand/favicon-96x96.png",
+          "type": "image/png",
+          "sizes": "96x96"
+        },
+        {
+          "rel": "icon",
+          "href": "/brand/favicon.ico",
+          "type": "image/x-icon",
+          "sizes": "16x16 32x32 48x48"
+        },
+        {
+          "rel": "icon",
+          "href": "/brand/favicon.svg",
+          "type": "image/svg+xml",
+          "sizes": "any"
+        },
+        {
+          "rel": "apple-touch-icon",
+          "href": "/brand/apple-touch-icon.png",
+          "sizes": "180x180",
+          "type": "image/png"
+        },
+        {
+          "rel": "icon",
+          "href": "/brand/icon-192.png",
+          "sizes": "192x192",
+          "type": "image/png"
+        },
+        {
+          "rel": "icon",
+          "href": "/brand/icon-512.png",
+          "sizes": "512x512",
+          "type": "image/png"
+        }
+      ]
+    },
+    {
+      "path": "/it",
+      "body_identical": true,
+      "canonical_identical": true,
+      "html_language_identical": true,
+      "declared_icons": [
+        {
+          "rel": "icon",
+          "href": "/brand/favicon-96x96.png",
+          "type": "image/png",
+          "sizes": "96x96"
+        },
+        {
+          "rel": "icon",
+          "href": "/brand/favicon.ico",
+          "type": "image/x-icon",
+          "sizes": "16x16 32x32 48x48"
+        },
+        {
+          "rel": "icon",
+          "href": "/brand/favicon.svg",
+          "type": "image/svg+xml",
+          "sizes": "any"
+        },
+        {
+          "rel": "apple-touch-icon",
+          "href": "/brand/apple-touch-icon.png",
+          "sizes": "180x180",
+          "type": "image/png"
+        },
+        {
+          "rel": "icon",
+          "href": "/brand/icon-192.png",
+          "sizes": "192x192",
+          "type": "image/png"
+        },
+        {
+          "rel": "icon",
+          "href": "/brand/icon-512.png",
+          "sizes": "512x512",
+          "type": "image/png"
+        }
+      ]
+    },
+    {
+      "path": "/fr",
+      "body_identical": true,
+      "canonical_identical": true,
+      "html_language_identical": true,
+      "declared_icons": [
+        {
+          "rel": "icon",
+          "href": "/brand/favicon-96x96.png",
+          "type": "image/png",
+          "sizes": "96x96"
+        },
+        {
+          "rel": "icon",
+          "href": "/brand/favicon.ico",
+          "type": "image/x-icon",
+          "sizes": "16x16 32x32 48x48"
+        },
+        {
+          "rel": "icon",
+          "href": "/brand/favicon.svg",
+          "type": "image/svg+xml",
+          "sizes": "any"
+        },
+        {
+          "rel": "apple-touch-icon",
+          "href": "/brand/apple-touch-icon.png",
+          "sizes": "180x180",
+          "type": "image/png"
+        },
+        {
+          "rel": "icon",
+          "href": "/brand/icon-192.png",
+          "sizes": "192x192",
+          "type": "image/png"
+        },
+        {
+          "rel": "icon",
+          "href": "/brand/icon-512.png",
+          "sizes": "512x512",
+          "type": "image/png"
+        }
+      ]
+    },
+    {
+      "path": "/pt",
+      "body_identical": true,
+      "canonical_identical": true,
+      "html_language_identical": true,
+      "declared_icons": [
+        {
+          "rel": "icon",
+          "href": "/brand/favicon-96x96.png",
+          "type": "image/png",
+          "sizes": "96x96"
+        },
+        {
+          "rel": "icon",
+          "href": "/brand/favicon.ico",
+          "type": "image/x-icon",
+          "sizes": "16x16 32x32 48x48"
+        },
+        {
+          "rel": "icon",
+          "href": "/brand/favicon.svg",
+          "type": "image/svg+xml",
+          "sizes": "any"
+        },
+        {
+          "rel": "apple-touch-icon",
+          "href": "/brand/apple-touch-icon.png",
+          "sizes": "180x180",
+          "type": "image/png"
+        },
+        {
+          "rel": "icon",
+          "href": "/brand/icon-192.png",
+          "sizes": "192x192",
+          "type": "image/png"
+        },
+        {
+          "rel": "icon",
+          "href": "/brand/icon-512.png",
+          "sizes": "512x512",
+          "type": "image/png"
+        }
+      ]
+    },
+    {
+      "path": "/es/knowledge",
+      "body_identical": true,
+      "canonical_identical": true,
+      "html_language_identical": true,
+      "declared_icons": [
+        {
+          "rel": "icon",
+          "href": "/brand/favicon-96x96.png",
+          "type": "image/png",
+          "sizes": "96x96"
+        },
+        {
+          "rel": "icon",
+          "href": "/brand/favicon.ico",
+          "type": "image/x-icon",
+          "sizes": "16x16 32x32 48x48"
+        },
+        {
+          "rel": "icon",
+          "href": "/brand/favicon.svg",
+          "type": "image/svg+xml",
+          "sizes": "any"
+        },
+        {
+          "rel": "apple-touch-icon",
+          "href": "/brand/apple-touch-icon.png",
+          "sizes": "180x180",
+          "type": "image/png"
+        },
+        {
+          "rel": "icon",
+          "href": "/brand/icon-192.png",
+          "sizes": "192x192",
+          "type": "image/png"
+        },
+        {
+          "rel": "icon",
+          "href": "/brand/icon-512.png",
+          "sizes": "512x512",
+          "type": "image/png"
+        }
+      ]
+    },
+    {
+      "path": "/es/pricing",
+      "body_identical": true,
+      "canonical_identical": true,
+      "html_language_identical": true,
+      "declared_icons": [
+        {
+          "rel": "icon",
+          "href": "/brand/favicon-96x96.png",
+          "type": "image/png",
+          "sizes": "96x96"
+        },
+        {
+          "rel": "icon",
+          "href": "/brand/favicon.ico",
+          "type": "image/x-icon",
+          "sizes": "16x16 32x32 48x48"
+        },
+        {
+          "rel": "icon",
+          "href": "/brand/favicon.svg",
+          "type": "image/svg+xml",
+          "sizes": "any"
+        },
+        {
+          "rel": "apple-touch-icon",
+          "href": "/brand/apple-touch-icon.png",
+          "sizes": "180x180",
+          "type": "image/png"
+        },
+        {
+          "rel": "icon",
+          "href": "/brand/icon-192.png",
+          "sizes": "192x192",
+          "type": "image/png"
+        },
+        {
+          "rel": "icon",
+          "href": "/brand/icon-512.png",
+          "sizes": "512x512",
+          "type": "image/png"
+        }
+      ]
+    },
+    {
+      "path": "/es/landing-lab",
+      "body_identical": true,
+      "canonical_identical": true,
+      "html_language_identical": true,
+      "declared_icons": [
+        {
+          "rel": "icon",
+          "href": "/brand/favicon-96x96.png",
+          "type": "image/png",
+          "sizes": "96x96"
+        },
+        {
+          "rel": "icon",
+          "href": "/brand/favicon.ico",
+          "type": "image/x-icon",
+          "sizes": "16x16 32x32 48x48"
+        },
+        {
+          "rel": "icon",
+          "href": "/brand/favicon.svg",
+          "type": "image/svg+xml",
+          "sizes": "any"
+        },
+        {
+          "rel": "apple-touch-icon",
+          "href": "/brand/apple-touch-icon.png",
+          "sizes": "180x180",
+          "type": "image/png"
+        },
+        {
+          "rel": "icon",
+          "href": "/brand/icon-192.png",
+          "sizes": "192x192",
+          "type": "image/png"
+        },
+        {
+          "rel": "icon",
+          "href": "/brand/icon-512.png",
+          "sizes": "512x512",
+          "type": "image/png"
+        }
+      ]
+    }
+  ]
+}
