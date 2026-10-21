@@ -4,6 +4,7 @@ import { absolutePublicUrl } from "./acquisition-seo";
 import { marketingPath } from "./marketing-content";
 import { publicCopy } from "./marketing-ui";
 import { industries, industryBySlug } from "./marketing-industries";
+import { publicSocialMetadata } from "./site-seo";
 
 export const marketingPaths = [
   "/data",
@@ -45,12 +46,6 @@ export function marketingMetadata(path: string, locale: Locale): Metadata {
     title,
     description,
     alternates: { canonical: url, languages: marketingLanguages(path) },
-    openGraph: {
-      title: `${title} · AXIGNAL`,
-      description,
-      url,
-      locale,
-      type: "website",
-    },
+    ...publicSocialMetadata({ title: `${title} · AXIGNAL`, description, path: marketingPath(path, locale), locale }),
   };
 }

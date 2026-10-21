@@ -3,23 +3,20 @@ import { LocaleProvider } from "@/lib/locale";
 import { SurfaceStyles } from "@/components/surface-styles";
 import { PrivacyNotice } from "@/components/privacy-notice";
 import { siteIcons } from "@/lib/site-icons";
+import { HOME_METADATA } from "@/lib/public-home-metadata";
+import { publicSocialMetadata } from "@/lib/site-seo";
 
 export const metadata: Metadata = {
   metadataBase: new URL(
     process.env.NEXT_PUBLIC_SITE_URL ?? "https://axignal.com",
   ),
   title: {
-    default: "AXIGNAL — What changes around your company, and why it matters",
+    default: HOME_METADATA.en.title,
     template: "%s · AXIGNAL",
   },
-  description:
-    "Business and economic intelligence from public evidence: AXIGNAL observes the organizations you choose and shows what changes, with source and date.",
+  description: HOME_METADATA.en.description,
   icons: siteIcons,
-  openGraph: {
-    title: "AXIGNAL — What changes around your company, and why it matters",
-    description: "Continuous economic observation, with memory and evidence.",
-    images: ["/brand/og-image-1200x630.png"],
-  },
+  ...publicSocialMetadata({ ...HOME_METADATA.en, path: "/", locale: "en" }),
 };
 export default function RootLayout({
   children,

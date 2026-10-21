@@ -12,7 +12,7 @@
     "typecheck": "tsc --noEmit",
     "test": "tsx --test tests/*.test.ts",
     "test:admin-http": "node --test tools/check-admin-transport.mjs",
-    "check:seo": "tsx --test tests/acquisition.test.ts",
+    "check:seo": "tsx --test tests/acquisition.test.ts tests/self-presence.test.ts tests/site-icons.test.ts tests/public-seo.test.ts",
     "check:i18n": "node tools/locale-inventory.mjs --check",
     "check:styles": "node tools/surface-styles.mjs --check",
     "check:repertoire": "tsx tools/landing-lab-repertoire.ts --check"
