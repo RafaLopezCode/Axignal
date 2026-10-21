@@ -69,11 +69,13 @@ test("public home routes preload only the same two essential fonts as the accept
   }
 });
 
-test("conventional favicon preserves one approved asset in Next and the production fallback", async () => {
+test("conventional favicon preserves one approved asset in Next and both production edge profiles", async () => {
   const redirects = await config.redirects!();
   assert.ok(redirects.some(rule => rule.source === "/favicon.ico" && rule.destination === "/brand/favicon.ico" && rule.permanent));
-  const nginx = readFileSync(resolve("../../../deploy/production/docker/landing-nginx.conf"), "utf8");
-  assert.match(nginx, /location = \/favicon\.ico\s*\{ return 308 \/brand\/favicon\.ico; \}/);
+  for (const path of ["docker/landing-nginx.conf", "subscriber-edge-nginx.conf"]) {
+    const nginx = readFileSync(resolve(`../../../deploy/production/${path}`), "utf8");
+    assert.match(nginx, /location = \/favicon\.ico\s*\{ return 308 \/brand\/favicon\.ico; \}/, path);
+  }
 });
 
 test("assistant directory exposes existing language URLs, current access terms and evidence limits", async () => {

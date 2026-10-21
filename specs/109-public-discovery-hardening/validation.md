@@ -47,4 +47,8 @@ Lighthouse 13.5.0, Chrome headless, mobile simulated throttling, fresh profile, 
 
 ## Release acceptance
 
+The first release, `c7b2ae39d0508c31d6929ed3cac6163bf1a5483a` (PR #360), passed exact-head and main CI, the canonical deployment gate and all 596 sitemap documents. Post-deploy checks exposed a profile-specific gap: production bind-mounts `subscriber-edge-nginx.conf` over the base Nginx configuration, so the base favicon alias was not active. The corrective change adds the same exact alias to that active profile and extends the regression check to both configurations; neither forwarding rules nor private access are expanded. The official declared search icon remained 200 throughout. Final acceptance must test the public alias itself, not just the frontend or the base image.
+
+The first public mobile run after #360 measured LCP 1,996 ms, TBT 65 ms and CLS 0.0975, with performance 96 and accessibility/best-practices/SEO 100. The CLS trace identifies the privacy notice: its urgent visibility update preceded the lower-priority language transition. Locale readiness and resolved language now commit together, and the notice waits for that actual readiness. No timer, artificial loading state, copy, consent choice, preference policy or layout change is introduced. Browser and final Lighthouse checks must verify the correction.
+
 Merge only after exact-head CI succeeds. Deploy the immutable merged SHA through the canonical five-file Compose entrypoint, retain subscriber/AXENT/semantic/research configuration and verify public/private routes, image labels and health. Repeat the public crawl, Lighthouse mobile/desktop and Search Console live inspection after release. Record final public release results separately from private operator diagnostics.
