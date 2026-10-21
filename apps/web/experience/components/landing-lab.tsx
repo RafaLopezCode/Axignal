@@ -18,7 +18,6 @@ import {
   Check,
   ChevronDown,
   Clock3,
-  Menu,
   Search,
   ShieldCheck,
 } from "lucide-react";
@@ -39,7 +38,7 @@ import { exampleDepth, funnelCta, track } from "@/lib/funnel-events";
 import { NatureMark } from "./nature-mark";
 import { InsightSources } from "./insight-sources";
 import { SyntheticEvidenceProvider } from "./evidence-link-context";
-import { Dialog } from "./dialog";
+import { PublicHeader } from "./public-header";
 import labFonts from "@/lib/landing-lab-fonts.json";
 
 // Separate async chunk: essential presentation and controls do not import GSAP.
@@ -92,7 +91,6 @@ export function LandingLab({ content }: { content: LandingLabContent }) {
     });
   const root = useRef<HTMLDivElement>(null);
   const motionRequested = useRef(false);
-  const [menu, setMenu] = useState(false);
   const [scenario, setScenario] = useState<Scenario>("renovation");
   const [moment, setMoment] = useState<ExampleMoment>("2026-10-03");
   const [persona, setPersona] = useState(0);
@@ -103,23 +101,11 @@ export function LandingLab({ content }: { content: LandingLabContent }) {
   const [systemReduced, setSystemReduced] = useState(false);
   const [narrativeRun, setNarrativeRun] = useState(0);
   const [newsletterOpen, setNewsletterOpen] = useState(false);
-  const [activeChapter, setActiveChapter] = useState("");
   const [showBackTop, setShowBackTop] = useState(false);
   const reading = content.runtime.byLocale[locale];
   const selected = reading.views[moment][scenario];
   const heroFinding = reading.hero;
   const label = (key: keyof Omit<typeof c, "benefits">) => c[key][locale];
-  const nav = [
-    ["#discover", label("discover")],
-    ["#audience", label("audience")],
-    ["#how", label("how")],
-    [
-      "#pricing",
-      words("Precios", "Pricing", "Tarifs", "Preise", "Prezzi", "Preços")[
-        locale
-      ],
-    ],
-  ];
   useEffect(() => {
     track({ kind: "LANDING_VIEWED", surface: "landing" });
     const observer = new IntersectionObserver(
@@ -144,61 +130,13 @@ export function LandingLab({ content }: { content: LandingLabContent }) {
   useEffect(() => {
     const surface = root.current;
     if (!surface) return;
-    const visibleChapters = new Set<string>();
-    let sectionObserver: IntersectionObserver | undefined;
-    const watchChapters = () => {
-      sectionObserver?.disconnect();
-      visibleChapters.clear();
-      const first = surface.querySelector("#discover");
-      const padding =
-        parseFloat(
-          getComputedStyle(document.documentElement).scrollPaddingTop,
-        ) || 0;
-      const margin = first
-        ? parseFloat(getComputedStyle(first).scrollMarginTop) || 0
-        : 0;
-      // A pixel band follows the native anchor position. Percentage root margins
-      // depend on root width and can collapse on wide, short viewports.
-      const line = Math.min(
-        window.innerHeight - 2,
-        Math.round(padding + margin + 2),
-      );
-      sectionObserver = new IntersectionObserver(
-        (entries) => {
-          for (const entry of entries) {
-            if (entry.isIntersecting) visibleChapters.add(entry.target.id);
-            else visibleChapters.delete(entry.target.id);
-          }
-          const current = [...visibleChapters]
-            .map((id) => surface.querySelector<HTMLElement>("#" + id))
-            .filter((node): node is HTMLElement => node !== null)
-            .sort(
-              (a, b) =>
-                b.getBoundingClientRect().top - a.getBoundingClientRect().top,
-            )[0];
-          setActiveChapter(current ? "#" + current.id : "");
-        },
-        {
-          rootMargin: `-${line}px 0px -${Math.max(0, window.innerHeight - line - 2)}px 0px`,
-          threshold: 0,
-        },
-      );
-      surface
-        .querySelectorAll("#discover, #audience, #how, #pricing")
-        .forEach((node) => sectionObserver?.observe(node));
-    };
-    watchChapters();
-    window.addEventListener("resize", watchChapters, { passive: true });
     const hero = surface.querySelector(".lab-hero-copy");
     const topObserver = new IntersectionObserver((entries) => {
       setShowBackTop(!entries[0].isIntersecting);
-      if (entries[0].isIntersecting) setActiveChapter("");
     });
     if (hero) topObserver.observe(hero);
     return () => {
-      sectionObserver?.disconnect();
       topObserver.disconnect();
-      window.removeEventListener("resize", watchChapters);
     };
   }, []);
   useEffect(() => {
@@ -314,6 +252,8 @@ export function LandingLab({ content }: { content: LandingLabContent }) {
   );
   const stepImages = ["focus", "explain", "memory"];
   return (
+    <>
+    <PublicHeader />
     <div className="landing-lab" ref={root} id="lab-top">
       {labFonts.fonts.slice(0, 2).map((font) => (
         <link
@@ -325,69 +265,6 @@ export function LandingLab({ content }: { content: LandingLabContent }) {
           crossOrigin="anonymous"
         />
       ))}
-      <header className="lab-header">
-        <a
-          href={marketingPath("/", locale)}
-          className="lab-brand"
-          aria-label="AXIGNAL"
-        >
-          <img
-            className="public-brand-vector"
-            src="/brand/logo-light.svg"
-            width={147}
-            height={43}
-            alt=""
-            fetchPriority="low"
-            decoding="async"
-          />
-        </a>
-        <nav aria-label={label("menu")}>
-          {nav.map(([href, name], index) => (
-            <a
-              key={href}
-              href={href}
-              aria-current={activeChapter === href ? "location" : undefined}
-              onClick={() => setActiveChapter(href)}
-            >
-              <span className="lab-nav-number" aria-hidden="true">
-                0{index + 1}
-              </span>
-              {name}
-            </a>
-          ))}
-          <a href={marketingPath("/knowledge", locale)}>{PUBLIC_EDITORIAL_LABEL}</a>
-          <a href="/contact">{p.contact[locale]}</a>
-        </nav>
-        <div className="lab-header-actions">
-          {localeSelector}
-          <a className="lab-signin" href="/login">
-            {label("signIn")}
-          </a>
-          <a
-            className="lab-button lab-small"
-            href="/signup"
-            onClick={() =>
-              track({
-                kind: "CTA_ACTIVATED",
-                surface: "landing",
-                cta: funnelCta.headerStart,
-              })
-            }
-          >
-            {label("start")}
-            <ArrowUpRight size={16} aria-hidden="true" />
-          </a>
-          <button
-            type="button"
-            className="lab-menu-button"
-            aria-label={label("menu")}
-            aria-expanded={menu}
-            onClick={() => setMenu(true)}
-          >
-            <Menu size={22} aria-hidden="true" />
-          </button>
-        </div>
-      </header>
       <main id="main" tabIndex={-1}>
         <section className="lab-hero" aria-labelledby="lab-heading">
           <div className="lab-hero-copy">
@@ -1224,32 +1101,6 @@ export function LandingLab({ content }: { content: LandingLabContent }) {
           {localeSelector}
         </div>
       </footer>
-      {menu && (
-        <Dialog
-          title={label("menu")}
-          onClose={() => setMenu(false)}
-          className="lab-menu"
-        >
-          <nav aria-label={label("menu")}>
-            {nav.map(([href, name], index) => (
-              <a className="lab-menu-section" key={href} href={href} onClick={() => setMenu(false)}>
-                <span className="lab-menu-index" aria-hidden="true">
-                  0{index + 1}
-                </span>
-                {name}
-                <ArrowRight size={18} aria-hidden="true" />
-              </a>
-            ))}
-            <a href={EXAMPLE_HREF} onClick={() => setMenu(false)}>{label("example")}<ArrowRight size={18} aria-hidden="true" /></a>
-            <a href={marketingPath("/knowledge", locale)} onClick={() => setMenu(false)}>{PUBLIC_EDITORIAL_LABEL}<ArrowRight size={18} aria-hidden="true" /></a>
-            <a href="/contact" onClick={() => setMenu(false)}>{p.contact[locale]}<ArrowRight size={18} aria-hidden="true" /></a>
-            <a href="/login" className="lab-signin">
-              {label("signIn")}
-            </a>
-            <a href="/signup">{label("start")}</a>
-          </nav>
-        </Dialog>
-      )}
       {showBackTop && (
         <a
           className="lab-backtop"
@@ -1274,5 +1125,6 @@ export function LandingLab({ content }: { content: LandingLabContent }) {
         </MotionBoundary>
       )}
     </div>
+    </>
   );
 }

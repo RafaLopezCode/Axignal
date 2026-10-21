@@ -22,6 +22,8 @@ const PUBLIC_SURFACES = [
   "components/landing-extras.tsx",
   "components/landing-observatory.tsx",
   "components/public-shell.tsx",
+  "components/public-header.tsx",
+  "lib/public-navigation.ts",
   "components/marketing-shared.tsx",
   "components/marketing-pages.tsx",
   "components/marketing-home-body.tsx",

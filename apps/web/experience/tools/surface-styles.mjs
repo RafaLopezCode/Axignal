@@ -13,6 +13,7 @@ const sources = [
   "app/funnel.css",
   "app/public-layout.css",
   "components/cognition/cognition.css",
+  "components/public-header.css",
 ];
 const sheets = sources.map((path) => ({
   path,
@@ -22,7 +23,7 @@ const legacy = sheets
   .map(({ path, text }) => `/* ${path} */\n${text}`)
   .join("\n");
 const allowed =
-  /\.(?:button|icon-button|dialog(?:-body|-header)?|skip-link|sr-only|mono|eyebrow|privacy-[\w-]+|publication-note|draft-form|weekly-brief-form|form-fields|form-bottom|brief-consent|field-error|marketing-newsletter-channel|marketing-text-link|lab-newsletter-channel|rights-request-copy)(?![\w-])/;
+  /\.(?:ax-site-[\w-]+|button|icon-button|dialog(?:-body|-header)?|skip-link|sr-only|mono|eyebrow|privacy-[\w-]+|publication-note|draft-form|weekly-brief-form|form-fields|form-bottom|brief-consent|field-error|marketing-newsletter-channel|marketing-text-link|lab-newsletter-channel|rights-request-copy)(?![\w-])/;
 const unrelated =
   /\.(?:product[\w-]*|admin[\w-]*|canonical[\w-]*|axent[\w-]*|obs-[\w-]*|cg-[\w-]*|public-page|public-header|public-footer|public-main|public-back-top|mini-footer|acquisition-[\w-]*)\b/;
 function select(node) {
@@ -47,7 +48,7 @@ function select(node) {
 }
 const foundation = postcss.root();
 for (const { path, text } of sheets.filter(
-  (sheet) => !sheet.path.startsWith("components/"),
+  (sheet) => !sheet.path.startsWith("components/") || sheet.path === "components/public-header.css",
 )) {
   for (const node of postcss.parse(text, { from: path }).nodes) {
     const chosen = select(node);

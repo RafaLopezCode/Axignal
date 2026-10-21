@@ -6,22 +6,23 @@
     "app/acquisition.css",
     "app/funnel.css",
     "app/public-layout.css",
-    "components/cognition/cognition.css"
+    "components/cognition/cognition.css",
+    "components/public-header.css"
   ],
   "fontManifestSha256": "ee068481c0ad543988532942f06dd3c22937ce1662d6582120f4171701814122",
   "base": {
-    "url": "/styles/base.dbdcd3476db1.css",
-    "bytes": 24347,
-    "sha256": "dbdcd3476db14b7f4fdef1a9826213565a42408c00c3299ec905ae8448efc309"
+    "url": "/styles/base.48d552cd7011.css",
+    "bytes": 28285,
+    "sha256": "48d552cd701192ea2bcb6d8d4cdec6643546ba327237dd54a6e5acc6ce163307"
   },
   "legacy": {
-    "url": "/styles/legacy.9f29a3a0eda1.css",
-    "bytes": 243562,
-    "sha256": "9f29a3a0eda1e0fefcb7be167cc7d39fc9de04949981183be8efefd7d362eff8"
+    "url": "/styles/legacy.7b34bfb85ea4.css",
+    "bytes": 247537,
+    "sha256": "7b34bfb85ea42010ca71537a2e6b1a658665856de57083e0b1d5edd02bd7a2ee"
   },
   "lab": {
-    "url": "/styles/lab.0c3f6d90a54c.css",
-    "bytes": 61765,
-    "sha256": "0c3f6d90a54cd2cf31fd65ff376298a0c1113d35e6087a9181082fe144957c4c"
+    "url": "/styles/lab.954551f31da3.css",
+    "bytes": 61938,
+    "sha256": "954551f31da342ce8ab8382c4cf47e212ba3741907f9be3ef6655bd6ccee3cc6"
   }
 }

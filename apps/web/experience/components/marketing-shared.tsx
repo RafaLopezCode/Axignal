@@ -74,7 +74,6 @@ export function MarketingShell({
   return (
     <PublicShell
       landing={landing}
-      catalog
       className={`marketing-site ${className}`.trim()}
       footer={<MarketingFooter />}
       localeRoutes={
