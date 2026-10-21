@@ -10,18 +10,18 @@
   ],
   "fontManifestSha256": "ee068481c0ad543988532942f06dd3c22937ce1662d6582120f4171701814122",
   "base": {
-    "url": "/styles/base.6a1b27358c35.css",
-    "bytes": 23597,
-    "sha256": "6a1b27358c35577f0b4d6245d6102436d588241a65d152e31abd5dc60cf89b29"
+    "url": "/styles/base.dbdcd3476db1.css",
+    "bytes": 24347,
+    "sha256": "dbdcd3476db14b7f4fdef1a9826213565a42408c00c3299ec905ae8448efc309"
   },
   "legacy": {
-    "url": "/styles/legacy.6cd6be449f6b.css",
-    "bytes": 243199,
-    "sha256": "6cd6be449f6bb7e7434755cafacd411796dfa5ac463c074b764b2f7ccc5b2e61"
+    "url": "/styles/legacy.9f29a3a0eda1.css",
+    "bytes": 243562,
+    "sha256": "9f29a3a0eda1e0fefcb7be167cc7d39fc9de04949981183be8efefd7d362eff8"
   },
   "lab": {
-    "url": "/styles/lab.d2094b618da9.css",
-    "bytes": 60825,
-    "sha256": "d2094b618da912652603fb5776f13c12d6b3e13ce922d7f6a637ea960bada5d3"
+    "url": "/styles/lab.0c3f6d90a54c.css",
+    "bytes": 61765,
+    "sha256": "0c3f6d90a54cd2cf31fd65ff376298a0c1113d35e6087a9181082fe144957c4c"
   }
 }

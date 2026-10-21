@@ -43,6 +43,8 @@ test("shared foundation retains accessibility, dialog, privacy and real request 
     ".skip-link",
     ".sr-only",
     ".dialog",
+    ".dialog-body",
+    ".dialog-header",
     ".icon-button",
     ".privacy-preferences-button",
     ".privacy-document-links",
@@ -61,6 +63,19 @@ test("shared foundation retains accessibility, dialog, privacy and real request 
     );
     assert.equal(data.length, asset.bytes);
     assert.equal(createHash("sha256").update(data).digest("hex"), asset.sha256);
+  }
+  for (const asset of [styles.base, styles.lab]) {
+    const css = postcss.parse(fs.readFileSync(new URL("../public" + asset.url, import.meta.url), "utf8"));
+    const declarations = (selector: string, property: string) => {
+      const values: string[] = [];
+      css.walkRules(rule => {
+        if (postcss.list.comma(rule.selector).includes(selector))
+          rule.walkDecls(property, declaration => { values.push(declaration.value); });
+      });
+      return values;
+    };
+    assert.ok(declarations(".dialog-body", "padding").some(value => value !== "0"), "Dialog content must retain its inset in the delivered CSS");
+    assert.ok(declarations(".dialog-header", "display").includes("flex"), "Dialog title and close action must retain their layout");
   }
 });
 test("the public home and isolated landing preview use the focused landing skin", () => {

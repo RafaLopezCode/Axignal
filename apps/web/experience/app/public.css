@@ -68,6 +68,17 @@ html:has(.public-header) {
   background: #e4ebf7;
   border-color: #b9c7e3;
 }
+.public-login-link {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-height: 44px;
+  padding: 10px 16px;
+  border: 1px solid var(--blue);
+  border-radius: 5px;
+  background: transparent;
+  color: var(--blue);
+}
 .public-menu-button {
   display: none;
 }

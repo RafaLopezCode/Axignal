@@ -1,5 +1,5 @@
 "use client";
-import { useRouter } from "next/navigation";
+import { usePathname, useRouter } from "next/navigation";
 import {
   Component,
   lazy,
@@ -24,7 +24,7 @@ import {
 } from "lucide-react";
 import { useLocale } from "@/lib/locale";
 import { locales, isLocale } from "@/lib/languages";
-import { words, marketingPath } from "@/lib/marketing-locale";
+import { words, marketingPath, landingLanguagePath, PUBLIC_EDITORIAL_LABEL } from "@/lib/marketing-locale";
 import type { LandingLabContent } from "@/lib/landing-lab-content";
 import type { ExampleMoment } from "@/lib/landing-observatory";
 import { dateLabel } from "@/lib/date-label";
@@ -85,6 +85,7 @@ export function LandingLab({ content }: { content: LandingLabContent }) {
   const EXAMPLE_MOMENTS = content.runtime.moments;
   const { locale, t, copy, reducedMotion, setReducedMotion } = useLocale();
   const router = useRouter();
+  const pathname = usePathname();
   const focusHero = () =>
     requestAnimationFrame(() => {
       document.getElementById("lab-heading")?.focus({ preventScroll: true });
@@ -300,7 +301,7 @@ export function LandingLab({ content }: { content: LandingLabContent }) {
         onChange={(event) => {
           const value = event.target.value;
           if (isLocale(value))
-            router.push(`/${value}/landing-lab` + window.location.hash);
+            router.push(landingLanguagePath(pathname, value, window.location.hash));
         }}
       >
         {locales.map((item) => (
@@ -354,6 +355,8 @@ export function LandingLab({ content }: { content: LandingLabContent }) {
               {name}
             </a>
           ))}
+          <a href={marketingPath("/knowledge", locale)}>{PUBLIC_EDITORIAL_LABEL}</a>
+          <a href="/contact">{p.contact[locale]}</a>
         </nav>
         <div className="lab-header-actions">
           {localeSelector}
@@ -1105,6 +1108,7 @@ export function LandingLab({ content }: { content: LandingLabContent }) {
           </div>
           <section
             className="lab-footer-newsletter"
+            id="weekly-brief"
             aria-labelledby="lab-newsletter-title"
           >
             <p className="lab-eyebrow">Newsletter · AXIGNAL</p>
@@ -1153,7 +1157,7 @@ export function LandingLab({ content }: { content: LandingLabContent }) {
                 )[locale]
               }
             </a>
-            <a href={"/" + locale + "/knowledge"}>Knowledge</a>
+            <a href={marketingPath("/knowledge", locale)}>{PUBLIC_EDITORIAL_LABEL}</a>
           </nav>
           <nav aria-label={label("audience")}>
             <h3>{label("audience")}</h3>
@@ -1226,9 +1230,9 @@ export function LandingLab({ content }: { content: LandingLabContent }) {
           onClose={() => setMenu(false)}
           className="lab-menu"
         >
-          <nav>
+          <nav aria-label={label("menu")}>
             {nav.map(([href, name], index) => (
-              <a key={href} href={href} onClick={() => setMenu(false)}>
+              <a className="lab-menu-section" key={href} href={href} onClick={() => setMenu(false)}>
                 <span className="lab-menu-index" aria-hidden="true">
                   0{index + 1}
                 </span>
@@ -1236,7 +1240,9 @@ export function LandingLab({ content }: { content: LandingLabContent }) {
                 <ArrowRight size={18} aria-hidden="true" />
               </a>
             ))}
-            <a href={EXAMPLE_HREF}>{label("example")}</a>
+            <a href={EXAMPLE_HREF} onClick={() => setMenu(false)}>{label("example")}<ArrowRight size={18} aria-hidden="true" /></a>
+            <a href={marketingPath("/knowledge", locale)} onClick={() => setMenu(false)}>{PUBLIC_EDITORIAL_LABEL}<ArrowRight size={18} aria-hidden="true" /></a>
+            <a href="/contact" onClick={() => setMenu(false)}>{p.contact[locale]}<ArrowRight size={18} aria-hidden="true" /></a>
             <a href="/login" className="lab-signin">
               {label("signIn")}
             </a>
