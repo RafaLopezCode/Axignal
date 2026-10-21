@@ -25,6 +25,7 @@ const LocaleContext = createContext({
   reducedMotion: false,
   setReducedMotion: (_: boolean) => {},
   locale: DEFAULT_LOCALE,
+  localeReady: false,
   setLocale: (_: Locale) => {},
   t: (_es: string, en: string) => en,
   copy: (c: Copy) => c.en,
@@ -106,14 +107,16 @@ export function LocaleProvider({ children }: { children: React.ReactNode }) {
           ? navigator.languages
           : [navigator.language];
 
-    setLocalLocale(
-      resolveInitialLocale({
+    // Commit the resolved language and readiness together. Consumers such as
+    // the privacy notice must not appear in the fallback language for one frame.
+    startTransition(() => {
+      commitLocale(resolveInitialLocale({
         routeLocale,
         savedLocale,
         browserLanguages,
-      }),
-    );
-    setReady(true);
+      }));
+      setReady(true);
+    });
   }, [pathname]);
 
   useEffect(() => {
@@ -158,6 +161,7 @@ export function LocaleProvider({ children }: { children: React.ReactNode }) {
         reducedMotion,
         setReducedMotion,
         locale,
+        localeReady: ready,
         setLocale: changeLocale,
         profile, profileLoading, profileSaving, profileError, reloadProfile, saveProfile, resetProfile,
         t: (es, en) => translate(es, en),

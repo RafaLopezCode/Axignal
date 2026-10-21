@@ -7,7 +7,7 @@ import { Dialog } from "./dialog";
 const key = "axignal.privacy-notice.v1";
 const maximumAge = 180 * 24 * 60 * 60 * 1000;
 export function PrivacyNotice() {
-  const { t } = useLocale();
+  const { t, localeReady } = useLocale();
   const path = usePathname();
   const [notice, setNotice] = useState(false);
   const [details, setDetails] = useState(false);
@@ -42,7 +42,7 @@ export function PrivacyNotice() {
         <ShieldCheck size={15} />
         {t("Privacidad", "Privacy")}
       </button>
-      {notice && (
+      {notice && localeReady && (
         <aside
           className="privacy-notice"
           aria-label={t(
