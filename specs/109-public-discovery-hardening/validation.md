@@ -29,7 +29,9 @@ The declared official search favicon already returned 200. The added `/favicon.i
 | `tests/observation_runtime/test_scheduler_deployment.py:164` | POSIX deployment; no scheduler code changed. |
 | `tests/semantic_layer/test_providers.py:123` | Optional `typesafe_sdk` absent; no semantic provider or SDK changed. |
 
-Required Ubuntu CI rechecks the POSIX cases before merge. The optional SDK case remains explicitly conditional; no gate was weakened and no required dependency was added to eliminate a skip.
+Required Ubuntu CI rechecks the POSIX-capable cases before merge; the filesystem ownership test additionally requires root and stays conditional on that authority. The optional SDK case also remains explicitly conditional. No related runtime code changed, no gate was weakened and no required dependency was added to eliminate a skip.
+
+The first container CI build exposed a missing test input: the Nginx fallback configuration was not copied into the build stage. The Dockerfile now includes that exact public configuration, as it already includes the Traefik configuration for SEO checks. The final runtime image still copies only the Experience subtree; no configuration or secret exposure is added.
 
 ## Visual and interaction evidence
 
