@@ -19,6 +19,7 @@ export function PublicHeader({ localeRoutes }: { localeRoutes?: PublicLocaleRout
   const nav = publicNavigation(locale, path.endsWith("/landing-lab"));
   const disclosure = useRef<HTMLDetailsElement>(null);
   const summary = useRef<HTMLElement>(null);
+  const previousPath = useRef(path);
   const [open, setOpen] = useState(false);
   const [hash, setHash] = useState("");
   const panelId = useId();
@@ -26,7 +27,10 @@ export function PublicHeader({ localeRoutes }: { localeRoutes?: PublicLocaleRout
   const close = () => disclosure.current?.removeAttribute("open");
 
   useEffect(() => {
-    close();
+    // Preserve a native disclosure opened before hydration; close only on navigation.
+    if (previousPath.current !== path) close();
+    previousPath.current = path;
+    setOpen(disclosure.current?.open ?? false);
     const sync = () => setHash(window.location.hash);
     sync();
     window.addEventListener("hashchange", sync);
