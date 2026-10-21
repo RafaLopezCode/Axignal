@@ -1,0 +1,136 @@
+{
+  "date": "2026-10-21",
+  "application_revision": "dc5514ab019baee8a9f5bc494e61f07d77fe6a84",
+  "origin": "http://127.0.0.1:3830",
+  "instrument": "Codex in-app browser via CUA",
+  "format": "Unretouched browser JPEG",
+  "human_visual_acceptance": "pending",
+  "screenshots": [
+    {
+      "file": "desktop-closed.jpg",
+      "route": "/es/landing-lab",
+      "state": "closed initial",
+      "viewport": {
+        "height": 1244,
+        "width": 1365
+      },
+      "image": {
+        "height": 1230,
+        "width": 1350
+      },
+      "sha256": "a56d19af8516ce1352d879e52824bb994c6ee0b0ee72b489abbb84d358c4dca2"
+    },
+    {
+      "file": "desktop-open.jpg",
+      "route": "/es/landing-lab",
+      "state": "open desktop",
+      "viewport": {
+        "height": 1244,
+        "width": 1365
+      },
+      "image": {
+        "height": 1230,
+        "width": 1350
+      },
+      "sha256": "8d76bec2563eb2c383d3fbbb54a38f750fa96fd8fa6c83abd13ad66c5f10619a"
+    },
+    {
+      "file": "desktop-blog.jpg",
+      "route": "/es/knowledge",
+      "state": "closed blog",
+      "viewport": {
+        "height": 1244,
+        "width": 1365
+      },
+      "image": {
+        "height": 1230,
+        "width": 1350
+      },
+      "sha256": "c9ce6a854244a5644d6c792f16972a2553e56ad9961919056283c97474de8614"
+    },
+    {
+      "file": "desktop-article-de.jpg",
+      "route": "/de/knowledge/was-axignal-macht",
+      "state": "closed equivalent article",
+      "viewport": {
+        "height": 1244,
+        "width": 1365
+      },
+      "image": {
+        "height": 1230,
+        "width": 1350
+      },
+      "sha256": "beb774898a20ab71e2156956ca2cf51107de3a0ab6beb4f518cee84fd969d8e2"
+    },
+    {
+      "file": "tablet768-open.jpg",
+      "route": "/es/landing-lab",
+      "state": "open tablet",
+      "viewport": {
+        "height": 1024,
+        "width": 768
+      },
+      "image": {
+        "height": 1004,
+        "width": 753
+      },
+      "sha256": "873c8b4739219f13b9e49cf805d08e814a2d2c5e34bc2ca27b1255600e4b1c40"
+    },
+    {
+      "file": "mobile390-landing-closed.jpg",
+      "route": "/es",
+      "state": "closed public landing",
+      "viewport": {
+        "height": 844,
+        "width": 390
+      },
+      "image": {
+        "height": 812,
+        "width": 375
+      },
+      "sha256": "97929297a1fa91a56abea03c90f194760564f7e3613098b2863040ae39cccb0d"
+    },
+    {
+      "file": "mobile390-open-es.jpg",
+      "route": "/es",
+      "state": "open public landing",
+      "viewport": {
+        "height": 844,
+        "width": 390
+      },
+      "image": {
+        "height": 812,
+        "width": 375
+      },
+      "sha256": "e83c3ea6b8119243aab6effa476d59184c768b4cdcd92a4f7cc37f2353fc5be1"
+    },
+    {
+      "file": "mobile390-open-bottom.jpg",
+      "route": "/contact",
+      "state": "open German menu scrolled to language and access",
+      "viewport": {
+        "height": 844,
+        "width": 390
+      },
+      "image": {
+        "height": 812,
+        "width": 375
+      },
+      "sha256": "d8b959b6cd2d021ad2e729d1cee0ee0685554123fdb131d555cdb8de5f7471b6"
+    },
+    {
+      "file": "mobile320-open-es.jpg",
+      "route": "/es/landing-lab",
+      "state": "open narrow preview",
+      "viewport": {
+        "height": 740,
+        "width": 320
+      },
+      "image": {
+        "height": 705,
+        "width": 305
+      },
+      "sha256": "ca65dc080b0431ada8d044ba7dead3c84e602e153028e1b666f9de825e1af971"
+    }
+  ]
+}

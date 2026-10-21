@@ -5,8 +5,9 @@ import { labInsight } from "../lib/landing-lab-model";
 import { EXAMPLE_MOMENTS } from "../lib/landing-observatory";
 import { locales } from "../lib/languages";
 import { translate } from "../lib/copy-catalog";
+import { publicNavigationCopy } from "../lib/public-navigation";
 const data = getLandingLabContent(null);
-let text = JSON.stringify(data) + "0123456789.,+−€ /";
+let text = JSON.stringify(data) + JSON.stringify(publicNavigationCopy) + "0123456789.,+−€ /";
 for (const { id } of locales)
   for (const moment of EXAMPLE_MOMENTS)
     for (const question of data.labQuestions)

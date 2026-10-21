@@ -17,6 +17,7 @@ test("the legacy stylesheet preserves every original rule in original import ord
     "app/funnel.css",
     "app/public-layout.css",
     "components/cognition/cognition.css",
+    "components/public-header.css",
   ];
   assert.deepEqual(styles.sources, original);
   const expected = original

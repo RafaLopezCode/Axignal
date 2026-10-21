@@ -103,18 +103,6 @@
 .landing-lab section[id] {
   scroll-margin-top: 110px;
 }
-.lab-header {
-  display: flex;
-  align-items: center;
-  gap: 36px;
-  padding: 18px 4%;
-  min-height: 88px;
-  background: rgb(248 250 252 / 97%);
-  border-bottom: 1px solid var(--lab-line);
-  position: sticky;
-  top: 0;
-  z-index: 30;
-}
 .lab-brand {
   display: inline-flex;
   flex-shrink: 0;
@@ -124,28 +112,6 @@
   max-width: 100%;
   height: auto;
 }
-.lab-header > nav {
-  display: flex;
-  align-items: center;
-  gap: 16px;
-  margin-inline: auto;
-  font-size: 13px;
-  font-weight: 600;
-}
-.lab-header > nav a {
-  min-height: 44px;
-  display: flex;
-  align-items: center;
-  white-space: nowrap;
-}
-.lab-header > nav a:hover {
-  color: var(--lab-blue);
-}
-.lab-header-actions {
-  display: flex;
-  align-items: center;
-  gap: 22px;
-}
 .lab-locale select {
   border: 0;
   background: transparent;
@@ -154,10 +120,6 @@
   color: var(--lab-ink);
   font-size: 13px;
   cursor: pointer;
-}
-.lab-signin {
-  font-size: 13px;
-  white-space: nowrap;
 }
 .landing-lab .lab-button {
   display: inline-flex;
@@ -178,21 +140,6 @@
 }
 .landing-lab .lab-button:hover {
   background: #283e7d;
-}
-.landing-lab .lab-small {
-  min-height: 44px;
-  padding: 10px 15px;
-  font-size: 12px;
-  gap: 12px;
-}
-.lab-menu-button {
-  display: none;
-  place-items: center;
-  width: 44px;
-  height: 44px;
-  border: 0;
-  background: transparent;
-  color: var(--lab-ink);
 }
 .lab-hero {
   max-width: 1560px;
@@ -1195,39 +1142,6 @@
   font-size: 10px;
   color: var(--lab-muted);
 }
-.lab-menu {
-  width: calc(100% - 32px);
-  max-width: 500px;
-}
-.lab-menu .dialog-header h2 {
-  margin: 0;
-  font-size: 27px;
-  line-height: 1.2;
-}
-.lab-menu nav {
-  display: flex;
-  flex-direction: column;
-  gap: 8px;
-}
-.lab-menu nav a {
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  gap: 20px;
-  min-height: 52px;
-  text-decoration: none;
-  color: #354f98;
-  border-bottom: 1px solid #d6dce5;
-  padding-block: 12px;
-}
-.lab-menu nav .lab-menu-section {
-  display: grid;
-  grid-template-columns: 24px minmax(0, 1fr) 18px;
-  gap: 12px;
-}
-.lab-menu .lab-menu-index {
-  margin-right: 0;
-}
 @media (min-width: 1700px) {
   .lab-hero {
     padding-inline: 30px;
@@ -1240,32 +1154,7 @@
     bottom: 0;
   }
 }
-@media (max-width: 1400px) {
-  .lab-header > nav {
-    display: none;
-  }
-  .lab-header-actions {
-    margin-inline-start: auto;
-  }
-  .lab-menu-button {
-    display: grid;
-  }
-}
 @media (max-width: 1220px) {
-  .lab-header {
-    gap: 18px;
-    padding-inline: 4%;
-  }
-  .lab-header > nav {
-    gap: 17px;
-    font-size: 11px;
-  }
-  .lab-header-actions {
-    gap: 13px;
-  }
-  .lab-header-actions .lab-small {
-    display: none;
-  }
   .lab-hero {
     gap: 4%;
     padding-top: 45px;
@@ -1310,18 +1199,6 @@
   }
 }
 @media (max-width: 980px) {
-  .lab-header > nav {
-    display: none;
-  }
-  .lab-header-actions {
-    margin-inline-start: auto;
-  }
-  .lab-menu-button {
-    display: grid;
-  }
-  .lab-header-actions .lab-small {
-    display: inline-flex;
-  }
   .lab-hero {
     grid-template-columns: 1fr;
     padding: 50px 6% 60px;
@@ -1414,27 +1291,9 @@
   }
 }
 @media (max-width: 700px) {
-  .lab-header {
-    min-height: 76px;
-    padding: 12px 6%;
-    gap: 12px;
-  }
-  .lab-header .lab-brand .public-brand-vector {
-    width: 128px;
-  }
-  .lab-header-actions .lab-small,
-  .lab-signin {
-    display: none;
-  }
-  .lab-header-actions {
-    gap: 8px;
-  }
   .lab-locale select {
     font-size: 11px;
     max-width: 92px;
-  }
-  .lab-menu-button {
-    width: 38px;
   }
   .lab-hero {
     padding: 32px 6% 55px;
@@ -1863,15 +1722,6 @@
   }
 }
 @media (max-width: 360px) {
-  .lab-header {
-    padding-inline: 5%;
-  }
-  .lab-header .lab-brand .public-brand-vector {
-    width: 112px;
-  }
-  .lab-header-actions {
-    gap: 1px;
-  }
   .lab-locale select {
     max-width: 84px;
   }
@@ -2169,49 +2019,6 @@ html[data-motion="reduced"] .landing-lab * {
 }
 
 /* Narrative hierarchy, revised from the CTO's rendered review. */
-.lab-header .lab-signin {
-  display: inline-flex;
-  align-items: center;
-  justify-content: center;
-  min-height: 44px;
-  padding: 9px 18px;
-  border: 1px solid var(--lab-blue);
-  border-radius: 6px;
-  color: var(--lab-blue);
-  background: transparent;
-  font-weight: 650;
-  transition: box-shadow 0.2s;
-}
-.lab-header .lab-signin:hover {
-  box-shadow: inset 0 0 0 1px var(--lab-blue);
-}
-.lab-header > nav a {
-  position: relative;
-  gap: 7px;
-}
-.lab-nav-number {
-  font:
-    10px/1.2 "IBM Plex Mono",
-    monospace;
-  color: var(--lab-muted);
-}
-.lab-header > nav a::after {
-  content: "";
-  position: absolute;
-  height: 2px;
-  bottom: 0;
-  inset-inline: 0;
-  background: var(--lab-blue);
-  transform: scaleX(0);
-  transform-origin: left;
-  transition: transform 0.25s;
-}
-.lab-header > nav a[aria-current] {
-  color: var(--lab-blue);
-}
-.lab-header > nav a[aria-current]::after {
-  transform: scaleX(1);
-}
 .lab-case-caption {
   display: flex;
   align-items: flex-start;
@@ -2554,24 +2361,7 @@ html[data-motion="reduced"] .landing-lab * {
 .lab-backtop:hover {
   border-color: var(--lab-blue);
 }
-.lab-menu-index {
-  font:
-    13px/1 "IBM Plex Mono",
-    monospace;
-  color: #687991;
-  margin-right: 12px;
-}
-.lab-menu nav .lab-signin {
-  display: flex;
-  border: 1px solid var(--lab-blue);
-  border-radius: 5px;
-  padding-inline: 20px;
-  margin-top: 16px;
-}
 @media (max-width: 1220px) {
-  .lab-nav-number {
-    display: none;
-  }
   .lab-price-options {
     grid-template-columns: 1fr;
   }
@@ -2598,12 +2388,6 @@ html[data-motion="reduced"] .landing-lab * {
   }
 }
 @media (max-width: 700px) {
-  .lab-header .lab-signin {
-    display: none;
-  }
-  .lab-menu nav .lab-signin {
-    display: flex;
-  }
   .lab-case-caption {
     gap: 5px 12px;
   }
@@ -2706,12 +2490,6 @@ html[data-motion="reduced"] .landing-lab * {
   .lab-footer-bottom {
     font-size: 10px;
     gap: 12px;
-  }
-}
-@media (prefers-reduced-motion: reduce) {
-  .lab-header > nav a::after,
-  .lab-header .lab-signin {
-    transition: none;
   }
 }
 

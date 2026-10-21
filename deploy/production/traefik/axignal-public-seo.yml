@@ -104,6 +104,9 @@ http:
          Path(`/marketing/focus.webp`) ||
          Path(`/marketing/memory.webp`) ||
          Path(`/marketing/explain.webp`) ||
+         Path(`/styles/base.48d552cd7011.css`) ||
+         Path(`/styles/legacy.7b34bfb85ea4.css`) ||
+         Path(`/styles/lab.954551f31da3.css`) ||
          Path(`/styles/base.dbdcd3476db1.css`) ||
          Path(`/styles/legacy.9f29a3a0eda1.css`) ||
          Path(`/styles/lab.0c3f6d90a54c.css`) ||
