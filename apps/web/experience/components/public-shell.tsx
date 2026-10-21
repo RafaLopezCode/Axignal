@@ -11,6 +11,7 @@ import { Brand, LocaleToggle, Dialog, MiniFooter } from "./ui";
 import { PublicBrandVector } from "./public-brand-vector";
 import { BackToTop } from "./back-to-top";
 import { marketingCopy, marketingPath } from "@/lib/marketing-content";
+import { PUBLIC_EDITORIAL_LABEL } from "@/lib/marketing-locale";
 
 type LocaleRoute = { locale: Locale; href: string };
 export function PublicHeader({
@@ -50,8 +51,8 @@ export function PublicHeader({
     if (href.includes("#")) setHash(href.slice(href.indexOf("#")));
   };
   // The header follows the visitor's questions, not the architecture:
-  // what is it → show me → what does it cost → learn more. Contact, trust and data
-  // rights live in the footer and the menu, where people look for them.
+  // what is it → show me → what does it cost → learn more → contact.
+  // Trust and data rights also remain directly accessible in the menu/footer.
   const links = catalog
     ? [
         {
@@ -66,27 +67,25 @@ export function PublicHeader({
           href: marketingPath("/pricing", locale),
           name: marketingCopy.price[locale],
         },
-        { href: `/${locale}/knowledge`, name: "Knowledge" },
+        { href: marketingPath("/knowledge", locale), name: PUBLIC_EDITORIAL_LABEL },
       ]
     : [
         {
-          href: landing ? "#how" : "/#how",
+          href: landing ? "#how" : marketingPath("/", locale) + "#how",
           name: t("Cómo funciona", "How it works"),
         },
         { href: "/demo", name: t("Ejemplo", "Example") },
         {
-          href: landing ? "#pricing" : "/#pricing",
+          href: landing ? "#pricing" : marketingPath("/", locale) + "#pricing",
           name: t("Precio", "Pricing"),
         },
         {
-          href:
-            localeRoutes?.find((route) => route.locale === locale)?.href ??
-            "/knowledge",
-          name: "Knowledge",
+          href: marketingPath("/knowledge", locale),
+          name: PUBLIC_EDITORIAL_LABEL,
         },
       ];
+  links.push({ href: "/contact", name: t("Contacto", "Contact") });
   const secondary = [
-    { href: "/contact", name: t("Contacto", "Contact") },
     {
       href: "/policies",
       name: t("Confianza y políticas", "Trust and policies"),
@@ -110,7 +109,7 @@ export function PublicHeader({
             <PublicBrandVector />
           </Link>
         ) : (
-          <Brand />
+          <Brand href={marketingPath("/", locale)} />
         )}
         <nav aria-label={t("Principal", "Main")}>
           {links.map((link) => (
@@ -185,6 +184,10 @@ export function PublicHeader({
             ))}
             <Link prefetch={false} href="/login" onClick={() => setMenu(false)}>
               {t("Acceder", "Sign in")}
+              <ArrowRight size={18} />
+            </Link>
+            <Link prefetch={false} className="public-access-link" href="/signup" onClick={() => setMenu(false)}>
+              {t("Empezar", "Get started")}
               <ArrowRight size={18} />
             </Link>
           </nav>

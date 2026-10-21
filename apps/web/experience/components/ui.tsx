@@ -15,17 +15,20 @@ import { useLocale } from "@/lib/locale";
 import { locales, type Locale } from "@/lib/languages";
 import type { Epistemic } from "@/lib/projection";
 import { FramedObserver, type NarratorScene } from "./observer-frame";
+import { marketingPath, PUBLIC_EDITORIAL_LABEL } from "@/lib/marketing-locale";
 export function Brand({
   dark = false,
   compact = false,
+  href = "/",
 }: {
   dark?: boolean;
   compact?: boolean;
+  href?: string;
 }) {
   const { t } = useLocale();
   return (
     <Link
-      href="/"
+      href={href}
       aria-label={t("AXIGNAL · Inicio", "AXIGNAL · Home")}
       className={compact ? "brand compact" : "brand"}
     >
@@ -203,12 +206,12 @@ export function AxentIdentity() {
   );
 }
 export function MiniFooter() {
-  const { t } = useLocale();
+  const { t, locale } = useLocale();
   // Public footer: visitor destinations only. Staff surfaces (Admin, the design
   // system) are not part of the public journey and are not linked from it.
   return (
     <footer className="mini-footer">
-      <Brand />
+      <Brand href={marketingPath("/", locale)} />
       <span>
         {t(
           "Observación económica con memoria y evidencia.",
@@ -220,8 +223,9 @@ export function MiniFooter() {
       <span>{t("Hecho en España · Servicio global", "Made in Spain · Global service")}</span>
       <nav aria-label={t("Más sobre AXIGNAL", "More about AXIGNAL")}>
         <Link href="/demo">{t("Ejemplo", "Example")}</Link>
-        <Link href="/#pricing">{t("Precio", "Pricing")}</Link>
-        <Link href="/knowledge">Knowledge</Link>
+        <Link href={marketingPath("/", locale) + "#pricing"}>{t("Precio", "Pricing")}</Link>
+        <Link href={marketingPath("/knowledge", locale)}>{PUBLIC_EDITORIAL_LABEL}</Link>
+        <Link href={marketingPath("/", locale) + "#weekly-brief"}>Newsletter</Link>
         <Link href="/contact">{t("Contacto", "Contact")}</Link>
         <Link href="/policies">{t("Políticas", "Policies")}</Link>
         <Link href="/gdpr">GDPR</Link>

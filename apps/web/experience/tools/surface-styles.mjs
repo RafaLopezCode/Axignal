@@ -22,7 +22,7 @@ const legacy = sheets
   .map(({ path, text }) => `/* ${path} */\n${text}`)
   .join("\n");
 const allowed =
-  /\.(?:button|icon-button|dialog|skip-link|sr-only|mono|eyebrow|privacy-[\w-]+|publication-note|draft-form|weekly-brief-form|form-fields|form-bottom|brief-consent|field-error|marketing-newsletter-channel|marketing-text-link|lab-newsletter-channel|rights-request-copy)(?![\w-])/;
+  /\.(?:button|icon-button|dialog(?:-body|-header)?|skip-link|sr-only|mono|eyebrow|privacy-[\w-]+|publication-note|draft-form|weekly-brief-form|form-fields|form-bottom|brief-consent|field-error|marketing-newsletter-channel|marketing-text-link|lab-newsletter-channel|rights-request-copy)(?![\w-])/;
 const unrelated =
   /\.(?:product[\w-]*|admin[\w-]*|canonical[\w-]*|axent[\w-]*|obs-[\w-]*|cg-[\w-]*|public-page|public-header|public-footer|public-main|public-back-top|mini-footer|acquisition-[\w-]*)\b/;
 function select(node) {

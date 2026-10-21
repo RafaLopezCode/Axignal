@@ -21,6 +21,7 @@ import type { FamilyId } from "@/lib/projection";
 import { locales, type Locale } from "@/lib/languages";
 import { useLocale } from "@/lib/locale";
 import { marketingPath, marketingCopy, words } from "@/lib/marketing-content";
+import { PUBLIC_EDITORIAL_LABEL } from "@/lib/marketing-locale";
 import { publicCopy as p } from "@/lib/marketing-ui";
 import { industries, type PublicIndustry } from "@/lib/marketing-industries";
 import {
@@ -110,7 +111,7 @@ export function MarketingFooter() {
             {marketingCopy.price[locale]}
           </Link>
           <Link prefetch={false} href="/demo">{p.example[locale]}</Link>
-          <Link prefetch={false} href={`/${locale}/knowledge`}>Knowledge</Link>
+          <Link prefetch={false} href={marketingPath("/knowledge", locale)}>{PUBLIC_EDITORIAL_LABEL}</Link>
           <Link prefetch={false} href={`${marketingPath("/", locale)}#weekly-brief`}>
             Newsletter
           </Link>

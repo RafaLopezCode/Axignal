@@ -47,6 +47,11 @@
 /* Keep the privacy notice's actions unobstructed until it has been dismissed. */
 body:has(.privacy-notice) .public-back-top { visibility: hidden; }
 
+@media (max-width: 1100px) {
+  .public-header nav { display: none; }
+  .public-menu-button { display: inline-flex; }
+}
+
 .public-page > .public-header {
   flex-shrink: 0;
   background: rgb(250 251 252 / 96%);

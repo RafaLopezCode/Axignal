@@ -44,7 +44,7 @@
   position: relative;
   background: #fafcfd;
   display: grid;
-  grid-template-columns: minmax(0, 1fr) max-content minmax(0, 1fr);
+  grid-template-columns: auto minmax(0, 1fr) auto;
   gap: 2%;
   backdrop-filter: none;
 }
@@ -1617,7 +1617,7 @@
 
 @media (min-width: 1280px) and (max-width: 1519px) {
   .marketing-site > .public-header {
-    grid-template-columns: minmax(0, 1fr) max-content minmax(0, 1fr);
+    grid-template-columns: auto minmax(0, 1fr) auto;
     column-gap: 1.5%;
   }
   .marketing-site .public-header nav {
@@ -1684,8 +1684,8 @@
   min-width: 112px;
   padding-inline: 8px;
 }
-/* Equal side tracks center navigation on the header, independent of action width.
-   Collapse before localized navigation can collide with the fixed action group. */
+/* Content-sized side tracks preserve the logo and action footprints; navigation
+   centers in the remaining space. Collapse before long localized links collide. */
 @media (min-width: 1280px) and (max-width: 1439px) {
   .marketing-site > .public-header {
     grid-template-columns: minmax(0, 1fr) auto;
