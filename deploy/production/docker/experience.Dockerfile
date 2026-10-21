@@ -14,6 +14,7 @@ COPY apps/web/experience/content ./content
 COPY apps/web/experience/tests ./tests
 COPY apps/web/experience/tools ./tools
 COPY deploy/production/traefik/axignal-public-seo.yml /app/deploy/production/traefik/axignal-public-seo.yml
+COPY deploy/production/docker/landing-nginx.conf /app/deploy/production/docker/landing-nginx.conf
 COPY apps/web/experience/next.config.ts ./
 COPY apps/web/experience/tsconfig.json ./
 
