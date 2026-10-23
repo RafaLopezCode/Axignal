@@ -2,8 +2,9 @@
 
 from __future__ import annotations
 
-from datetime import datetime, timedelta
+from datetime import datetime
 
+from application.admin_billing.retry_policy import ReconciliationRetryPolicy
 from application.admin_billing.subscriber_reconciliation import (
     SubscriberPurchaseReconciler,
 )
@@ -22,7 +23,7 @@ class SubscriberReconciliationWorker:
             raise ValueError("maximum attempts must be between 1 and 20")
         self._store = store
         self._reconciler = reconciler
-        self._maximum_attempts = maximum_attempts
+        self._retry_policy = ReconciliationRetryPolicy(maximum_attempts=maximum_attempts)
 
     def run_due(self, *, now: datetime, limit: int = 20) -> tuple[str, ...]:
         if now.tzinfo is None or now.utcoffset() is None:
@@ -58,11 +59,10 @@ class SubscriberReconciliationWorker:
                     attempt.tenant_id, attempt.request_ref, now=now
                 )
             except Exception as exc:
-                dead = count >= self._maximum_attempts
-                delay = min(60 * (2 ** min(count, 10)), 21_600)
+                dead = self._retry_policy.is_dead(count)
                 self._store.enqueue_retry(
                     operation_ref=operation_ref,
-                    next_attempt_at=None if dead else now + timedelta(seconds=delay),
+                    next_attempt_at=None if dead else now + self._retry_policy.failure_delay(count),
                     attempt_count=count,
                     disposition="DLQ" if dead else "RETRY",
                     failure_code=type(exc).__name__[:80],
@@ -86,10 +86,12 @@ class SubscriberReconciliationWorker:
                 )
                 completed.append(attempt.intent_ref)
             elif result.value in {"UNKNOWN", "MISMATCH"}:
-                dead = count >= self._maximum_attempts
+                dead = self._retry_policy.is_dead(count)
                 self._store.enqueue_retry(
                     operation_ref=operation_ref,
-                    next_attempt_at=None if dead else now + timedelta(seconds=300),
+                    next_attempt_at=None
+                    if dead
+                    else now + self._retry_policy.unknown_outcome_delay,
                     attempt_count=count,
                     disposition="DLQ" if dead else "RETRY",
                     failure_code=result.value,

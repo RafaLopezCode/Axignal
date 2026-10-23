@@ -4,11 +4,12 @@ from __future__ import annotations
 
 import hashlib
 from dataclasses import dataclass, replace
-from datetime import datetime, timedelta
+from datetime import datetime
 from enum import StrEnum
 from typing import Protocol
 from uuid import uuid4
 
+from application.admin_billing.retry_policy import RECONCILIATION_RETRY_POLICY
 from application.admin_billing.subscriber_billing import (
     PaymentState,
     PurchaseState,
@@ -490,11 +491,12 @@ class SubscriberCheckoutService:
                 )
             except Exception as exc:
                 count = self._store.retry_attempt_count(retry_ref) + 1  # type: ignore[attr-defined]
-                dead = count >= 8
-                delay = min(60 * (2 ** min(count, 10)), 21_600)
+                dead = RECONCILIATION_RETRY_POLICY.is_dead(count)
                 self._store.enqueue_retry(  # type: ignore[attr-defined]
                     operation_ref=retry_ref,
-                    next_attempt_at=None if dead else now + timedelta(seconds=delay),
+                    next_attempt_at=None
+                    if dead
+                    else now + RECONCILIATION_RETRY_POLICY.failure_delay(count),
                     attempt_count=count,
                     disposition="DLQ" if dead else "RETRY",
                     failure_code=type(exc).__name__[:80],
