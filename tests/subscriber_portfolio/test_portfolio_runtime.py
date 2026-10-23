@@ -1,13 +1,13 @@
 from __future__ import annotations
 
 from concurrent.futures import ThreadPoolExecutor
+from contextlib import contextmanager
 from dataclasses import dataclass
 from datetime import UTC, datetime
 from pathlib import Path
 from threading import Lock
 
 import pytest
-from contextlib import contextmanager
 
 from application.subscriber_identity.runtime import VerifiedExternalIdentity
 from application.subscriber_portfolio.models import (
