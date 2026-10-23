@@ -64,6 +64,8 @@ apps/web/landing/assets/images/source/
 /.tmp_*.sh
 /.pb*_pytest_*.log
 /.claude/settings.local.json
+/.claude/worktrees/
+/.uv-cache-*/
 
 # Locally installed optional agent tooling; do not commit vendor binaries.
 /.agents/skills/impeccable/
