@@ -64,19 +64,18 @@ def _coverage(known: int, total: int) -> DataCompleteness:
 def _known_costs(events: tuple[LearningEvent, ...]) -> tuple[tuple[str, int], ...]:
     totals: dict[str, int] = {}
     for event in events:
-        if event.cost.amount_microunits is None:
+        if event.cost.amount_microunits is None or event.cost.currency is None:
             continue
-        assert event.cost.currency is not None
         totals[event.cost.currency] = (
             totals.get(event.cost.currency, 0) + event.cost.amount_microunits
         )
     return tuple(sorted(totals.items()))
 
 
-def _provider_slice(events: tuple[LearningEvent, ...]) -> ProviderUsageSlice:
+def _provider_slice(
+    events: tuple[LearningEvent, ...], *, provider: str, provider_version: str
+) -> ProviderUsageSlice:
     first = events[0]
-    assert first.provider is not None
-    assert first.provider_version is not None
     costs = _known_costs(events)
     latency_values = tuple(
         event.cost.latency_ms for event in events if event.cost.latency_ms is not None
@@ -88,8 +87,8 @@ def _provider_slice(events: tuple[LearningEvent, ...]) -> ProviderUsageSlice:
         event.cost.output_units for event in events if event.cost.output_units is not None
     )
     return ProviderUsageSlice(
-        provider=first.provider,
-        provider_version=first.provider_version,
+        provider=provider,
+        provider_version=provider_version,
         operation_class=first.kind.value,
         policy_id=first.policy_id,
         policy_version=first.policy_version,
@@ -100,9 +99,14 @@ def _provider_slice(events: tuple[LearningEvent, ...]) -> ProviderUsageSlice:
         no_change_count=sum(event.outcome is LearningOutcome.NO_CHANGE for event in events),
         failed_count=sum(event.outcome is LearningOutcome.FAILED for event in events),
         known_costs_by_currency=costs,
-        unknown_cost_event_count=sum(event.cost.amount_microunits is None for event in events),
+        unknown_cost_event_count=sum(
+            event.cost.amount_microunits is None or event.cost.currency is None for event in events
+        ),
         cost_completeness=_coverage(
-            sum(event.cost.amount_microunits is not None for event in events),
+            sum(
+                event.cost.amount_microunits is not None and event.cost.currency is not None
+                for event in events
+            ),
             len(events),
         ),
         known_latency_event_count=len(latency_values),
@@ -286,9 +290,8 @@ def project_brain_provider_observatory(
 
     by_slice: dict[tuple[str, str, str, str, str], list[LearningEvent]] = defaultdict(list)
     for event in eligible_events:
-        if event.provider is None:
+        if event.provider is None or event.provider_version is None:
             continue
-        assert event.provider_version is not None
         key = (
             event.provider,
             event.provider_version,
@@ -297,12 +300,18 @@ def project_brain_provider_observatory(
             event.policy_version,
         )
         by_slice[key].append(event)
-    provider_slices = tuple(_provider_slice(tuple(by_slice[key])) for key in sorted(by_slice))
+    provider_slices = tuple(
+        _provider_slice(tuple(by_slice[key]), provider=key[0], provider_version=key[1])
+        for key in sorted(by_slice)
+    )
 
     latency_values = tuple(
         event.cost.latency_ms for event in eligible_events if event.cost.latency_ms is not None
     )
-    known_cost_count = sum(event.cost.amount_microunits is not None for event in eligible_events)
+    known_cost_count = sum(
+        event.cost.amount_microunits is not None and event.cost.currency is not None
+        for event in eligible_events
+    )
     control = _control_state(eligible_records, eligible_events)
     control_completeness = (
         DataCompleteness.KNOWN
