@@ -589,7 +589,8 @@ function browserLocale(){
   return 'en';
 }
 let lang=SUPPORTED.includes(params.get('lang'))?params.get('lang'):(SUPPORTED.includes(stored)?stored:browserLocale());
-let chapter=Math.min(15,Math.max(1,Number(params.get('c')||1)));
+const chapterParam=Number(params.get('c'));
+let chapter=Number.isFinite(chapterParam)?Math.min(15,Math.max(1,chapterParam)):1;
 const criticalFirst={
   en:{eyebrow:'Outside your walls',headline:'Do you really know how your company looks from the outside?',body:'You already know what your company says about itself. AXIGNAL starts somewhere else: with what can be independently observed around it.'},
   es:{eyebrow:'Desde fuera',headline:'¿De verdad sabes cómo se ve tu empresa desde fuera?',body:'Ya sabes lo que tu empresa dice de sí misma. AXIGNAL empieza en otro lugar: en lo que puede observarse de forma independiente a su alrededor.'},
@@ -895,6 +896,7 @@ function renderStable(){
   fillCopy(ch); updateHeader(); buildRail(); buildChapterMenu(); updateUrl();
 }
 async function goTo(target,dir=1){
+  if(!data.length)return;
   target=Math.min(15,Math.max(1,target));
   if(target===chapter&&!transitioning) return;
   if(transitioning){pendingNavigation={target,dir};return}

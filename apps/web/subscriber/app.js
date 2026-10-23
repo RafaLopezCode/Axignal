@@ -1637,6 +1637,15 @@ function bindInteractions() {
   })
   $('#preferences-open').addEventListener('click', () => setBottomView('preferences'))
   $('#preferences-close').addEventListener('click', () => setBottomView('reader', true))
+  $('#lab-context-search').addEventListener('input', (event) => {
+    const query = event.currentTarget.value.toLocaleLowerCase(presentation.locale)
+    let visibleCount = 0
+    for (const button of $('#lab-context-list').querySelectorAll('.lab-context')) {
+      button.hidden = !button.textContent.toLocaleLowerCase(presentation.locale).includes(query)
+      if (!button.hidden) visibleCount += 1
+    }
+    $('#lab-context-empty').hidden = visibleCount > 0
+  })
   $('#preferences-view').addEventListener('keydown', (event) => {
     if (event.key === 'Escape') setBottomView('reader', true)
   })
@@ -2056,8 +2065,8 @@ function configureUxLab() {
   $('#xeed-current').disabled = false
   const search = $('#lab-context-search')
   search.hidden = !lab.contextSearch
-  const emptyState = $('#lab-context-empty')
   list.replaceChildren()
+  $('#lab-context-empty').hidden = true
   for (const [index, context] of lab.contexts.entries()) {
     const label = context.label
     const button = document.createElement('button')
@@ -2075,15 +2084,6 @@ function configureUxLab() {
     })
     list.append(button)
   }
-  search.addEventListener('input', () => {
-    const query = search.value.toLocaleLowerCase(presentation.locale)
-    let visibleCount = 0
-    for (const button of list.querySelectorAll('.lab-context')) {
-      button.hidden = !button.textContent.toLocaleLowerCase(presentation.locale).includes(query)
-      if (!button.hidden) visibleCount += 1
-    }
-    emptyState.hidden = visibleCount > 0
-  })
 
   const research = $('#research-depth')
   const governanceAvailable = Boolean(lab.governanceAvailable)

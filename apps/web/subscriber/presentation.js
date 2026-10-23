@@ -142,8 +142,6 @@
       'navigation.cognitiveDepth': 'Cognitive depth',
       'navigation.focus': 'Focus',
       'navigation.field': 'AXIGLAND field',
-      'navigation.trail': 'Focus trail',
-      'navigation.timeline': 'Timeline',
       'navigation.workspace': 'Workspace',
       'navigation.xeed': 'Organization',
       'navigation.memory': 'Memory',
