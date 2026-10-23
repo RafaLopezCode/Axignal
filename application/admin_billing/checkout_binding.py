@@ -195,7 +195,8 @@ def _validate_checkout_binding_inputs(
         return _unknown(BindingReason.MISSING_SNAPSHOT, values)
     if binding is None:
         return _unknown(BindingReason.MISSING_ATTEMPT_BINDING, values)
-    assert values is not None
+    if values is None:
+        return _unknown(BindingReason.MISSING_SNAPSHOT, values)
     if (
         intent.catalogue_ref != catalogue.catalogue_ref
         or intent.catalogue_version != catalogue.version
@@ -316,7 +317,8 @@ def validate_checkout_binding(
         return _mismatch(BindingReason.PRIOR_INTENT_MISMATCH, values) if values else recomputed
     if snapshot is None:
         return recomputed
-    assert values is not None
+    if values is None:
+        return _unknown(BindingReason.MISSING_SNAPSHOT, values)
     if previous.evidence_ref == snapshot.evidence_ref:
         if previous.evidence_fingerprint != values.fingerprint:
             return _mismatch(BindingReason.CONFLICTING_REPLAY, values)

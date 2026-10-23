@@ -5,6 +5,8 @@ from __future__ import annotations
 import hashlib
 import json
 import sqlite3
+from collections.abc import Iterator
+from contextlib import contextmanager
 from dataclasses import asdict
 from datetime import UTC, datetime
 from enum import StrEnum
@@ -24,6 +26,7 @@ from application.admin_billing.subscriber_checkout import (
 from application.subscriber_identity.runtime import PurchaseScopeProvisioningReceipt
 from domain.admin_billing.checkout_binding import BindingReason, BindingStatus
 from domain.identity import PrincipalId, TenantId
+from pipeline.sqlite_lifecycle import closing_connection
 
 
 class SubscriberStoreConflict(ValueError):
@@ -151,16 +154,18 @@ class SqliteSubscriberBillingStore:
                    WHERE checkout_session_ref IS NOT NULL"""
             )
 
-    def _connect(self) -> sqlite3.Connection:
-        connection = sqlite3.connect(
-            f"{self.path.resolve().as_uri()}?mode=ro" if self._read_only else self.path,
+    @contextmanager
+    def _connect(self) -> Iterator[sqlite3.Connection]:
+        database = f"{self.path.resolve().as_uri()}?mode=ro" if self._read_only else self.path
+        with closing_connection(
+            database,
             uri=self._read_only,
             timeout=10,
-        )
-        connection.row_factory = sqlite3.Row
-        connection.execute("PRAGMA foreign_keys = ON")
-        connection.execute("PRAGMA busy_timeout = 10000")
-        return connection
+            row_factory=sqlite3.Row,
+            foreign_keys=True,
+            busy_timeout_ms=10000,
+        ) as connection:
+            yield connection
 
     @staticmethod
     def _attempt_fingerprint(attempt: PurchaseAttempt) -> str:

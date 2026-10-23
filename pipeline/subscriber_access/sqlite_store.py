@@ -6,11 +6,14 @@ import hashlib
 import json
 import sqlite3
 import uuid
+from collections.abc import Iterator
+from contextlib import contextmanager
 from datetime import UTC, datetime, timedelta
 from pathlib import Path
 
 from application.subscriber_access.pilot import PilotGrant, PilotOperationError
 from domain.identity import PrincipalId, TenantId
+from pipeline.sqlite_lifecycle import closing_connection
 
 
 class SqlitePilotAccessStore:
@@ -22,16 +25,18 @@ class SqlitePilotAccessStore:
         self.path.parent.mkdir(parents=True, exist_ok=True)
         self._initialize()
 
-    def _connect(self) -> sqlite3.Connection:
-        connection = sqlite3.connect(
-            f"{self.path.resolve().as_uri()}?mode=ro" if self._read_only else self.path,
+    @contextmanager
+    def _connect(self) -> Iterator[sqlite3.Connection]:
+        database = f"{self.path.resolve().as_uri()}?mode=ro" if self._read_only else self.path
+        with closing_connection(
+            database,
             uri=self._read_only,
             timeout=10,
-        )
-        connection.row_factory = sqlite3.Row
-        connection.execute("PRAGMA foreign_keys = ON")
-        connection.execute("PRAGMA busy_timeout = 10000")
-        return connection
+            row_factory=sqlite3.Row,
+            foreign_keys=True,
+            busy_timeout_ms=10000,
+        ) as connection:
+            yield connection
 
     def _initialize(self) -> None:
         with self._connect() as connection:

@@ -29,7 +29,11 @@
       "pin": "41bbe19d1a1a7eaab5e7bb9050a417e5c6cffc8f",
       "license": "Apache-2.0",
       "install_method": "Pinned content vendored under .opencode/skills/frontend-design; Codex delegates through .agents/skills/frontend-design/SKILL.md",
-      "files": [".opencode/skills/frontend-design/SKILL.md", ".opencode/skills/frontend-design/LICENSE.txt", ".agents/skills/frontend-design/SKILL.md"],
+      "files": [
+        ".opencode/skills/frontend-design/SKILL.md",
+        ".opencode/skills/frontend-design/LICENSE.txt",
+        ".agents/skills/frontend-design/SKILL.md"
+      ],
       "executable_code": false,
       "network_at_runtime": false,
       "secrets_required": false,
@@ -62,7 +66,11 @@
       "pin": "dcc40ff5133ef78276117db0cc34e7b83cc8aeba / ui-ux-pro-max-cli@2.15.0",
       "license": "MIT",
       "install_method": "Existing offline-installed local corpus under .opencode/skills/ui-ux-pro-max; Codex delegates through .agents/skills/ui-ux-pro-max/SKILL.md",
-      "files": [".opencode/skills/ui-ux-pro-max/**", ".agents/skills/ui-ux-pro-max/SKILL.md", ".opencode/skills/ui-ux-pro-max/LICENSE"],
+      "files": [
+        ".opencode/skills/ui-ux-pro-max/**",
+        ".agents/skills/ui-ux-pro-max/SKILL.md",
+        ".opencode/skills/ui-ux-pro-max/LICENSE"
+      ],
       "executable_code": "Local Python standard-library search helpers; no project runtime code",
       "network_at_runtime": false,
       "secrets_required": false,
@@ -134,6 +142,67 @@
       "role": "Optional deterministic browser automation if host browser access is unavailable or insufficient",
       "authority": "Rendered evidence only; human acceptance remains required",
       "reason": "Not needed for this task because a real host browser is available; defer package and browser-binary maintenance until a concrete CI need exists."
+    },
+    {
+      "id": "design-taste-frontend",
+      "status": "INSTALLED",
+      "reviewed_on": "2026-10-15",
+      "upstream": "https://github.com/Leonxlnx/taste-skill",
+      "upstream_path": "skills/taste-skill",
+      "pin": "f624f37a8c650b9cc550253104925efe4c8de246",
+      "license": "MIT",
+      "install_method": "skills@1.7.2; project-local shared corpus and Codex/Claude thin entrypoints",
+      "files": [
+        ".opencode/skills/design-taste-frontend/**",
+        ".agents/skills/design-taste-frontend/SKILL.md",
+        ".claude/skills/design-taste-frontend/SKILL.md"
+      ],
+      "executable_code": "Optional Node standard-library scripts; reviewed, not executed",
+      "network_at_runtime": "Optional asset searches/downloads and browser navigation; no application or CI dependency",
+      "secrets_required": false,
+      "windows_compatible": true,
+      "role": "Public-facing page art direction; upstream excludes dashboards and app screens.",
+      "authority": "Advisory; subordinate to AXIGNAL doctrine and accepted visual evidence",
+      "reason": "Explicit user-requested project installation; no sibling skills, hooks or product dependencies installed."
+    },
+    {
+      "id": "web-design-guidelines",
+      "status": "INSTALLED",
+      "reviewed_on": "2026-10-15",
+      "upstream": "https://github.com/vercel-labs/agent-skills",
+      "upstream_path": "skills/web-design-guidelines",
+      "pin": "063bee94c3f4df8453406c830b0a7df0f2860278",
+      "license": "Not declared in the agent-skills repository at the reviewed revision",
+      "install_method": "skills@1.7.2; project-local shared corpus and Codex/Claude thin entrypoints",
+      "files": [
+        ".opencode/skills/web-design-guidelines/**",
+        ".agents/skills/web-design-guidelines/SKILL.md",
+        ".claude/skills/web-design-guidelines/SKILL.md"
+      ],
+      "executable_code": false,
+      "network_at_runtime": "Upstream review fetches live Vercel guidelines; no application or CI dependency",
+      "secrets_required": false,
+      "windows_compatible": true,
+      "role": "Targeted web interaction, accessibility and semantics review.",
+      "authority": "Advisory; subordinate to AXIGNAL doctrine and accepted visual evidence",
+      "reason": "Explicit user-requested project installation; no sibling skills, hooks or product dependencies installed."
+    },
+    {
+      "id": "awesome-design-md",
+      "status": "REFERENCED",
+      "reviewed_on": "2026-10-15",
+      "upstream": "https://github.com/VoltAgent/awesome-design-md",
+      "pin": "3b605329240ce735b510037cca322f1831fdd7f8",
+      "license": "MIT",
+      "install_method": "Reference catalog only; no SKILL.md, brand corpus or root DESIGN.md installed",
+      "files": [],
+      "executable_code": false,
+      "network_at_runtime": "Only when consulting upstream references",
+      "secrets_required": false,
+      "windows_compatible": true,
+      "role": "Optional comparative design reference",
+      "authority": "Advisory; third-party brand analyses are not AXIGNAL design authority",
+      "reason": "User supplied the catalog; no specific foreign brand was selected or imported."
     }
   ]
 }

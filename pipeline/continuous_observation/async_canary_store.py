@@ -4,6 +4,8 @@ from __future__ import annotations
 
 import json
 import sqlite3
+from collections.abc import Iterator
+from contextlib import contextmanager
 from datetime import datetime
 from pathlib import Path
 
@@ -11,6 +13,7 @@ from cognition.async_research_canary import (
     DurableCanaryClaim,
     DurableCanaryExecution,
 )
+from pipeline.sqlite_lifecycle import closing_connection
 
 
 class SqliteDurableCanaryExecutionStore:
@@ -37,10 +40,13 @@ class SqliteDurableCanaryExecutionStore:
                 """
             )
 
-    def _connect(self) -> sqlite3.Connection:
-        db = sqlite3.connect(self._path)
-        db.row_factory = sqlite3.Row
-        return db
+    @contextmanager
+    def _connect(self) -> Iterator[sqlite3.Connection]:
+        with closing_connection(
+            self._path,
+            row_factory=sqlite3.Row,
+        ) as connection:
+            yield connection
 
     def active_for_subject(self, subject_id: str) -> DurableCanaryExecution | None:
         with self._connect() as db:

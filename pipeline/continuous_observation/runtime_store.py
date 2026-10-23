@@ -4,6 +4,8 @@ from __future__ import annotations
 
 import sqlite3
 import uuid
+from collections.abc import Iterator
+from contextlib import contextmanager
 from datetime import UTC, datetime
 from pathlib import Path
 
@@ -13,6 +15,7 @@ from application.economic_discovery.research_runtime import (
     ResearchRuntimeSnapshot,
     ResearchRuntimeStatus,
 )
+from pipeline.sqlite_lifecycle import closing_connection
 
 
 def _utc(value: datetime) -> datetime:
@@ -59,10 +62,13 @@ class SqliteResearchRuntimeStore:
                 """
             )
 
-    def _connect(self) -> sqlite3.Connection:
-        db = sqlite3.connect(self._path)
-        db.row_factory = sqlite3.Row
-        return db
+    @contextmanager
+    def _connect(self) -> Iterator[sqlite3.Connection]:
+        with closing_connection(
+            self._path,
+            row_factory=sqlite3.Row,
+        ) as connection:
+            yield connection
 
     def snapshot(self) -> ResearchRuntimeSnapshot:
         with self._connect() as db:

@@ -337,6 +337,7 @@ def vertical(tmp_path: Path) -> Fixture:
         object_or_value=request.object_or_value,
         evidence=evidence,
         decision=decision,
+        epistemic_state=EpistemicState.OBSERVED,
         currentness=Currentness.CURRENT,
     )
     return Fixture(

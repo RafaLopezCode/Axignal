@@ -4,6 +4,8 @@ from __future__ import annotations
 
 import json
 import sqlite3
+from collections.abc import Iterator
+from contextlib import contextmanager
 from datetime import datetime
 from pathlib import Path
 
@@ -12,6 +14,7 @@ from domain.admin_api_operations import (
     WebhookDisposition,
     WebhookEnvelope,
 )
+from pipeline.sqlite_lifecycle import closing_connection
 
 
 class ApiOperationsStoreConflict(ValueError):
@@ -44,10 +47,13 @@ class SqliteApiOperationsStore:
                 """
             )
 
-    def _connect(self) -> sqlite3.Connection:
-        connection = sqlite3.connect(self.path)
-        connection.row_factory = sqlite3.Row
-        return connection
+    @contextmanager
+    def _connect(self) -> Iterator[sqlite3.Connection]:
+        with closing_connection(
+            self.path,
+            row_factory=sqlite3.Row,
+        ) as connection:
+            yield connection
 
     def append_observation(self, observation: ApiOperationObservation) -> bool:
         payload = json.dumps(

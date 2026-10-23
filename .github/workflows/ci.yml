@@ -19,6 +19,7 @@ jobs:
   frontend:
     name: Frontend regression checks
     runs-on: ubuntu-latest
+    timeout-minutes: 30
     defaults:
       run:
         working-directory: apps/web/experience
@@ -26,10 +27,10 @@ jobs:
       NEXT_TELEMETRY_DISABLED: "1"
     steps:
       - name: Checkout
-        uses: actions/checkout@v4
+        uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262 # v4
 
       - name: Set up production Node major
-        uses: actions/setup-node@v4
+        uses: actions/setup-node@49933ea5288caeca8642d1e84afbd3f7d6820020 # v4
         with:
           node-version-file: apps/web/experience/.nvmrc
           cache: npm
@@ -58,19 +59,25 @@ jobs:
         run: npm run test:admin-http
 
   validate:
-    name: Deterministic validation
+    name: Deterministic validation (${{ matrix.python }})
     runs-on: ubuntu-latest
+    timeout-minutes: 30
+    strategy:
+      fail-fast: false
+      matrix:
+        # requires-python is >=3.11; the declared minimum must actually be tested.
+        python: ["3.11", "3.12"]
     steps:
       - name: Checkout
-        uses: actions/checkout@v4
+        uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262 # v4
 
       - name: Install uv
-        uses: astral-sh/setup-uv@v5
+        uses: astral-sh/setup-uv@d4b2f3b6ecc6e67c4457f6d3e41ec42d3d0fcb86 # v5
         with:
           enable-cache: true
 
       - name: Set up Python
-        run: uv python install "$(cat .python-version)"
+        run: uv python install "${{ matrix.python }}"
 
       - name: Sync (locked)
         run: uv sync --frozen
@@ -99,12 +106,13 @@ jobs:
   graphify-structural:
     name: Graphify structural checks
     runs-on: ubuntu-latest
+    timeout-minutes: 15
     steps:
       - name: Checkout
-        uses: actions/checkout@v4
+        uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262 # v4
 
       - name: Install uv
-        uses: astral-sh/setup-uv@v5
+        uses: astral-sh/setup-uv@d4b2f3b6ecc6e67c4457f6d3e41ec42d3d0fcb86 # v5
 
       - name: Install Graphify
         run: uv tool install graphifyy
@@ -132,13 +140,14 @@ jobs:
   secret-scan:
     name: Secret scanning
     runs-on: ubuntu-latest
+    timeout-minutes: 10
     steps:
       - name: Checkout
-        uses: actions/checkout@v4
+        uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262 # v4
         with:
           fetch-depth: 0
 
       - name: gitleaks
-        uses: gitleaks/gitleaks-action@v2
+        uses: gitleaks/gitleaks-action@ff98106e4c7b2bc287b24eaf42907196329070c7 # v2
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}

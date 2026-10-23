@@ -10,6 +10,8 @@
 | `frontend-design` | Visual direction, art direction, composition, typography, hierarchy, spatial rhythm, motion language, interaction polish, distinctive visual identity, avoiding generic AI aesthetics. | Shared source: `.opencode/skills/frontend-design/SKILL.md`; Codex entry point: `.agents/skills/frontend-design/SKILL.md` |
 | `ui-ux-pro-max` | Information architecture, interaction design, usability, accessibility, responsive behavior, navigation, cognitive load, UX heuristics, consistency, component/state design, empty/loading/error states, data-density, dashboard ergonomics. | Shared corpus: `.opencode/skills/ui-ux-pro-max/SKILL.md`; Codex entry point: `.agents/skills/ui-ux-pro-max/SKILL.md` |
 | `axignal-graph-design` | AXIGLAND-specific economic cartography, semantic/epistemic/temporal grammar, evidence explainability, accessibility requirements, and renderer boundary. Authored for AXIGNAL; not an upstream super-skill. | `.opencode/skills/axignal-graph-design/SKILL.md` |
+| `design-taste-frontend` | Optional art direction for public-facing pages; upstream excludes dashboards and app screens. | Shared corpus: `.opencode/skills/design-taste-frontend/`; Codex and Claude entrypoints under `.agents/skills/` and `.claude/skills/` |
+| `web-design-guidelines` | Targeted accessibility, semantics and web interaction review. | Shared source: `.opencode/skills/web-design-guidelines/SKILL.md`; Codex and Claude entrypoints under `.agents/skills/` and `.claude/skills/` |
 
 The two upstream skills remain subordinate general design intelligence. The
 AXIGNAL-specific graph skill adds governed product context for graph work; it
@@ -23,6 +25,12 @@ does not change the provenance or pinned revisions of either upstream skill.
 | `ui-ux-pro-max` | [nextlevelbuilder/ui-ux-pro-max-skill](https://github.com/nextlevelbuilder/ui-ux-pro-max-skill) | source-of-truth repo `dcc40ff5133ef78276117db0cc34e7b83cc8aeba`; published package `ui-ux-pro-max-cli@2.15.0` | Official installer: `npx ui-ux-pro-max-cli@2.15.0 init --ai opencode --offline` | `fff1d6ffd0c5e2e121f83e4c5bdbf52f25695a4de37d445a7b2f3afa1de362d9` |
 
 Machine-readable form: [SKILLS.lock.json](SKILLS.lock.json).
+
+The two additional skills requested on 2026-10-15 have their pinned revisions,
+file hashes, agent discovery paths and license notes in that lock and in
+[EXTERNAL_DESIGN_REFERENCES.md](EXTERNAL_DESIGN_REFERENCES.md). That note also
+records `VoltAgent/awesome-design-md` as an optional reference catalog rather
+than an installable skill or replacement AXIGNAL design system.
 
 ### Why these upstreams (super-skill selection evidence)
 

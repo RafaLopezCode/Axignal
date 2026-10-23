@@ -4,6 +4,8 @@ from __future__ import annotations
 
 import json
 import sqlite3
+from collections.abc import Iterator
+from contextlib import contextmanager
 from pathlib import Path
 
 from application.admin_customer_accounts import replay_account
@@ -14,6 +16,7 @@ from domain.admin_customer_accounts import (
     AccountId,
     AccountSnapshot,
 )
+from pipeline.sqlite_lifecycle import closing_connection
 
 
 class SqliteAdminCustomerAccountStore:
@@ -38,10 +41,13 @@ class SqliteAdminCustomerAccountStore:
                 """
             )
 
-    def _connect(self) -> sqlite3.Connection:
-        connection = sqlite3.connect(self.path)
-        connection.row_factory = sqlite3.Row
-        return connection
+    @contextmanager
+    def _connect(self) -> Iterator[sqlite3.Connection]:
+        with closing_connection(
+            self.path,
+            row_factory=sqlite3.Row,
+        ) as connection:
+            yield connection
 
     @staticmethod
     def _payload(event: AccountEvent) -> str:

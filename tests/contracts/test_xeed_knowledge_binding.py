@@ -75,6 +75,7 @@ def _faxt(
                 claim_proposition=evidence.extracted_claim,
             )
         ),
+        epistemic_state=EpistemicState.OBSERVED,
         currentness=currentness,
     )
 

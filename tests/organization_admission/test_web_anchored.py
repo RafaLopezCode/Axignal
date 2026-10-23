@@ -12,6 +12,7 @@ from application.subscriber_portfolio.models import (
     OrganizationIdentityPending,
     OrganizationIdentityRejected,
 )
+from domain.evidence.epistemics import EpistemicState
 from domain.faxt.model import FAXTCreationError
 from domain.identity import is_web_subject
 from domain.organizations.model import Organization
@@ -82,4 +83,5 @@ def test_a_web_anchored_subject_can_never_hold_canonical_state() -> None:
         FAXT.create(  # type: ignore[call-arg]
             faxt_id="faxt:1", subject_id=str(web_subject_id("shop.example.com")),
             predicate="legal_name", object_or_value="Shop SL", evidence=None, decision=None,
+            epistemic_state=EpistemicState.OBSERVED,
         )  # fmt: skip

@@ -82,10 +82,9 @@ def _xeed_diagnostic(
     costs: dict[str, int] = {}
     unknown_costs = 0
     for event in ordered:
-        if event.cost.amount_microunits is None:
+        if event.cost.amount_microunits is None or event.cost.currency is None:
             unknown_costs += 1
         else:
-            assert event.cost.currency is not None
             costs[event.cost.currency] = (
                 costs.get(event.cost.currency, 0) + event.cost.amount_microunits
             )

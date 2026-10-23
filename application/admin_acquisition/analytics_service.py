@@ -186,7 +186,8 @@ def project_growth_observatory(
     for event in analytics:
         if event.kind is not AnalyticsEventKind.REQUEST_ACCOUNT_LINKED:
             continue
-        assert event.request_id is not None and event.account_id is not None
+        if event.request_id is None or event.account_id is None:
+            continue
         previous = links.get(event.request_id)
         if previous is not None and previous != event.account_id:
             raise ValueError("one acquisition request cannot map to multiple paid accounts")
@@ -213,13 +214,12 @@ def project_growth_observatory(
         if not paid_events:
             continue
         first_paid = paid_events[0]
-        capacity_events = [event for event in billing_events if event.xeed_capacity is not None]
-        xeed_capacity = (
-            max(capacity_events, key=lambda event: event.provider_created_at).xeed_capacity
-            if capacity_events
-            else 1
-        )
-        assert xeed_capacity is not None
+        capacity_events = [
+            (event.provider_created_at, event.xeed_capacity)
+            for event in billing_events
+            if event.xeed_capacity is not None
+        ]
+        xeed_capacity = max(capacity_events)[1] if capacity_events else 1
         conversions.append(
             ConversionView(
                 request_id=request_id,
@@ -246,9 +246,11 @@ def project_growth_observatory(
 
     cost_by_currency: Counter[str] = Counter()
     for event in analytics:
-        if event.kind is AnalyticsEventKind.DELIVERY_COST_RECORDED:
-            assert event.amount_minor is not None and event.currency is not None
-            cost_by_currency[event.currency] += event.amount_minor
+        if event.kind is not AnalyticsEventKind.DELIVERY_COST_RECORDED:
+            continue
+        if event.amount_minor is None or event.currency is None:
+            continue
+        cost_by_currency[event.currency] += event.amount_minor
 
     currencies = sorted(set(revenue_by_currency) | set(cost_by_currency))
     economics = tuple(

@@ -153,6 +153,7 @@ def _document(index: int) -> tuple[EconomicObservation, ...]:
                 object_or_value=value,
                 evidence=evidence,
                 decision=decision,
+                epistemic_state=EpistemicState.OBSERVED,
                 currentness=Currentness.CURRENT,
             )
         observations.append(
@@ -613,6 +614,7 @@ def test_vertical_capability_cannot_admit_a_different_tuple_from_same_claim(chan
                 object_or_value=request.object_or_value,
                 evidence=evidence,
                 decision=decision,
+                epistemic_state=EpistemicState.OBSERVED,
             )
 
 
@@ -636,6 +638,7 @@ def test_vertical_capability_requires_current_main_grounding(missing) -> None:
             object_or_value=request.object_or_value,
             evidence=evidence,
             decision=decision,
+            epistemic_state=EpistemicState.OBSERVED,
         )
 
 

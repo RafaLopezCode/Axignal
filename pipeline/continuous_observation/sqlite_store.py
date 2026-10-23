@@ -5,6 +5,8 @@ from __future__ import annotations
 import json
 import sqlite3
 import uuid
+from collections.abc import Iterator
+from contextlib import contextmanager
 from datetime import UTC, datetime, timedelta
 from pathlib import Path
 
@@ -20,6 +22,7 @@ from application.economic_discovery.research_scheduler import (
     ResearchScheduleOutcome,
     ResearchScheduleState,
 )
+from pipeline.sqlite_lifecycle import closing_connection
 
 
 def _utc(value: datetime, label: str) -> datetime:
@@ -34,11 +37,14 @@ class SqliteSharedObservationWorkMemory:
         self._path.parent.mkdir(parents=True, exist_ok=True)
         self._initialize()
 
-    def _connect(self) -> sqlite3.Connection:
-        connection = sqlite3.connect(self._path)
-        connection.row_factory = sqlite3.Row
-        connection.execute("PRAGMA foreign_keys = ON")
-        return connection
+    @contextmanager
+    def _connect(self) -> Iterator[sqlite3.Connection]:
+        with closing_connection(
+            self._path,
+            row_factory=sqlite3.Row,
+            foreign_keys=True,
+        ) as connection:
+            yield connection
 
     def _initialize(self) -> None:
         with self._connect() as db:

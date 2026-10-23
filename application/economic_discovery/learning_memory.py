@@ -314,10 +314,9 @@ def summarize_learning(events: tuple[LearningEvent, ...]) -> LearningSummary:
 
     for event in events:
         outcome_counts[event.outcome] += 1
-        if event.cost.amount_microunits is None:
+        if event.cost.amount_microunits is None or event.cost.currency is None:
             unknown_costs += 1
         else:
-            assert event.cost.currency is not None
             costs[event.cost.currency] = (
                 costs.get(event.cost.currency, 0) + event.cost.amount_microunits
             )

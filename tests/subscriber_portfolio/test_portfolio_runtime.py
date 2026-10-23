@@ -1,6 +1,7 @@
 from __future__ import annotations
 
 from concurrent.futures import ThreadPoolExecutor
+from contextlib import contextmanager
 from dataclasses import dataclass
 from datetime import UTC, datetime
 from pathlib import Path
@@ -117,10 +118,11 @@ class TracedPortfolioStore(SqliteSubscriberPortfolioStore):
         self.statements: list[str] = []
         super().__init__(database_path)
 
+    @contextmanager
     def _connect(self):
-        connection = super()._connect()
-        connection.set_trace_callback(self.statements.append)
-        return connection
+        with super()._connect() as connection:
+            connection.set_trace_callback(self.statements.append)
+            yield connection
 
 
 def _runtime(tmp_path: Path, capacity=1, currentness=Currentness.CURRENT, trace=False):

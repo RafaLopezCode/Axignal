@@ -78,7 +78,7 @@ class FAXT:
         evidence: Evidence,
         decision: AdmissionDecision,
         claim_proposition: str | None = None,
-        epistemic_state: EpistemicState = EpistemicState.OBSERVED,
+        epistemic_state: EpistemicState,
         observed_at: datetime | None = None,
         currentness: Currentness = Currentness.UNKNOWN,
     ) -> FAXT:

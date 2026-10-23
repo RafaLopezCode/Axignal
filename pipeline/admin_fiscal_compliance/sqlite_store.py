@@ -4,6 +4,8 @@ from __future__ import annotations
 
 import json
 import sqlite3
+from collections.abc import Iterator
+from contextlib import contextmanager
 from datetime import datetime
 from pathlib import Path
 
@@ -15,6 +17,7 @@ from domain.admin_fiscal_compliance import (
     FiscalEvidenceKind,
     FiscalProviderSelection,
 )
+from pipeline.sqlite_lifecycle import closing_connection
 
 
 class FiscalComplianceStoreConflict(ValueError):
@@ -49,10 +52,13 @@ class SqliteFiscalComplianceStore:
                 """
             )
 
-    def _connect(self) -> sqlite3.Connection:
-        connection = sqlite3.connect(self.path)
-        connection.row_factory = sqlite3.Row
-        return connection
+    @contextmanager
+    def _connect(self) -> Iterator[sqlite3.Connection]:
+        with closing_connection(
+            self.path,
+            row_factory=sqlite3.Row,
+        ) as connection:
+            yield connection
 
     @staticmethod
     def _selection_payload(selection: FiscalProviderSelection) -> str:
