@@ -12,6 +12,8 @@ import json
 import sqlite3
 import threading
 import uuid
+from collections.abc import Iterator
+from contextlib import contextmanager
 from dataclasses import dataclass
 from datetime import datetime, timedelta
 from pathlib import Path
@@ -25,6 +27,7 @@ from pipeline.entity_resolution.resolver import (
     ResolutionCandidate,
     ResolutionStatus,
 )
+from pipeline.sqlite_lifecycle import closing_connection
 from tools.runtime.first_proof import FirstProofInsufficientEvidence, FirstProofService
 
 
@@ -154,10 +157,13 @@ class OrganizationAttention:
                     str(context["id"]),
                 )
 
-    def _connect(self) -> sqlite3.Connection:
-        db = sqlite3.connect(self.proof.store.path)
-        db.row_factory = sqlite3.Row
-        return db
+    @contextmanager
+    def _connect(self) -> Iterator[sqlite3.Connection]:
+        with closing_connection(
+            self.proof.store.path,
+            row_factory=sqlite3.Row,
+        ) as connection:
+            yield connection
 
     @staticmethod
     def _id(target: str) -> str:
