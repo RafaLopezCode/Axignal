@@ -41,7 +41,7 @@ from application.subscriber_projection import (
 )
 from application.xeed_access.organization_reader import AuthorizedXeedOrganizationReader
 from application.xeed_access.reader import AuthorizedXeedReader, TrustedRequestContext
-from domain.evidence import Currentness
+from domain.evidence import Currentness, EpistemicState
 from domain.evidence.admission import (
     AdmissionRequest,
     Evidence,
@@ -134,6 +134,7 @@ def _faxt() -> FAXT:
                 claim_proposition=evidence.extracted_claim,
             )
         ),
+        epistemic_state=EpistemicState.OBSERVED,
         observed_at=NOW,
         currentness=Currentness.CURRENT,
     )

@@ -71,6 +71,7 @@ def _create(evidence: Evidence, decision: AdmissionDecision, **overrides: object
         "evidence": evidence,
         "decision": decision,
         "claim_proposition": evidence.extracted_claim,
+        "epistemic_state": EpistemicState.OBSERVED,
     }
     values.update(overrides)
     return FAXT.create(**values)  # type: ignore[arg-type]

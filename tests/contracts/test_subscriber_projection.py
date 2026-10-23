@@ -19,7 +19,7 @@ from domain.evidence.admission import (
     GroundedClaim,
     SourceAuthority,
 )
-from domain.evidence.epistemics import Currentness
+from domain.evidence.epistemics import Currentness, EpistemicState
 from domain.faxt.model import FAXT
 from tests.support.grounding import with_synthetic_representation
 from tests.support.hfx01_demo import Hfx01Demo
@@ -173,6 +173,7 @@ def test_equal_raw_ids_in_distinct_identity_planes_keep_distinct_projection_keys
         object_or_value=original.object_or_value,
         evidence=evidence,
         decision=EvidenceAdmission.admit_claim(request),
+        epistemic_state=EpistemicState.OBSERVED,
         currentness=Currentness.UNKNOWN,
     )
     demo.knowledge.faxts[colliding_faxt.id] = colliding_faxt
