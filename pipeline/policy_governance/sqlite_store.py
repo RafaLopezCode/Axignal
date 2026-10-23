@@ -4,6 +4,8 @@ from __future__ import annotations
 
 import json
 import sqlite3
+from collections.abc import Iterator
+from contextlib import contextmanager
 from dataclasses import asdict
 from datetime import datetime
 from pathlib import Path
@@ -17,6 +19,7 @@ from application.economic_discovery.policy_governance import (
     RolloutMode,
     RolloutPlan,
 )
+from pipeline.sqlite_lifecycle import closing_connection
 
 
 def _policy_payload(policy: ActivePolicyRef) -> dict[str, object]:
@@ -112,10 +115,13 @@ class SqliteActivePolicyStore:
                 """
             )
 
-    def _connect(self) -> sqlite3.Connection:
-        connection = sqlite3.connect(self.path)
-        connection.row_factory = sqlite3.Row
-        return connection
+    @contextmanager
+    def _connect(self) -> Iterator[sqlite3.Connection]:
+        with closing_connection(
+            self.path,
+            row_factory=sqlite3.Row,
+        ) as connection:
+            yield connection
 
     def seed_active(self, policy: ActivePolicyRef) -> bool:
         """Establish the pre-governance baseline once; never overwrite it."""

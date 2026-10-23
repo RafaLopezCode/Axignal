@@ -3,6 +3,8 @@
 from __future__ import annotations
 
 import sqlite3
+from collections.abc import Iterator
+from contextlib import contextmanager
 from datetime import datetime
 from pathlib import Path
 
@@ -18,6 +20,7 @@ from domain.admin_access import (
     AdminSessionRevocation,
     PrivilegeChangeKind,
 )
+from pipeline.sqlite_lifecycle import closing_connection
 
 
 class SqliteAdminAccessStore:
@@ -28,10 +31,13 @@ class SqliteAdminAccessStore:
         self._path.parent.mkdir(parents=True, exist_ok=True)
         self._initialize()
 
-    def _connect(self) -> sqlite3.Connection:
-        connection = sqlite3.connect(self._path)
-        connection.row_factory = sqlite3.Row
-        return connection
+    @contextmanager
+    def _connect(self) -> Iterator[sqlite3.Connection]:
+        with closing_connection(
+            self._path,
+            row_factory=sqlite3.Row,
+        ) as connection:
+            yield connection
 
     def _initialize(self) -> None:
         with self._connect() as connection:

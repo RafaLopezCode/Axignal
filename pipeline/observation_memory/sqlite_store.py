@@ -4,7 +4,8 @@ from __future__ import annotations
 
 import json
 import sqlite3
-from collections.abc import Callable
+from collections.abc import Callable, Iterator
+from contextlib import contextmanager
 from dataclasses import replace
 from datetime import UTC, datetime, timedelta
 from pathlib import Path
@@ -22,6 +23,7 @@ from application.economic_discovery.observation_memory import (
     observation_reuse_authority_from_payload,
     observation_reuse_authority_payload,
 )
+from pipeline.sqlite_lifecycle import closing_connection
 
 
 class SqliteObservationMemory:
@@ -35,14 +37,16 @@ class SqliteObservationMemory:
         self._path.parent.mkdir(parents=True, exist_ok=True)
         self._initialize()
 
-    def _connect(self) -> sqlite3.Connection:
-        connection = sqlite3.connect(
-            f"{self._path.resolve().as_uri()}?mode=ro" if self._read_only else self._path,
+    @contextmanager
+    def _connect(self) -> Iterator[sqlite3.Connection]:
+        database = f"{self._path.resolve().as_uri()}?mode=ro" if self._read_only else self._path
+        with closing_connection(
+            database,
             uri=self._read_only,
             timeout=10,
-        )
-        connection.execute("PRAGMA foreign_keys = ON")
-        return connection
+            foreign_keys=True,
+        ) as connection:
+            yield connection
 
     def _initialize(self) -> None:
         restricted_reuse_json = json.dumps(

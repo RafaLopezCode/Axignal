@@ -4,6 +4,8 @@ from __future__ import annotations
 
 import json
 import sqlite3
+from collections.abc import Iterator
+from contextlib import contextmanager
 from dataclasses import asdict
 from datetime import datetime
 from enum import Enum
@@ -34,6 +36,7 @@ from domain.admin_commercial import (
     ProspectStage,
     TaskState,
 )
+from pipeline.sqlite_lifecycle import closing_connection
 
 
 def _json_default(value: object) -> object:
@@ -67,10 +70,13 @@ class SqliteAdminCommercialStore:
                 """
             )
 
-    def _connect(self) -> sqlite3.Connection:
-        connection = sqlite3.connect(self.path)
-        connection.row_factory = sqlite3.Row
-        return connection
+    @contextmanager
+    def _connect(self) -> Iterator[sqlite3.Connection]:
+        with closing_connection(
+            self.path,
+            row_factory=sqlite3.Row,
+        ) as connection:
+            yield connection
 
     @staticmethod
     def _payload(record: Any) -> str:

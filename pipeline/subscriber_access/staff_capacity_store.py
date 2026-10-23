@@ -4,6 +4,8 @@ from __future__ import annotations
 
 import json
 import sqlite3
+from collections.abc import Iterator
+from contextlib import contextmanager
 from datetime import datetime
 from pathlib import Path
 
@@ -14,6 +16,7 @@ from application.subscriber_access.staff_capacity import (
     StaffCapacityGrant,
 )
 from domain.identity import TenantId
+from pipeline.sqlite_lifecycle import closing_connection
 
 
 def _grant(row: sqlite3.Row) -> StaffCapacityGrant:
@@ -80,15 +83,17 @@ class SqliteStaffCapacityStore:
                 """
             )
 
-    def _connect(self) -> sqlite3.Connection:
-        db = sqlite3.connect(
-            f"{self.path.resolve().as_uri()}?mode=ro" if self._read_only else self.path,
+    @contextmanager
+    def _connect(self) -> Iterator[sqlite3.Connection]:
+        database = f"{self.path.resolve().as_uri()}?mode=ro" if self._read_only else self.path
+        with closing_connection(
+            database,
             uri=self._read_only,
             timeout=10,
-        )
-        db.row_factory = sqlite3.Row
-        db.execute("PRAGMA busy_timeout = 10000")
-        return db
+            row_factory=sqlite3.Row,
+            busy_timeout_ms=10000,
+        ) as connection:
+            yield connection
 
     def record_audit(
         self,

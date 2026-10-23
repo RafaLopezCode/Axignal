@@ -7,6 +7,7 @@ from pathlib import Path
 from threading import Lock
 
 import pytest
+from contextlib import contextmanager
 
 from application.subscriber_identity.runtime import VerifiedExternalIdentity
 from application.subscriber_portfolio.models import (
@@ -117,10 +118,11 @@ class TracedPortfolioStore(SqliteSubscriberPortfolioStore):
         self.statements: list[str] = []
         super().__init__(database_path)
 
+    @contextmanager
     def _connect(self):
-        connection = super()._connect()
-        connection.set_trace_callback(self.statements.append)
-        return connection
+        with super()._connect() as connection:
+            connection.set_trace_callback(self.statements.append)
+            yield connection
 
 
 def _runtime(tmp_path: Path, capacity=1, currentness=Currentness.CURRENT, trace=False):

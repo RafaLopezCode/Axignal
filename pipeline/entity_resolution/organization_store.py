@@ -5,6 +5,8 @@ from __future__ import annotations
 import hashlib
 import json
 import sqlite3
+from collections.abc import Iterator
+from contextlib import contextmanager
 from datetime import datetime
 from pathlib import Path
 from typing import Protocol
@@ -38,6 +40,7 @@ from pipeline.entity_resolution.resolver import (
     ResolutionStatus,
 )
 from pipeline.entity_resolution.sqlite_store import SqliteIdentityGovernanceStore
+from pipeline.sqlite_lifecycle import closing_connection
 
 
 class IdentityArtifactIntegrity(Protocol):
@@ -87,14 +90,16 @@ class SqliteCanonicalOrganizationStore:
                 proposition_digest TEXT NOT NULL, policy_id TEXT NOT NULL,
                 observed_at TEXT NOT NULL)""")
 
-    def _connect(self) -> sqlite3.Connection:
-        connection = sqlite3.connect(
-            f"{self.path.resolve().as_uri()}?mode=ro" if self._read_only else self.path,
+    @contextmanager
+    def _connect(self) -> Iterator[sqlite3.Connection]:
+        database = f"{self.path.resolve().as_uri()}?mode=ro" if self._read_only else self.path
+        with closing_connection(
+            database,
             uri=self._read_only,
             timeout=10,
-        )
-        connection.row_factory = sqlite3.Row
-        return connection
+            row_factory=sqlite3.Row,
+        ) as connection:
+            yield connection
 
     def register(self, request: AdmissionRequest, decision: AdmissionDecision) -> bool:
         """Called by a governed registry intake after independent identity binding."""
