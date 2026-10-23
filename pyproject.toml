@@ -73,4 +73,6 @@ testpaths = ["tests"]
 addopts = "-ra"
 
 [tool.uv.sources]
-turboquant = { git = "https://github.com/Firmamento-Technologies/TurboQuant.git", rev = "2b6596093017419632abb03ae76e19bdcfb9a1e1" }
+# Vendored at the pinned upstream revision (2b6596093017419632abb03ae76e19bdcfb9a1e1)
+# so deterministic gates never depend on an external git repository staying reachable.
+turboquant = { path = "vendor/turboquant" }

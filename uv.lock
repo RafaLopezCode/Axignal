@@ -143,13 +143,13 @@ dev = [
     { name = "pytest", specifier = ">=8.3" },
     { name = "ruff", specifier = ">=0.6" },
     { name = "trafilatura", specifier = ">=2.0,<3" },
-    { name = "turboquant", git = "https://github.com/Firmamento-Technologies/TurboQuant.git?rev=2b6596093017419632abb03ae76e19bdcfb9a1e1" },
+    { name = "turboquant", directory = "vendor/turboquant" },
 ]
 research-canary-live = [{ name = "openai", specifier = ">=3.24.0" }]
 semantic-layer-live = [{ name = "typesafe-sdk", specifier = "==0.7.1" }]
 semantic-retrieval = [
     { name = "numpy", specifier = ">=1.26,<2.3" },
-    { name = "turboquant", git = "https://github.com/Firmamento-Technologies/TurboQuant.git?rev=2b6596093017419632abb03ae76e19bdcfb9a1e1" },
+    { name = "turboquant", directory = "vendor/turboquant" },
 ]
 subscriber-auth = [
     { name = "pillow", specifier = ">=12,<13" },
@@ -1792,12 +1792,26 @@ wheels = [
 [[package]]
 name = "turboquant"
 version = "0.3.0"
-source = { git = "https://github.com/Firmamento-Technologies/TurboQuant.git?rev=2b6596093017419632abb03ae76e19bdcfb9a1e1#2b6596093017419632abb03ae76e19bdcfb9a1e1" }
+source = { directory = "vendor/turboquant" }
 dependencies = [
     { name = "numpy" },
     { name = "scipy", version = "1.17.1", source = { registry = "https://pypi.org/simple" }, marker = "python_full_version < '3.12'" },
     { name = "scipy", version = "1.18.1", source = { registry = "https://pypi.org/simple" }, marker = "python_full_version >= '3.12'" },
 ]
+
+[package.metadata]
+requires-dist = [
+    { name = "faiss-cpu", marker = "extra == 'all'", specifier = ">=1.7" },
+    { name = "faiss-cpu", marker = "extra == 'bench'", specifier = ">=1.7" },
+    { name = "numpy", specifier = ">=1.24" },
+    { name = "pytest", marker = "extra == 'all'", specifier = ">=7.0" },
+    { name = "pytest", marker = "extra == 'dev'", specifier = ">=7.0" },
+    { name = "pytest-benchmark", marker = "extra == 'dev'" },
+    { name = "scipy", specifier = ">=1.10" },
+    { name = "sentence-transformers", marker = "extra == 'all'", specifier = ">=2.0" },
+    { name = "sentence-transformers", marker = "extra == 'bench'", specifier = ">=2.0" },
+]
+provides-extras = ["dev", "bench", "all"]
 
 [[package]]
 name = "typesafe-sdk"
